@@ -1,0 +1,4 @@
+python tools/design_trials.py C:\Users\ychen\OneDrive\文件\GitHub\sim_physics\.belief\artifacts\RUN-0024\result.json -- tests/sim/test_analytic.py -q
+exit=0
+test=TST-sim-analytic@642e2c2c
+at=2026-09-18T17:53:32+00:00

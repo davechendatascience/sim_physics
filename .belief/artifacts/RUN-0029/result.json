@@ -1,0 +1,2140 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-predictor]",
+        "claim": "TRACE:EQ-predictor",
+        "doc": "01-architecture.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-inertia-energy]",
+        "claim": "TRACE:EQ-inertia-energy",
+        "doc": "01-architecture.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-velocity-update]",
+        "claim": "TRACE:EQ-velocity-update",
+        "doc": "01-architecture.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-affine-orthogonality]",
+        "claim": "TRACE:EQ-affine-orthogonality",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-impedance]",
+        "claim": "TRACE:EQ-impedance",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-barrier]",
+        "claim": "TRACE:EQ-barrier",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-friction-potential]",
+        "claim": "TRACE:EQ-friction-potential",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-pressure-friction]",
+        "claim": "TRACE:EQ-pressure-friction",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-soft-finger]",
+        "claim": "TRACE:EQ-soft-finger",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-grasp-translational]",
+        "claim": "TRACE:EQ-grasp-translational",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-grasp-torsion]",
+        "claim": "TRACE:EQ-grasp-torsion",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-gas-energy]",
+        "claim": "TRACE:EQ-gas-energy",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-hoop-stress]",
+        "claim": "TRACE:EQ-hoop-stress",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-fmin]",
+        "claim": "TRACE:EQ-fmin",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-bending-length]",
+        "claim": "TRACE:EQ-bending-length",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-dent-scale]",
+        "claim": "TRACE:EQ-dent-scale",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-plane-strain-modulus]",
+        "claim": "TRACE:EQ-plane-strain-modulus",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-fiber-strain]",
+        "claim": "TRACE:EQ-fiber-strain",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-ring-compliance]",
+        "claim": "TRACE:EQ-ring-compliance",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-first-yield-stress]",
+        "claim": "TRACE:EQ-first-yield-stress",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-first-yield-load]",
+        "claim": "TRACE:EQ-first-yield-load",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-first-yield-moment]",
+        "claim": "TRACE:EQ-first-yield-moment",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-plastic-moment]",
+        "claim": "TRACE:EQ-plastic-moment",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-collapse-load]",
+        "claim": "TRACE:EQ-collapse-load",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-ring-buckling]",
+        "claim": "TRACE:EQ-ring-buckling",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-metric-displacement-form]",
+        "claim": "TRACE:EQ-metric-displacement-form",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-ramanujan-perimeter]",
+        "claim": "TRACE:EQ-ramanujan-perimeter",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-rim-hoop-strain]",
+        "claim": "TRACE:EQ-rim-hoop-strain",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-elastica]",
+        "claim": "TRACE:EQ-elastica",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-flat-onset-gap]",
+        "claim": "TRACE:EQ-flat-onset-gap",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-flat-force-law]",
+        "claim": "TRACE:EQ-flat-force-law",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-flat-contact-length]",
+        "claim": "TRACE:EQ-flat-contact-length",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-first-yield-gap]",
+        "claim": "TRACE:EQ-first-yield-gap",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[equations:EQ-first-yield-force]",
+        "claim": "TRACE:EQ-first-yield-force",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-hoop-stress]",
+        "claim": "TRACE:Q-hoop-stress",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-bending-length]",
+        "claim": "TRACE:Q-bending-length",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-dent-scale]",
+        "claim": "TRACE:Q-dent-scale",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-fmin-full-dry]",
+        "claim": "TRACE:Q-fmin-full-dry",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-fmin-full-wet]",
+        "claim": "TRACE:Q-fmin-full-wet",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-fmin-empty-dry]",
+        "claim": "TRACE:Q-fmin-empty-dry",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-fmin-empty-wet]",
+        "claim": "TRACE:Q-fmin-empty-wet",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-condensation-ratio]",
+        "claim": "TRACE:Q-condensation-ratio",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-full-can-mass]",
+        "claim": "TRACE:Q-full-can-mass",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-t-over-R]",
+        "claim": "TRACE:Q-t-over-R",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-wave-transit]",
+        "claim": "TRACE:Q-wave-transit",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-grains-through-wall]",
+        "claim": "TRACE:Q-grains-through-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-rate-shift]",
+        "claim": "TRACE:Q-rate-shift",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-gas-compressibility]",
+        "claim": "TRACE:Q-gas-compressibility",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-slosh-tilt]",
+        "claim": "TRACE:Q-slosh-tilt",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-pad-contact-width]",
+        "claim": "TRACE:Q-pad-contact-width",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-dhat-can]",
+        "claim": "TRACE:Q-dhat-can",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-can-plane-strain-modulus]",
+        "claim": "TRACE:Q-can-plane-strain-modulus",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-can-first-yield-stress]",
+        "claim": "TRACE:Q-can-first-yield-stress",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-can-fully-plastic-stress]",
+        "claim": "TRACE:Q-can-fully-plastic-stress",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ring-compliance]",
+        "claim": "TRACE:Q-ring-compliance",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ring-first-yield]",
+        "claim": "TRACE:Q-ring-first-yield",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ring-collapse]",
+        "claim": "TRACE:Q-ring-collapse",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ring-buckling-pressure]",
+        "claim": "TRACE:Q-ring-buckling-pressure",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ring-pressure-stiffening]",
+        "claim": "TRACE:Q-ring-pressure-stiffening",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ring-pressure-ratio]",
+        "claim": "TRACE:Q-ring-pressure-ratio",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-lobatto5-plastic-moment]",
+        "claim": "TRACE:Q-lobatto5-plastic-moment",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-lobatto7-plastic-moment]",
+        "claim": "TRACE:Q-lobatto7-plastic-moment",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ring-deflection-at-first-yield]",
+        "claim": "TRACE:Q-ring-deflection-at-first-yield",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-yield-curvature-change]",
+        "claim": "TRACE:Q-yield-curvature-change",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-can-wall-curvature]",
+        "claim": "TRACE:Q-can-wall-curvature",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-flat-plate-gap-at-yield]",
+        "claim": "TRACE:Q-flat-plate-gap-at-yield",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-small-deflection-load]",
+        "claim": "TRACE:Q-small-deflection-load",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-float32-naive-metric]",
+        "claim": "TRACE:Q-float32-naive-metric",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-float32-displacement-metric]",
+        "claim": "TRACE:Q-float32-displacement-metric",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ramanujan-margin]",
+        "claim": "TRACE:Q-ramanujan-margin",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-ramanujan-50pct]",
+        "claim": "TRACE:Q-ramanujan-50pct",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-can-ovalization-period]",
+        "claim": "TRACE:Q-can-ovalization-period",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-lemniscate-constant]",
+        "claim": "TRACE:Q-lemniscate-constant",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-flat-onset-gap]",
+        "claim": "TRACE:Q-flat-onset-gap",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-flat-onset-force]",
+        "claim": "TRACE:Q-flat-onset-force",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-first-yield-gap]",
+        "claim": "TRACE:Q-first-yield-gap",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-first-yield-force]",
+        "claim": "TRACE:Q-first-yield-force",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-can-R-over-t]",
+        "claim": "TRACE:Q-can-R-over-t",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-round-fingertip-slide]",
+        "claim": "TRACE:Q-round-fingertip-slide",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[quantities:Q-flat-pad-slide]",
+        "claim": "TRACE:Q-flat-pad-slide",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-thin-shell]",
+        "claim": "TRACE:R-thin-shell",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-continuum-wall]",
+        "claim": "TRACE:R-continuum-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-rate-independence]",
+        "claim": "TRACE:R-rate-independence",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-quasi-static-wall]",
+        "claim": "TRACE:R-quasi-static-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-ideal-gas]",
+        "claim": "TRACE:R-ideal-gas",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-linear-slosh]",
+        "claim": "TRACE:R-linear-slosh",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-hertz-benchmark]",
+        "claim": "TRACE:R-hertz-benchmark",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-hertz-pad-on-can]",
+        "claim": "TRACE:R-hertz-pad-on-can",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-barrier-vs-molecular]",
+        "claim": "TRACE:R-barrier-vs-molecular",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-barrier-vs-wall]",
+        "claim": "TRACE:R-barrier-vs-wall",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-thin-shell-sim]",
+        "claim": "TRACE:R-thin-shell-sim",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-ring-compliance-check]",
+        "claim": "TRACE:R-ring-compliance-check",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-ring-first-yield-thin-can]",
+        "claim": "TRACE:R-ring-first-yield-thin-can",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-float32-displacement-uniform]",
+        "claim": "TRACE:R-float32-displacement-uniform",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-ramanujan-below-plastic-threshold]",
+        "claim": "TRACE:R-ramanujan-below-plastic-threshold",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-ramanujan-small-ovalization]",
+        "claim": "TRACE:R-ramanujan-small-ovalization",
+        "doc": "10-performance.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-squeeze-quasi-static]",
+        "claim": "TRACE:R-squeeze-quasi-static",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-elastica-inextensible]",
+        "claim": "TRACE:R-elastica-inextensible",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[regimes:R-nonrelativistic]",
+        "claim": "TRACE:R-nonrelativistic",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[empirical:E-yield-strength]",
+        "claim": "TRACE:E-yield-strength",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[empirical:E-wall-thickness]",
+        "claim": "TRACE:E-wall-thickness",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[empirical:E-internal-pressure]",
+        "claim": "TRACE:E-internal-pressure",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[empirical:E-dent-threshold]",
+        "claim": "TRACE:E-dent-threshold",
+        "doc": "05-case-study-soda-can.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-ip-step]",
+        "claim": "TRACE:MOD-ip-step",
+        "doc": "01-architecture.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-friction]",
+        "claim": "TRACE:MOD-friction",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-barrier]",
+        "claim": "TRACE:MOD-barrier",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-neo-hookean]",
+        "claim": "TRACE:MOD-neo-hookean",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-j2]",
+        "claim": "TRACE:MOD-j2",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-hill48]",
+        "claim": "TRACE:MOD-hill48",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-gas]",
+        "claim": "TRACE:MOD-gas",
+        "doc": "03-deformables-and-materials.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-pressure-friction]",
+        "claim": "TRACE:MOD-pressure-friction",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-fiber-section]",
+        "claim": "TRACE:MOD-fiber-section",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-staggered-plasticity]",
+        "claim": "TRACE:MOD-staggered-plasticity",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-rigid-body]",
+        "claim": "TRACE:MOD-rigid-body",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-contact-distance]",
+        "claim": "TRACE:MOD-contact-distance",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-gas-3d]",
+        "claim": "TRACE:MOD-gas-3d",
+        "doc": "09-simulator.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_claim_is_quoted_in_its_doc[models:MOD-ring-elastica]",
+        "claim": "TRACE:MOD-ring-elastica",
+        "doc": "11-analytic-squeeze.md",
+        "law": "quote_present"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_empirical_claim_has_validation_plan[E-yield-strength]",
+        "claim": "PLAN:E-yield-strength",
+        "doc": "05-case-study-soda-can.md",
+        "law": "empirical_has_plan"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_empirical_claim_has_validation_plan[E-wall-thickness]",
+        "claim": "PLAN:E-wall-thickness",
+        "doc": "05-case-study-soda-can.md",
+        "law": "empirical_has_plan"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_empirical_claim_has_validation_plan[E-internal-pressure]",
+        "claim": "PLAN:E-internal-pressure",
+        "doc": "05-case-study-soda-can.md",
+        "law": "empirical_has_plan"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_empirical_claim_has_validation_plan[E-dent-threshold]",
+        "claim": "PLAN:E-dent-threshold",
+        "doc": "05-case-study-soda-can.md",
+        "law": "empirical_has_plan"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_every_empirical_tag_is_registered",
+        "claim": "TRACE:empirical-tags-registered",
+        "doc": "05-case-study-soda-can.md",
+        "law": "empirical_tagged"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_shared_parameter_agrees_across_docs[P-young-modulus]",
+        "claim": "P-young-modulus",
+        "doc": "03-deformables-and-materials.md,05-case-study-soda-can.md",
+        "law": "cross_doc_consistency"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_shared_parameter_agrees_across_docs[P-yield-strength]",
+        "claim": "P-yield-strength",
+        "doc": "03-deformables-and-materials.md,05-case-study-soda-can.md",
+        "law": "cross_doc_consistency"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_shared_parameter_agrees_across_docs[P-wall-thickness]",
+        "claim": "P-wall-thickness",
+        "doc": "03-deformables-and-materials.md,05-case-study-soda-can.md,02-rigid-body-and-contact.md",
+        "law": "cross_doc_consistency"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_every_model_law_pair_has_a_test",
+        "claim": "TRACE:model-law-coverage",
+        "doc": "08-design-validation.md",
+        "law": "law_coverage"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[01-architecture.md->02-rigid-body-and-contact.md]",
+        "claim": "LINK:01-architecture.md->02-rigid-body-and-contact.md",
+        "doc": "01-architecture.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[01-architecture.md->03-deformables-and-materials.md]",
+        "claim": "LINK:01-architecture.md->03-deformables-and-materials.md",
+        "doc": "01-architecture.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[02-rigid-body-and-contact.md->04-inverse-problems.md]",
+        "claim": "LINK:02-rigid-body-and-contact.md->04-inverse-problems.md",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[02-rigid-body-and-contact.md->03-deformables-and-materials.md]",
+        "claim": "LINK:02-rigid-body-and-contact.md->03-deformables-and-materials.md",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[02-rigid-body-and-contact.md->05-case-study-soda-can.md]",
+        "claim": "LINK:02-rigid-body-and-contact.md->05-case-study-soda-can.md",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[02-rigid-body-and-contact.md->01-architecture.md]",
+        "claim": "LINK:02-rigid-body-and-contact.md->01-architecture.md",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[03-deformables-and-materials.md->02-rigid-body-and-contact.md]",
+        "claim": "LINK:03-deformables-and-materials.md->02-rigid-body-and-contact.md",
+        "doc": "03-deformables-and-materials.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[03-deformables-and-materials.md->08-design-validation.md]",
+        "claim": "LINK:03-deformables-and-materials.md->08-design-validation.md",
+        "doc": "03-deformables-and-materials.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[04-inverse-problems.md->02-rigid-body-and-contact.md]",
+        "claim": "LINK:04-inverse-problems.md->02-rigid-body-and-contact.md",
+        "doc": "04-inverse-problems.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[04-inverse-problems.md->01-architecture.md]",
+        "claim": "LINK:04-inverse-problems.md->01-architecture.md",
+        "doc": "04-inverse-problems.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[05-case-study-soda-can.md->03-deformables-and-materials.md]",
+        "claim": "LINK:05-case-study-soda-can.md->03-deformables-and-materials.md",
+        "doc": "05-case-study-soda-can.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[05-case-study-soda-can.md->04-inverse-problems.md]",
+        "claim": "LINK:05-case-study-soda-can.md->04-inverse-problems.md",
+        "doc": "05-case-study-soda-can.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[05-case-study-soda-can.md->09-simulator.md]",
+        "claim": "LINK:05-case-study-soda-can.md->09-simulator.md",
+        "doc": "05-case-study-soda-can.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[06-vla-integration.md->05-case-study-soda-can.md]",
+        "claim": "LINK:06-vla-integration.md->05-case-study-soda-can.md",
+        "doc": "06-vla-integration.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[06-vla-integration.md->04-inverse-problems.md0]",
+        "claim": "LINK:06-vla-integration.md->04-inverse-problems.md",
+        "doc": "06-vla-integration.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[06-vla-integration.md->03-deformables-and-materials.md]",
+        "claim": "LINK:06-vla-integration.md->03-deformables-and-materials.md",
+        "doc": "06-vla-integration.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[06-vla-integration.md->04-inverse-problems.md1]",
+        "claim": "LINK:06-vla-integration.md->04-inverse-problems.md",
+        "doc": "06-vla-integration.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[07-roadmap-and-validation.md->05-case-study-soda-can.md]",
+        "claim": "LINK:07-roadmap-and-validation.md->05-case-study-soda-can.md",
+        "doc": "07-roadmap-and-validation.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[08-design-validation.md->05-case-study-soda-can.md]",
+        "claim": "LINK:08-design-validation.md->05-case-study-soda-can.md",
+        "doc": "08-design-validation.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[08-design-validation.md->02-rigid-body-and-contact.md0]",
+        "claim": "LINK:08-design-validation.md->02-rigid-body-and-contact.md",
+        "doc": "08-design-validation.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[08-design-validation.md->03-deformables-and-materials.md0]",
+        "claim": "LINK:08-design-validation.md->03-deformables-and-materials.md",
+        "doc": "08-design-validation.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[08-design-validation.md->03-deformables-and-materials.md1]",
+        "claim": "LINK:08-design-validation.md->03-deformables-and-materials.md",
+        "doc": "08-design-validation.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[08-design-validation.md->02-rigid-body-and-contact.md1]",
+        "claim": "LINK:08-design-validation.md->02-rigid-body-and-contact.md",
+        "doc": "08-design-validation.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[08-design-validation.md->01-architecture.md]",
+        "claim": "LINK:08-design-validation.md->01-architecture.md",
+        "doc": "08-design-validation.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->01-architecture.md0]",
+        "claim": "LINK:09-simulator.md->01-architecture.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->01-architecture.md1]",
+        "claim": "LINK:09-simulator.md->01-architecture.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->02-rigid-body-and-contact.md0]",
+        "claim": "LINK:09-simulator.md->02-rigid-body-and-contact.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->02-rigid-body-and-contact.md1]",
+        "claim": "LINK:09-simulator.md->02-rigid-body-and-contact.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->03-deformables-and-materials.md0]",
+        "claim": "LINK:09-simulator.md->03-deformables-and-materials.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->03-deformables-and-materials.md1]",
+        "claim": "LINK:09-simulator.md->03-deformables-and-materials.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->03-deformables-and-materials.md2]",
+        "claim": "LINK:09-simulator.md->03-deformables-and-materials.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->09-simulator.md]",
+        "claim": "LINK:09-simulator.md->09-simulator.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->11-analytic-squeeze.md]",
+        "claim": "LINK:09-simulator.md->11-analytic-squeeze.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->02-rigid-body-and-contact.md2]",
+        "claim": "LINK:09-simulator.md->02-rigid-body-and-contact.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[09-simulator.md->01-architecture.md2]",
+        "claim": "LINK:09-simulator.md->01-architecture.md",
+        "doc": "09-simulator.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[10-performance.md->02-rigid-body-and-contact.md]",
+        "claim": "LINK:10-performance.md->02-rigid-body-and-contact.md",
+        "doc": "10-performance.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[10-performance.md->06-vla-integration.md]",
+        "claim": "LINK:10-performance.md->06-vla-integration.md",
+        "doc": "10-performance.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[10-performance.md->04-inverse-problems.md]",
+        "claim": "LINK:10-performance.md->04-inverse-problems.md",
+        "doc": "10-performance.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[11-analytic-squeeze.md->09-simulator.md0]",
+        "claim": "LINK:11-analytic-squeeze.md->09-simulator.md",
+        "doc": "11-analytic-squeeze.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[11-analytic-squeeze.md->09-simulator.md1]",
+        "claim": "LINK:11-analytic-squeeze.md->09-simulator.md",
+        "doc": "11-analytic-squeeze.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[11-analytic-squeeze.md->09-simulator.md2]",
+        "claim": "LINK:11-analytic-squeeze.md->09-simulator.md",
+        "doc": "11-analytic-squeeze.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->01-architecture.md]",
+        "claim": "LINK:README.md->01-architecture.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->02-rigid-body-and-contact.md]",
+        "claim": "LINK:README.md->02-rigid-body-and-contact.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->03-deformables-and-materials.md]",
+        "claim": "LINK:README.md->03-deformables-and-materials.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->04-inverse-problems.md]",
+        "claim": "LINK:README.md->04-inverse-problems.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->05-case-study-soda-can.md]",
+        "claim": "LINK:README.md->05-case-study-soda-can.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->06-vla-integration.md]",
+        "claim": "LINK:README.md->06-vla-integration.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->07-roadmap-and-validation.md]",
+        "claim": "LINK:README.md->07-roadmap-and-validation.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->08-design-validation.md]",
+        "claim": "LINK:README.md->08-design-validation.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->09-simulator.md]",
+        "claim": "LINK:README.md->09-simulator.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->10-performance.md]",
+        "claim": "LINK:README.md->10-performance.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_traceability::test_doc_links_resolve[README.md->11-analytic-squeeze.md]",
+        "claim": "LINK:README.md->11-analytic-squeeze.md",
+        "doc": "README.md",
+        "law": "link_resolves"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

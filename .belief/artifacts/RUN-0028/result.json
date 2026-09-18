@@ -1,0 +1,232 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-thin-shell]",
+        "claim": "R-thin-shell",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-continuum-wall]",
+        "claim": "R-continuum-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-rate-independence]",
+        "claim": "R-rate-independence",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-quasi-static-wall]",
+        "claim": "R-quasi-static-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-ideal-gas]",
+        "claim": "R-ideal-gas",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-linear-slosh]",
+        "claim": "R-linear-slosh",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-hertz-benchmark]",
+        "claim": "R-hertz-benchmark",
+        "doc": "05-case-study-soda-can.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-hertz-pad-on-can]",
+        "claim": "R-hertz-pad-on-can",
+        "doc": "05-case-study-soda-can.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-barrier-vs-molecular]",
+        "claim": "R-barrier-vs-molecular",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-barrier-vs-wall]",
+        "claim": "R-barrier-vs-wall",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-thin-shell-sim]",
+        "claim": "R-thin-shell-sim",
+        "doc": "09-simulator.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-ring-compliance-check]",
+        "claim": "R-ring-compliance-check",
+        "doc": "09-simulator.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-ring-first-yield-thin-can]",
+        "claim": "R-ring-first-yield-thin-can",
+        "doc": "09-simulator.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-float32-displacement-uniform]",
+        "claim": "R-float32-displacement-uniform",
+        "doc": "10-performance.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-ramanujan-below-plastic-threshold]",
+        "claim": "R-ramanujan-below-plastic-threshold",
+        "doc": "10-performance.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-ramanujan-small-ovalization]",
+        "claim": "R-ramanujan-small-ovalization",
+        "doc": "10-performance.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-squeeze-quasi-static]",
+        "claim": "R-squeeze-quasi-static",
+        "doc": "09-simulator.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-elastica-inextensible]",
+        "claim": "R-elastica-inextensible",
+        "doc": "11-analytic-squeeze.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-nonrelativistic]",
+        "claim": "R-nonrelativistic",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

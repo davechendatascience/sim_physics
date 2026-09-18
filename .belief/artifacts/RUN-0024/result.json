@@ -1,0 +1,54 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_force_matches_the_quadrature_reference_in_both_phases",
+        "claim": "tests.sim.test_analytic::test_force_matches_the_quadrature_reference_in_both_phases"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_first_yield_and_flat_onset_match_the_design",
+        "claim": "tests.sim.test_analytic::test_first_yield_and_flat_onset_match_the_design"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_force_rises_monotonically_as_the_pads_close",
+        "claim": "tests.sim.test_analytic::test_force_rises_monotonically_as_the_pads_close"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_a_whole_curve_is_fast",
+        "claim": "tests.sim.test_analytic::test_a_whole_curve_is_fast"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_curve_renders_to_png",
+        "claim": "tests.sim.test_analytic::test_curve_renders_to_png"
+      },
+      "outcome": "pass"
+    }
+  ]
+}
