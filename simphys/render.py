@@ -14,6 +14,31 @@ import numpy as np
 from .bodies import Shell
 
 
+def display_split(verts, faces, max_edge):
+    """Barycentric subdivision of large triangles, for drawing only.
+
+    matplotlib's 3D painter sorts polygons by their mean depth, so one huge
+    triangle (a floor) can be drawn over a small one that sits on it. Splitting
+    faces to a similar size lets the depth sort come out right. Returns, per
+    display triangle, its source face and the barycentric weights (3, 3) of its
+    corners, so positions can be recomputed every frame.
+    """
+    out_face, out_w = [], []
+    stack = [(f, np.eye(3)) for f in range(len(faces))]
+    while stack:
+        f, w = stack.pop()
+        corners = w @ verts[faces[f]]
+        edges = np.linalg.norm(corners - np.roll(corners, 1, axis=0), axis=1)
+        if edges.max() <= max_edge:
+            out_face.append(f)
+            out_w.append(w)
+            continue
+        m01, m12, m20 = (w[0] + w[1]) / 2, (w[1] + w[2]) / 2, (w[2] + w[0]) / 2
+        for tri in ((w[0], m01, m20), (m01, w[1], m12), (m20, m12, w[2]), (m01, m12, m20)):
+            stack.append((f, np.array(tri)))
+    return np.array(out_face), np.array(out_w)
+
+
 def _backend(mode):
     import matplotlib
     if mode == "headless":
@@ -41,6 +66,12 @@ class Renderer:
         lo, hi = x.min(0), x.max(0)
         c, r = (lo + hi) / 2, (hi - lo).max() / 2 * 1.1
         self.limits = [(ci - r, ci + r) for ci in c]
+        # display subdivision, computed once on each body's rest shape
+        target = (hi - lo).max() / 16
+        self.split = {}
+        for b in scene.bodies:
+            rest = b.rest if not hasattr(b, "X") else b.X
+            self.split[b.name] = display_split(rest, b.faces, target)
 
     def _face_colors(self, b):
         from matplotlib import colors
@@ -60,15 +91,21 @@ class Renderer:
         ax.cla()
         x = s.x()
         light = np.array([0.3, -0.5, 0.8]) / np.linalg.norm([0.3, -0.5, 0.8])
+        tris, cols = [], []
         for b in s.bodies:
-            tri = x[b.faces + b.vert0]
+            face, w = self.split[b.name]
+            src = x[b.faces + b.vert0][face]                        # (m, 3 corners, 3)
+            tri = np.einsum("mij,mjk->mik", w, src)
             n = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
             n /= np.linalg.norm(n, axis=1, keepdims=True) + 1e-30
-            shade = 0.55 + 0.45 * np.abs(n @ light)
-            col = self._face_colors(b)
-            col[:, :3] *= shade[:, None]
-            ax.add_collection3d(Poly3DCollection(tri, facecolors=col, edgecolors=(0, 0, 0, 0.08),
-                                                 linewidths=0.2))
+            col = self._face_colors(b)[face]
+            col[:, :3] *= (0.55 + 0.45 * np.abs(n @ light))[:, None]
+            tris.append(tri)
+            cols.append(col)
+        # one collection: matplotlib depth-sorts polygons within a collection,
+        # but draws separate collections in whole-object order
+        ax.add_collection3d(Poly3DCollection(np.concatenate(tris), facecolors=np.concatenate(cols),
+                                             edgecolors="none"))
         ax.set_xlim(*self.limits[0])
         ax.set_ylim(*self.limits[1])
         ax.set_zlim(*self.limits[2])
