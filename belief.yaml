@@ -1,0 +1,149 @@
+# Declarations for sim_physics.
+#
+# The server reads this file from git HEAD, not the working tree: edits take
+# effect only once a human commits them.
+#
+# The design process is the first component. Every implementation component
+# added later consumes its output through IFC-design__<component> and must not
+# be declared without one (see CLAUDE.md).
+
+components:
+  - id: CMP-design-process
+    purpose: >-
+      Turn classical physics and materials knowledge into design claims
+      (docs/ + design/claims.yaml) that implementation is allowed to build on
+    outputs: []
+    testable_capability: >-
+      Every physics statement in the design is registered, dimensionally
+      consistent, satisfies classical balance and thermodynamic laws when run
+      as a small reference model, reproduces its stated numbers, is used only
+      inside its regime of validity, and stays consistent across documents
+    failure_modes:
+      - {id: FM-dimension, observable: an equation mixes dimensions or feeds a dimensioned argument to ln/exp}
+      - {id: FM-balance, observable: a reference model creates momentum or energy, or violates Newton's third law}
+      - {id: FM-thermo, observable: a model dissipates negative energy, is not frame-indifferent, or loses ellipticity in its stated range}
+      - {id: FM-numeric, observable: a number in the docs does not follow from its stated inputs}
+      - {id: FM-regime, observable: a model is used outside the regime where classical continuum physics holds}
+      - {id: FM-trace, observable: a doc statement and its registered claim disagree, or an empirical value is untagged}
+    remediation: >-
+      Amend the doc and design/claims.yaml together. If the check itself is
+      wrong, fix the reference model with a stated reason. Never loosen a
+      tolerance to make a check pass.
+
+interfaces: []
+
+contracts:
+  - id: CTR-design-dimensional
+    subject: CMP-design-process
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.7}
+    trial_identity: [claim]
+    evaluable_by: [TST-design-dimensional]
+    sufficiency: {n_min: 8, max_ci_width: 0.35}
+
+  - id: CTR-design-balance-laws
+    subject: CMP-design-process
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.7}
+    trial_identity: [claim]
+    evaluable_by: [TST-design-balance]
+    sufficiency: {n_min: 8, max_ci_width: 0.35}
+
+  - id: CTR-design-admissibility
+    subject: CMP-design-process
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.7}
+    trial_identity: [claim]
+    evaluable_by: [TST-design-admissibility]
+    sufficiency: {n_min: 8, max_ci_width: 0.35}
+
+  - id: CTR-design-quantities
+    subject: CMP-design-process
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.7}
+    trial_identity: [claim]
+    evaluable_by: [TST-design-quantities]
+    sufficiency: {n_min: 8, max_ci_width: 0.35}
+
+  - id: CTR-design-regime
+    subject: CMP-design-process
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.7}
+    trial_identity: [claim]
+    evaluable_by: [TST-design-regime]
+    sufficiency: {n_min: 8, max_ci_width: 0.35}
+
+  - id: CTR-design-traceability
+    subject: CMP-design-process
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.7}
+    trial_identity: [claim]
+    evaluable_by: [TST-design-traceability]
+    sufficiency: {n_min: 8, max_ci_width: 0.35}
+
+tests:
+  - id: TST-design-dimensional
+    layer: component
+    targets: [CMP-design-process]
+    run: python tools/design_trials.py $OUT -- tests/design/test_dimensional.py -q
+    metrics: [passed]
+    capture: [claim, doc, law]
+    mandatory: true
+
+  - id: TST-design-balance
+    layer: component
+    targets: [CMP-design-process]
+    run: python tools/design_trials.py $OUT -- tests/design/test_balance_laws.py -q
+    metrics: [passed]
+    capture: [claim, doc, law]
+    mandatory: true
+
+  - id: TST-design-admissibility
+    layer: component
+    targets: [CMP-design-process]
+    run: python tools/design_trials.py $OUT -- tests/design/test_admissibility.py -q
+    metrics: [passed]
+    capture: [claim, doc, law]
+    mandatory: true
+
+  - id: TST-design-quantities
+    layer: component
+    targets: [CMP-design-process]
+    run: python tools/design_trials.py $OUT -- tests/design/test_quantities.py -q
+    metrics: [passed]
+    capture: [claim, doc, law]
+
+  - id: TST-design-regime
+    layer: component
+    targets: [CMP-design-process]
+    run: python tools/design_trials.py $OUT -- tests/design/test_regime.py -q
+    metrics: [passed]
+    capture: [claim, doc, law]
+    mandatory: true
+
+  - id: TST-design-traceability
+    layer: component
+    targets: [CMP-design-process]
+    run: python tools/design_trials.py $OUT -- tests/design/test_traceability.py -q
+    metrics: [passed]
+    capture: [claim, doc, law]
+
+priors: []
+
+policies:
+  - id: POL-design-freeze
+    criteria:
+      - {slice: CTR-design-dimensional, require: supported}
+      - {slice: CTR-design-balance-laws, require: supported}
+      - {slice: CTR-design-admissibility, require: supported}
+      - {slice: CTR-design-quantities, require: supported}
+      - {slice: CTR-design-regime, require: supported}
+      - {slice: CTR-design-traceability, require: supported}
+      - {safety_gates: all_passed}
+    weights: null
