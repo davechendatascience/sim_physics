@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "component-belief": {
+      "command": "C:/Users/ychen/OneDrive/文件/GitHub/Theoretically_Driven_LLM_Planning/.venv/Scripts/python.exe",
+      "args": ["-m", "component_belief.server"],
+      "env": {
+        "PYTHONPATH": "C:/Users/ychen/OneDrive/文件/GitHub/Theoretically_Driven_LLM_Planning/src",
+        "BELIEF_PROJECT_ROOT": "C:/Users/ychen/OneDrive/文件/GitHub/sim_physics"
+      }
+    }
+  }
+}

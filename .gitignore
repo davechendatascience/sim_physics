@@ -1,0 +1,6 @@
+.claude/settings.local.json
+.belief/cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
