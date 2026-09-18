@@ -111,6 +111,8 @@ class Scene:
             b = self.by_name[g.body]
             g.nRT = (P_ATM + g.p_gauge) * self._volume(x, b)
         self.lag = {}
+        self._cand_cache = None
+        self.cand_margin = 20 * dhat
 
     # --- state -------------------------------------------------------------
     def state(self):
@@ -183,11 +185,26 @@ class Scene:
     def _volume(self, x, body):
         return float(kernels.call(kernels.vol_E, x[body.faces + body.vert0]).sum())
 
+    def _candidates(self, x, radius):
+        """Broad-phase pairs within `radius`, reused while still provably complete.
+
+        A list built with radius r_c at positions x_ref holds every pair that
+        can now be within r, provided r + 2 max|x - x_ref| <= r_c: each
+        primitive has moved at most max|x - x_ref| (docs/10 §2)."""
+        c = self._cand_cache
+        if c is not None:
+            x_ref, r_c, cand = c
+            if radius + 2 * np.abs(x - x_ref).max() * np.sqrt(3) <= r_c:
+                return cand
+        r_c = radius + self.cand_margin
+        cand = collision.candidates(x, self.faces, self.edges, self.vert_body, self.face_body,
+                                    self.edge_body, self.pair_ok, r_c)
+        self._cand_cache = (x.copy(), r_c, cand)
+        return cand
+
     def _pairs(self, x, extra=0.0):
         """Contact pairs within the barrier's range (+extra), with their offsets."""
-        cand = collision.candidates(x, self.faces, self.edges, self.vert_body, self.face_body,
-                                    self.edge_body, self.pair_ok,
-                                    self.dhat + 2 * self.half_t.max() + extra)
+        cand = self._candidates(x, self.dhat + 2 * self.half_t.max() + extra)
         out = {}
         for kind in ("pt", "ee"):
             st = collision.stencil(kind, cand[kind], self.faces, self.edges)
@@ -235,22 +252,29 @@ class Scene:
             hq_c.append(np.tile(idx, len(idx)))
             hq_v.append(H.ravel())
 
-        def add_x(verts, G, H):
+        def add_x(verts, G, H, projected=False):
             dofs = (3 * verts[:, :, None] + np.arange(3)).reshape(len(verts), -1)
             np.add.at(gx, dofs.ravel(), G.reshape(len(verts), -1).ravel())
             k = dofs.shape[1]
             hx_r.append(np.repeat(dofs, k, axis=1).ravel())
             hx_c.append(np.tile(dofs, (1, k)).ravel())
-            hx_v.append(psd(H.reshape(len(verts), k, k)).ravel())
+            H = H.reshape(len(verts), k, k)
+            hx_v.append((H if projected else psd(H)).ravel())
 
         def run(kern, args, verts):
+            """kern = (energy kernel, fused kernel); one compiled call when derivatives are needed."""
             nonlocal E
-            e = kernels.call(kern[0], *args)
+            if not derivs:
+                e = kernels.call(kern[0], *args)
+                if not np.all(np.isfinite(e)):
+                    return False
+                E += float(e.sum())
+                return True
+            e, G, Hp = kernels.call(kern[1], *args)
             if not np.all(np.isfinite(e)):
                 return False
             E += float(e.sum())
-            if derivs:
-                add_x(verts, kernels.call(kern[1], *args), kernels.call(kern[2], *args))
+            add_x(verts, G, Hp, projected=True)
             return True
 
         # inertia and gravity
@@ -293,14 +317,14 @@ class Scene:
                 stn = b.stencil + b.vert0
                 nF = len(b.faces)
                 m = b.material
-                run((kernels.shell_E, kernels.shell_G, kernels.shell_H),
+                run((kernels.shell_E, kernels.shell_F),
                     (x[stn], b.has_nb, b.Ainv, b.abar, b.IIbar, b.area, b.thickness,
                      np.full(nF, m.E), np.full(nF, m.nu), b.eps_p), stn)
             elif isinstance(b, Solid):
                 stn = b.tets + b.vert0
                 mu, lam = b.material.lame
                 nT = len(b.tets)
-                if not run((kernels.tet_E, kernels.tet_G, kernels.tet_H),
+                if not run((kernels.tet_E, kernels.tet_F),
                            (x[stn], b.Dm_inv, b.vol, np.full(nT, mu), np.full(nT, lam)), stn):
                     return np.inf, None, None
 
@@ -320,12 +344,12 @@ class Scene:
         for kind, (stn, off) in self._pairs(x).items():
             if len(stn):
                 n = len(stn)
-                kern = (kernels.pt_E, kernels.pt_G, kernels.pt_H) if kind == "pt" else \
-                       (kernels.ee_E, kernels.ee_G, kernels.ee_H)
+                kern = (kernels.pt_E, kernels.pt_F) if kind == "pt" else \
+                       (kernels.ee_E, kernels.ee_F)
                 if not run(kern, (x[stn], off, np.full(n, self.dhat), np.full(n, self.kappa)), stn):
                     return np.inf, None, None
         for kind, (stn, xp, w, T, mulam, eps) in self.lag.items():
-            run((kernels.fr_E, kernels.fr_G, kernels.fr_H), (x[stn], xp, w, T, mulam, eps), stn)
+            run((kernels.fr_E, kernels.fr_F), (x[stn], xp, w, T, mulam, eps), stn)
 
         if not derivs:
             return E, None, None

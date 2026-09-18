@@ -14,8 +14,9 @@ All demos and scenes run on one physics library, `simphys`. The reference models
 | Cost | Before | Fix | After |
 |---|---|---|---|
 | Sparse solve per Newton iteration | 0.44 s (default ordering) | SPD mode, minimum-degree ordering on A + Aᵀ | 0.083 s, same answer to 3×10⁻¹¹ |
-| Newton iterations per step | 9–64 | adaptive barrier stiffness, tolerance tied to the physics (§3) | to be measured |
-| Energy, gradient and Hessian assembly | ~0.3 s per iteration | on-device assembly, no host copies (§2) | to be measured |
+| Newton iterations per step (pads in contact) | 9–64, often at the 120 cap | the squeeze protocol of [09](09-simulator.md) §5: supported can, pads on a prescribed path | 4–5 in the first steps of the squeeze; adaptive stiffness (§3) not yet built |
+| Everything else per Newton iteration (assembly, projection, broad phase, copies) | ~0.4–0.6 s | fused kernels, candidate reuse (§2) | whole iteration now 0.20 s |
+| Compilation at the start of every run | ~24 s | persistent compilation cache (§2) | ~4 s with a warm cache |
 
 Friction is not the iteration driver: with friction switched off, steps still took 9–39 iterations. Projecting negative Hessian eigenvalues to their absolute value instead of zero was also measured. It needed *more* iterations (for example 26 instead of 19 per step) for the same answer, so the design keeps clamping to zero.
 
@@ -25,6 +26,9 @@ Every energy is already a JAX function of a small stencil, differentiated by JAX
 
 - **State lives on the device.** Positions, velocities and plastic state stay as device arrays between steps. Host copies happen only for rendering and ledgers.
 - **Fixed-capacity buffers.** Contact pair lists and stencil batches are padded to power-of-two capacities, so each size compiles once.
+- **Persistent compilation cache.** Compiled kernels are stored on disk, so compilation is paid once per machine, not once per run.
+- **Fused kernels.** One compiled call per energy type returns the energy, gradient and PSD-projected Hessian of every stencil, so each is evaluated once and copied off the device once.
+- **Candidate pairs are reused.** The broad phase runs with a safety margin, and its pair list stays valid until some vertex has moved more than half that margin from where the list was built. Two primitives that were farther apart than the search radius plus the margin cannot then come within the search radius, so no contact can be missed.
 - **Linear solver behind one interface:**
   - *CPU:* sparse direct factorisation (SPD mode, minimum-degree ordering).
   - *GPU:* matrix-free preconditioned conjugate gradients. `H v` is computed stencil by stencil and scattered with a segment sum, so the global matrix is never assembled. The preconditioner is block-Jacobi with 3×3 blocks per vertex and 6×6 per rigid body.

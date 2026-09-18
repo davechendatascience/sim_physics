@@ -13,6 +13,11 @@ import jax.numpy as jnp
 import numpy as np
 
 jax.config.update("jax_enable_x64", True)
+# persistent compilation cache: compile once per machine, not once per run (docs/10 §2)
+from pathlib import Path as _Path
+jax.config.update("jax_compilation_cache_dir", str(_Path(__file__).resolve().parents[1] / ".jax_cache"))
+jax.config.update("jax_persistent_cache_min_compile_time_secs", 0.0)
+jax.config.update("jax_persistent_cache_min_entry_size_bytes", -1)
 
 # composite Simpson through the thickness, split at the mid-surface (docs/09 §2)
 XI = np.linspace(-1.0, 1.0, 9)
@@ -171,17 +176,28 @@ def rigid_rotational(w, Q, Qt, J, h, k_rot):
     return 0.5 * jnp.trace(D @ J @ D.T) / h ** 2 + 0.5 * k_rot * jnp.sum((Qw - jnp.eye(3)) ** 2)
 
 
-def _batched(f, argnums_static=()):
-    return (jax.jit(jax.vmap(f)), jax.jit(jax.vmap(jax.grad(f))), jax.jit(jax.vmap(jax.hessian(f))))
+def _psd(H):
+    w, V = jnp.linalg.eigh(0.5 * (H + H.T))
+    return (V * jnp.maximum(w, 0.0)) @ V.T
 
 
-shell_E, shell_G, shell_H = _batched(shell_energy)
-tet_E, tet_G, tet_H = _batched(tet_energy)
-pt_E, pt_G, pt_H = _batched(pt_barrier)
-ee_E, ee_G, ee_H = _batched(ee_barrier)
-fr_E, fr_G, fr_H = _batched(friction_energy)
-vol_E, vol_G, vol_H = _batched(face_volume)
-rot_E, rot_G, rot_H = _batched(rigid_rotational)
+def _batched(f):
+    """(energy, gradient, Hessian, fused) batched kernels. The fused kernel
+    returns energy, gradient and PSD-projected Hessian in one compiled call."""
+    def fused(*a):
+        n = a[0].size
+        return f(*a), jax.grad(f)(*a), _psd(jax.hessian(f)(*a).reshape(n, n))
+    return (jax.jit(jax.vmap(f)), jax.jit(jax.vmap(jax.grad(f))), jax.jit(jax.vmap(jax.hessian(f))),
+            jax.jit(jax.vmap(fused)))
+
+
+shell_E, shell_G, shell_H, shell_F = _batched(shell_energy)
+tet_E, tet_G, tet_H, tet_F = _batched(tet_energy)
+pt_E, pt_G, pt_H, pt_F = _batched(pt_barrier)
+ee_E, ee_G, ee_H, ee_F = _batched(ee_barrier)
+fr_E, fr_G, fr_H, fr_F = _batched(friction_energy)
+vol_E, vol_G, vol_H, vol_F = _batched(face_volume)
+rot_E, rot_G, rot_H, rot_F = _batched(rigid_rotational)
 shell_forms_batched = jax.jit(jax.vmap(shell_forms))
 shell_strains_batched = jax.jit(jax.vmap(shell_strains))
 
