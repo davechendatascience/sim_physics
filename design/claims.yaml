@@ -1,0 +1,239 @@
+# Registry of physics claims made by the design (docs/).
+#
+# Every entry quotes its doc verbatim (backticks and whitespace ignored), so
+# a doc edit that is not mirrored here fails traceability, and vice versa.
+# Checks: tests/design/. Method: docs/08-design-validation.md.
+#
+# Dimensions: M mass, L length, T time, Θ temperature, N amount; "1" = dimensionless.
+
+equations:
+  - id: EQ-predictor
+    doc: 01-architecture.md
+    quote: "q̃ = q_n + h v_n + h² M⁻¹ f_ext"
+    expr: "Eq(qt, q + h*v + h**2*f/m)"
+    dims: {qt: L, q: L, h: T, v: L T^-1, f: M L T^-2, m: M}
+  - id: EQ-inertia-energy
+    doc: 01-architecture.md
+    quote: "½‖q − q̃‖²_M / h²"
+    expr: "Eq(E, m*(q - qt)**2/(2*h**2))"
+    dims: {E: M L^2 T^-2, m: M, q: L, qt: L, h: T}
+  - id: EQ-velocity-update
+    doc: 01-architecture.md
+    quote: "v_{n+1} = (q_{n+1} − q_n)/h"
+    expr: "Eq(v, (q1 - q0)/h)"
+    dims: {v: L T^-1, q1: L, q0: L, h: T}
+  - id: EQ-affine-orthogonality
+    doc: 02-rigid-body-and-contact.md
+    quote: "κ·V·‖AᵀA − I‖²_F"
+    expr: "Eq(E, kappa*V*A2)"
+    dims: {E: M L^2 T^-2, kappa: M L^-1 T^-2, V: L^3, A2: "1"}
+  - id: EQ-impedance
+    doc: 02-rigid-body-and-contact.md
+    quote: "τ = K(q_d − q) + D(q̇_d − q̇) + τ_ff"
+    expr: "Eq(tau, K*(qd - q) + D*(wd - w) + tff)"
+    dims: {tau: M L^2 T^-2, K: M L^2 T^-2, qd: "1", q: "1", D: M L^2 T^-1, wd: T^-1, w: T^-1, tff: M L^2 T^-2}
+  - id: EQ-barrier
+    doc: 02-rigid-body-and-contact.md
+    quote: "b(d) = −κ_b (d − d̂)² ln(d/d̂)"
+    expr: "Eq(b, -kappa*(d - dhat)**2*log(d/dhat))"
+    dims: {b: M L^2 T^-2, kappa: M T^-2, d: L, dhat: L}
+  - id: EQ-friction-potential
+    doc: 02-rigid-body-and-contact.md
+    quote: "μ λ_n f₀(‖u_T‖)"
+    expr: "Eq(D, mu*lam*u)"     # f0 has the dimension of its argument (a length)
+    dims: {D: M L^2 T^-2, mu: "1", lam: M L T^-2, u: L}
+  - id: EQ-pressure-friction
+    doc: 02-rigid-body-and-contact.md
+    quote: "μ = μ₀ (p/p₀)^(n−1)"
+    expr: "Eq(mu, mu0*(p/p0)**(n - 1))"
+    dims: {mu: "1", mu0: "1", p: M L^-1 T^-2, p0: M L^-1 T^-2, n: "1"}
+  - id: EQ-soft-finger
+    doc: 02-rigid-body-and-contact.md
+    quote: "f_t²/μ² + τ_n²/(μ e)² ≤ f_n²"
+    expr: "ft**2/mu**2 + tn**2/(mu*e)**2 <= fn**2"
+    dims: {ft: M L T^-2, fn: M L T^-2, tn: M L^2 T^-2, mu: "1", e: L}
+  - id: EQ-grasp-translational
+    doc: 02-rigid-body-and-contact.md
+    quote: "Σ μ_i N_i ≥ m ‖g + a‖ · SF"
+    expr: "mu*N >= m*(g + a)*SF"
+    dims: {mu: "1", N: M L T^-2, m: M, g: L T^-2, a: L T^-2, SF: "1"}
+  - id: EQ-grasp-torsion
+    doc: 02-rigid-body-and-contact.md
+    quote: "Σ μ_i e_i N_i ≥ m ‖g + a‖ ‖r_⊥‖"
+    expr: "mu*e*N >= m*(g + a)*r"
+    dims: {mu: "1", e: L, N: M L T^-2, m: M, g: L T^-2, a: L T^-2, r: L}
+  - id: EQ-gas-energy
+    doc: 03-deformables-and-materials.md
+    quote: "−∫p dV"
+    expr: "Eq(E, -Integral(p, V))"
+    dims: {E: M L^2 T^-2, p: M L^-1 T^-2, V: L^3}
+  - id: EQ-hoop-stress
+    doc: 05-case-study-soda-can.md
+    quote: "σ_θ = pR/t"
+    expr: "Eq(sigma, p*R/t)"
+    dims: {sigma: M L^-1 T^-2, p: M L^-1 T^-2, R: L, t: L}
+  - id: EQ-fmin
+    doc: 05-case-study-soda-can.md
+    quote: "F_min per finger = m (g + a) / (2 μ)"
+    expr: "Eq(F, m*(g + a)/(2*mu))"
+    dims: {F: M L T^-2, m: M, g: L T^-2, a: L T^-2, mu: "1"}
+  - id: EQ-bending-length
+    doc: 05-case-study-soda-can.md
+    quote: "ℓ ≈ √(R t) / [3(1−ν²)]^¼"
+    expr: "Eq(ell, sqrt(R*t)/(3*(1 - nu**2))**Rational(1, 4))"
+    dims: {ell: L, R: L, t: L, nu: "1"}
+  - id: EQ-dent-scale
+    doc: 05-case-study-soda-can.md
+    quote: "P_dent ~ C · σ_y · t^{3/2} · R^{1/2}"
+    expr: "Eq(P, C*sy*t**Rational(3, 2)*R**Rational(1, 2))"
+    dims: {P: M L T^-2, C: "1", sy: M L^-1 T^-2, t: L, R: L}
+
+# Numbers stated in the docs, recomputed from their inputs by design/quantities.py.
+quantities:
+  - {id: Q-hoop-stress, doc: 05-case-study-soda-can.md, quote: "≈ 80 MPa", fn: hoop_stress,
+     inputs: {p: 0.25e6, R: 0.033, t: 1.0e-4}, stated: 80.0e6, rel_tol: 0.1}
+  - {id: Q-bending-length, doc: 05-case-study-soda-can.md, quote: "≈ 1.4 mm", fn: bending_length,
+     inputs: {R: 0.033, t: 1.0e-4, nu: 0.33}, stated: 1.4e-3, rel_tol: 0.05}
+  - {id: Q-dent-scale, doc: 05-case-study-soda-can.md, quote: "≈ 50 N", fn: dent_scale,
+     inputs: {sy: 290.0e6, t: 1.0e-4, R: 0.033}, stated: 50.0, rel_tol: 0.1}
+  - {id: Q-fmin-full-dry, doc: 05-case-study-soda-can.md, quote: "0.38·14.8 / 1.6 ≈ **3.5 N**", fn: fmin,
+     inputs: {m: 0.38, a: 5.0, mu: 0.8}, stated: 3.5, rel_tol: 0.03}
+  - {id: Q-fmin-full-wet, doc: 05-case-study-soda-can.md, quote: "≈ **9.4 N**", fn: fmin,
+     inputs: {m: 0.38, a: 5.0, mu: 0.3}, stated: 9.4, rel_tol: 0.03}
+  - {id: Q-fmin-empty-dry, doc: 05-case-study-soda-can.md, quote: "≈ **0.13 N**", fn: fmin,
+     inputs: {m: 0.014, a: 5.0, mu: 0.8}, stated: 0.13, rel_tol: 0.03}
+  - {id: Q-fmin-empty-wet, doc: 05-case-study-soda-can.md, quote: "≈ **0.35 N**", fn: fmin,
+     inputs: {m: 0.014, a: 5.0, mu: 0.3}, stated: 0.35, rel_tol: 0.03}
+  - {id: Q-condensation-ratio, doc: 05-case-study-soda-can.md, quote: "Condensation alone nearly triples the required force",
+     fn: ratio, inputs: {num: 0.8, den: 0.3}, stated_range: [2.5, 3.0]}
+  - {id: Q-full-can-mass, doc: 05-case-study-soda-can.md, quote: "~0.37–0.39 kg", fn: full_can_mass,
+     inputs: {volume: 355.0e-6, rho_liquid: [997.0, 1045.0], m_empty: [0.013, 0.015]}, stated_range: [0.37, 0.39]}
+  - {id: Q-t-over-R, doc: 05-case-study-soda-can.md, quote: "t/R ≈ 0.003", fn: ratio,
+     inputs: {num: 1.0e-4, den: 0.033}, stated: 0.003, rel_tol: 0.05}
+  - {id: Q-wave-transit, doc: 03-deformables-and-materials.md, quote: "Elastic waves cross the can in about 13 µs",
+     fn: wave_transit, inputs: {E: 69.0e9, rho: 2720.0, L: 0.066}, stated: 13.0e-6, rel_tol: 0.05}
+  - {id: Q-grains-through-wall, doc: 03-deformables-and-materials.md, quote: "only about 5–20 grains thick",
+     fn: grain_count, inputs: {t: 1.0e-4, grain: [5.0e-6, 20.0e-6]}, stated_range: [5.0, 20.0]}
+  - {id: Q-rate-shift, doc: 03-deformables-and-materials.md, quote: "flow stress can shift by up to ~11%",
+     fn: rate_shift, inputs: {m_rate: [0.002, 0.012], rate_lo: 1.0e-3, rate_hi: 10.0}, stated: 0.11, rel_tol: 0.05}
+  - {id: Q-gas-compressibility, doc: 03-deformables-and-materials.md, quote: "compressibility factor Z ≈ 0.98",
+     fn: co2_z, inputs: {p_abs: [3.0e5, 5.0e5], T: 293.0, B: -1.25e-4}, stated: 0.98, rel_tol: 0.01}
+  - {id: Q-slosh-tilt, doc: 03-deformables-and-materials.md, quote: "lateral accelerations up to about 1 m/s² (tilt ≲ 6°)",
+     fn: tilt_deg, inputs: {a: 1.0}, stated: 6.0, rel_tol: 0.05}
+  - {id: Q-pad-contact-width, doc: 05-case-study-soda-can.md, quote: "its contact half-width is about 0.14 R",
+     fn: hertz_line_ratio, inputs: {F: 10.0, width: 0.015, E_pad: 1.0e6, nu_pad: 0.5, R: 0.033}, stated: 0.14, rel_tol: 0.1}
+  - {id: Q-dhat-can, doc: 02-rigid-body-and-contact.md, quote: "10⁻⁵ m for a 0.1 mm can wall",
+     fn: ratio, inputs: {num: 1.0e-4, den: 10.0}, stated: 1.0e-5, rel_tol: 0.01}
+  # Measured on the reference model (design/oracles), not computed from a formula.
+  - {id: Q-round-fingertip-slide, doc: 02-rigid-body-and-contact.md, quote: "slides about 4× faster than friction alone predicts",
+     fn: oracle_round_fingertip_ratio, inputs: {k: 0.8}, stated: 4.0, rel_tol: 0.1}
+  - {id: Q-flat-pad-slide, doc: 02-rigid-body-and-contact.md, quote: "flat pads match the prediction exactly",
+     fn: oracle_flat_pad_ratio, inputs: {k: 0.8}, stated: 1.0, rel_tol: 0.01}
+
+# Regimes of validity. Status over the parameter range: holds / marginal / violated.
+#   holds     -> pass
+#   marginal  -> pass only if `mitigation` is quoted in the doc
+#   violated  -> pass only if `expect: violated` and `exclusion` is quoted in the doc
+regimes:
+  - {id: R-thin-shell, doc: 03-deformables-and-materials.md, quote: "Kirchhoff–Love shells require t/R ≲ 0.05",
+     fn: ratio_range, inputs: {num: [0.95e-4, 1.05e-4], den: [0.033, 0.033]}, limit: 0.05, sense: max}
+  - {id: R-continuum-wall, doc: 03-deformables-and-materials.md, quote: "A 0.1 mm can wall is only about 5–20 grains thick",
+     fn: ratio_range, inputs: {num: [0.95e-4, 1.05e-4], den: [5.0e-6, 20.0e-6]}, limit: 10.0, sense: min, hard_limit: 3.0,
+     mitigation: "calibrated on specimens cut from actual can walls"}
+  - {id: R-rate-independence, doc: 03-deformables-and-materials.md, quote: "Aluminum at room temperature has strain-rate sensitivity m ≈ 0.002–0.012",
+     fn: rate_shift_range, inputs: {m_rate: [0.002, 0.012], rate_lo: 1.0e-3, rate_hi: 10.0}, limit: 0.05, sense: max, hard_limit: 0.5,
+     mitigation: "the Johnson–Cook rate term is switched on"}
+  - {id: R-quasi-static-wall, doc: 03-deformables-and-materials.md, quote: "far shorter than a 0.05–1 s squeeze",
+     fn: ratio_range, inputs: {num: [1.31e-5, 1.31e-5], den: [0.05, 1.0]}, limit: 0.01, sense: max}
+  - {id: R-ideal-gas, doc: 03-deformables-and-materials.md, quote: "within the 5% the pressure model tolerates",
+     fn: co2_deviation_range, inputs: {p_abs: [3.0e5, 5.0e5], T: 293.0, B: -1.25e-4}, limit: 0.05, sense: max}
+  - {id: R-linear-slosh, doc: 03-deformables-and-materials.md, quote: "Linear slosh theory holds only while the free surface tilts a little",
+     fn: ratio_range, inputs: {num: [0.5, 5.0], den: [9.81, 9.81]}, limit: 0.1, sense: max, hard_limit: 10.0,
+     mitigation: "Beyond that the model switches to a particle fluid solve"}
+  - {id: R-hertz-benchmark, doc: 05-case-study-soda-can.md, quote: "Hertz contact of a stiff spherical indenter on a thick elastic block",
+     fn: hertz_sphere_ratio_range, inputs: {F: [10.0, 100.0], R: 0.005, E1: 210.0e9, nu1: 0.3, E2: 69.0e9, nu2: 0.33}, limit: 0.1, sense: max}
+  - {id: R-hertz-pad-on-can, doc: 05-case-study-soda-can.md, quote: "The silicone pad on the can is *not* a Hertz problem",
+     fn: pad_layer_ratio_range, inputs: {F: [5.0, 20.0], width: 0.015, E_pad: [1.0e6, 3.0e6], nu_pad: 0.5, R: 0.033, h_pad: [2.0e-3, 5.0e-3]},
+     limit: 10.0, sense: min, expect: violated, exclusion: "That contact is validated against reference FEM and physical tests instead"}
+  - {id: R-barrier-vs-molecular, doc: 02-rigid-body-and-contact.md, quote: "It stays far above the ~10⁻⁸ m range of real intermolecular forces",
+     fn: ratio_range, inputs: {num: [1.0e-5, 1.0e-4], den: [1.0e-8, 1.0e-8]}, limit: 100.0, sense: min}
+  - {id: R-barrier-vs-wall, doc: 02-rigid-body-and-contact.md, quote: "bounded by one tenth of the thinnest feature in contact",
+     fn: ratio_range, inputs: {num: [1.0e-5, 1.0e-5], den: [1.0e-4, 1.0e-4]}, limit: 0.1, sense: max}
+  - {id: R-nonrelativistic, doc: 03-deformables-and-materials.md, quote: "Speeds are ≲ 10 m/s",
+     fn: ratio_range, inputs: {num: [0.0, 10.0], den: [2.998e8, 2.998e8]}, limit: 1.0e-6, sense: max}
+
+# Values marked [calibrate]/[measure] are empirical: no derivation can confirm
+# them, so each must name the test that will.
+empirical:
+  - {id: E-yield-strength, doc: 05-case-study-soda-can.md, quote: "~280–300 MPa, with anisotropy from rolling | Handbook *[calibrate]*",
+     plan_doc: 05-case-study-soda-can.md, plan: "squeezes 30+ cans per condition to the onset of permanent deformation"}
+  - {id: E-wall-thickness, doc: 05-case-study-soda-can.md, quote: "Literature *[measure]*",
+     plan_doc: 05-case-study-soda-can.md, plan: "measured with a 3D scanner before and after"}
+  - {id: E-internal-pressure, doc: 05-case-study-soda-can.md, quote: "Literature *[measure per product]*",
+     plan_doc: 05-case-study-soda-can.md, plan: "Internal pressure of sealed cans is measured per product with a piercing pressure gauge"}
+  - {id: E-dent-threshold, doc: 05-case-study-soda-can.md, quote: "not a fraction of a newton** *[calibrate]*",
+     plan_doc: 05-case-study-soda-can.md, plan: "compare T2 to Abaqus/LS-DYNA on (a) lateral pad indentation of an empty can"}
+
+# Models the design specifies, the reference model that realises each, and the
+# laws each must satisfy. Every (model, law) pair must have a test case in
+# tests/design tagged claim="<model>:<law>".
+models:
+  - id: MOD-ip-step
+    doc: 01-architecture.md
+    quote: "Every step solves"
+    oracle: design.oracles.integrator
+    laws: [linear_momentum, newton_third, energy_nonincrease, energy_first_order, angular_momentum_first_order,
+           galilean_invariance, non_penetration]
+  - id: MOD-friction
+    doc: 02-rigid-body-and-contact.md
+    quote: "Lagged, smoothed Coulomb friction potential"
+    oracle: design.oracles.integrator
+    laws: [coulomb_bound, stick_below_limit, kinetic_slide_rate, dissipation_nonneg, grasp_threshold]
+  - id: MOD-barrier
+    doc: 02-rigid-body-and-contact.md
+    quote: "Guarantees no interpenetration and no tunneling"
+    oracle: design.oracles.contact
+    laws: [repulsive_only, infinite_at_contact, smooth_activation]
+  - id: MOD-neo-hookean
+    doc: 03-deformables-and-materials.md
+    quote: "Neo-Hookean, Mooney–Rivlin, Ogden, Arruda–Boyce"
+    oracle: design.oracles.constitutive
+    laws: [objectivity, stress_free_reference, potential_consistency, linear_limit, growth, ellipticity,
+           cauchy_symmetry, closed_cycle_work]
+  - id: MOD-j2
+    doc: 03-deformables-and-materials.md
+    quote: "J2 (von Mises) with isotropic (Voce/Swift)"
+    oracle: design.oracles.constitutive
+    laws: [yield_consistency, dissipation_nonneg, plastic_incompressibility, drucker_ilyushin, shear_limit,
+           elastic_cycle_no_dissipation]
+  - id: MOD-hill48
+    doc: 03-deformables-and-materials.md
+    quote: "**Hill48 anisotropic yield** for rolled sheet"
+    oracle: design.oracles.constitutive
+    laws: [convexity, von_mises_limit]
+  - id: MOD-gas
+    doc: 03-deformables-and-materials.md
+    quote: "the pressure term's energy is −∫p dV"
+    oracle: design.oracles.constitutive
+    laws: [potential_consistency, closed_cycle_work]
+  - id: MOD-pressure-friction
+    doc: 02-rigid-body-and-contact.md
+    quote: "**Pressure-dependent friction** for elastomer pads"
+    oracle: design.oracles.contact
+    laws: [friction_force_monotone]
+
+# The same physical parameter stated in several docs must agree.
+shared_params:
+  - id: P-young-modulus
+    mentions:
+      - {doc: 03-deformables-and-materials.md, quote: "mean: 69.0e9", value: 69.0e9}
+      - {doc: 05-case-study-soda-can.md, quote: "~69 GPa", value: 69.0e9}
+  - id: P-yield-strength
+    mentions:
+      - {doc: 03-deformables-and-materials.md, quote: "mean: 285e6", value: 285.0e6}
+      - {doc: 05-case-study-soda-can.md, quote: "~280–300 MPa", range: [280.0e6, 300.0e6]}
+  - id: P-wall-thickness
+    mentions:
+      - {doc: 03-deformables-and-materials.md, quote: "mean: 0.100e-3", value: 1.0e-4}
+      - {doc: 05-case-study-soda-can.md, quote: "~0.10 mm", value: 1.0e-4}
+      - {doc: 02-rigid-body-and-contact.md, quote: "10⁻⁵ m for a 0.1 mm can wall", value: 1.0e-4}

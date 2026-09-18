@@ -81,6 +81,7 @@ Why this formulation:
 - **Robustness.** Newton with line search, filtered by continuous collision detection (CCD), never produces penetration or tunneling. This matters because thin shells (0.1 mm walls) break penalty-based contact.
 - **Stability at large time steps** (implicit, dissipative), which throughput needs.
 - **Differentiability.** At a converged minimum, `∇E = 0`, so the implicit function theorem gives `∂q_{n+1}/∂(q_n, v_n, u, θ) = −H⁻¹ ∂²E/∂q∂(·)`. Only one extra linear solve with the Hessian already factorized is needed. Adjoints chain across steps.
+- **Conservation, stated honestly.** Implicit Euler on this potential conserves linear momentum exactly, because internal and contact forces cancel in pairs. It does *not* conserve angular momentum or energy exactly: both drift at first order in h, and the energy error is always a loss, never a gain. That dissipation is what makes large steps stable. The design-validation suite checks all three properties.
 - **Plasticity fits in.** Variational constitutive updates (Ortiz & Stainier 1999) turn associative J2 plasticity into a minimization, so it joins the same potential.
 
 Solver details:

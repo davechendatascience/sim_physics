@@ -1,0 +1,7 @@
+numpy>=2.0
+scipy>=1.13
+sympy>=1.13
+matplotlib>=3.9
+pillow>=10.0
+PyYAML>=6.0
+pytest>=8.0

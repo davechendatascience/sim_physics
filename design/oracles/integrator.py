@@ -26,6 +26,8 @@ class Plane:
     normal: np.ndarray           # unit normal pointing into the free side
     mu: float = 0.0
     velocity: np.ndarray = field(default_factory=lambda: np.zeros(2))
+    owner: int | None = None     # if set, the plane is a flat pad carried by this particle;
+                                 # `point` is then relative to the owner's position
 
 
 @dataclass
@@ -58,10 +60,12 @@ class Step:
         fext = s.f_ext if s.f_ext is not None else np.zeros_like(s.x)
         self.xt = s.x + h * s.v + h * h * (s.gravity[None, :] + fext / s.m[:, None])
         self.lag: list[tuple] = []
+        self.path: list[np.ndarray] = []   # every configuration the solver visits
 
     # --- contact geometry -------------------------------------------------
     def _plane_d(self, x, i, p: Plane):
-        return float(np.dot(x[i] - p.point, p.normal)) - self.s.r[i]
+        origin = p.point + (x[p.owner] if p.owner is not None else 0.0)
+        return float(np.dot(x[i] - origin, p.normal)) - self.s.r[i]
 
     def _pair_d(self, x, i, j):
         return float(np.linalg.norm(x[i] - x[j])) - self.s.r[i] - self.s.r[j]
@@ -71,6 +75,8 @@ class Step:
         out = []
         for i in range(s.n):
             for k, p in enumerate(s.planes):
+                if p.owner == i:
+                    continue
                 d = self._plane_d(x, i, p)
                 if d < s.dhat:
                     out.append(("plane", i, k, d))
@@ -120,21 +126,21 @@ class Step:
             db = barrier_grad(d, s.dhat, s.kappa)
             if kind == "plane":
                 g[i] += db * s.planes[j].normal
+                if s.planes[j].owner is not None:
+                    g[s.planes[j].owner] -= db * s.planes[j].normal
             else:
                 nrm = (x[i] - x[j]) / np.linalg.norm(x[i] - x[j])
                 g[i] += db * nrm
                 g[j] -= db * nrm
         eps = s.eps_v * h
         for kind, i, j, mulam, tan in self.lag:
-            if kind == "plane":
-                u = float(np.dot(x[i] - self.xn[i] - h * s.planes[j].velocity, tan))
-            else:
-                u = float(np.dot((x[i] - x[j]) - (self.xn[i] - self.xn[j]), tan))
+            o = j if kind == "pair" else s.planes[j].owner
+            u = _slip(x, self.xn, i, o, tan, h, None if kind == "pair" else s.planes[j])
             e += mulam * f0(abs(u), eps)
             gu = mulam * f1_over_y(abs(u), eps) * u * tan
             g[i] += gu
-            if kind == "pair":
-                g[j] -= gu
+            if o is not None:
+                g[o] -= gu
         return e, g
 
     def ccd_bound(self, x, dx):
@@ -143,8 +149,10 @@ class Step:
         alpha = 1.0
         for i in range(s.n):
             for p in s.planes:
+                if p.owner == i:
+                    continue
                 d0 = self._plane_d(x, i, p)
-                rate = float(np.dot(dx[i], p.normal))
+                rate = float(np.dot(dx[i] - (dx[p.owner] if p.owner is not None else 0.0), p.normal))
                 if rate < 0:
                     alpha = min(alpha, 0.9 * d0 / -rate)
             for j in range(i + 1, s.n):
@@ -162,6 +170,7 @@ class Step:
 
     def solve(self, tol=1e-9, max_iter=200, lag_updates=3):
         x = self.xn.copy()
+        self.path = [x.copy()]
         scale = max(1.0, float(np.max(self.s.m))) / self.h ** 2
         for _ in range(lag_updates):
             self.update_lag(x)
@@ -172,8 +181,12 @@ class Step:
                 H = self._hessian(x)
                 gf = g.ravel()
                 try:
+                    # Saddle-free Newton: |eigenvalues|, floored at the inertia
+                    # term m/h^2 that any PSD projection would keep. Clamping a
+                    # negative curvature to ~0 instead (barrier curvature is
+                    # negative tangentially) produces huge spurious steps.
                     w, V = np.linalg.eigh(H)
-                    w = np.maximum(w, 1e-8 * max(1.0, w.max()))
+                    w = np.maximum(np.abs(w), float(np.min(self.s.m)) / self.h ** 2)
                     dx = -(V @ ((V.T @ gf) / w)).reshape(x.shape)
                 except np.linalg.LinAlgError:
                     dx = -g / scale
@@ -184,6 +197,7 @@ class Step:
                         break
                     alpha *= 0.5
                 x = x + alpha * dx
+                self.path.append(x.copy())
         return x
 
     def _hessian(self, x):
@@ -204,6 +218,16 @@ class Step:
         return 0.5 * (H + H.T)
 
 
+def _slip(x, xn, i, o, tan, h, plane):
+    """Tangential slip of particle i relative to its contact partner over the step."""
+    rel = x[i] - xn[i]
+    if o is not None:
+        rel = rel - (x[o] - xn[o])
+    elif plane is not None:
+        rel = rel - h * plane.velocity
+    return float(np.dot(rel, tan))
+
+
 def step(s: System, h: float) -> dict:
     """Advance the system in place; return per-step diagnostics."""
     st = Step(s, h)
@@ -211,15 +235,13 @@ def step(s: System, h: float) -> dict:
     friction_work = 0.0   # work done by friction during the step, using the lag it solved with
     eps = s.eps_v * h
     for kind, i, j, mulam, tan in st.lag:
-        if kind == "plane":
-            u = float(np.dot(x_new[i] - s.x[i] - h * s.planes[j].velocity, tan))
-        else:
-            u = float(np.dot((x_new[i] - x_new[j]) - (s.x[i] - s.x[j]), tan))
+        o = j if kind == "pair" else s.planes[j].owner
+        u = _slip(x_new, s.x, i, o, tan, h, None if kind == "pair" else s.planes[j])
         # work done *by* friction on the slip displacement
         friction_work -= mulam * f1_over_y(abs(u), eps) * u * u
     s.v = (x_new - s.x) / h
     s.x = x_new
-    return {"friction_work": friction_work,
+    return {"friction_work": friction_work, "path": st.path,
             "min_gap": min((d for *_, d in st.contacts(x_new)), default=np.inf)}
 
 

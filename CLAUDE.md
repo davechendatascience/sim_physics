@@ -19,5 +19,6 @@ This machine has no usable GPU for the simulator. Prioritise small demos that te
 
 ## Environment
 
-- System `python` (3.11) has numpy, scipy, sympy, matplotlib, pytest, PyYAML. No pint/hypothesis.
+- Use the project venv: `python -m venv .venv` then `.venv/Scripts/python -m pip install -r requirements.txt`. Add every new dependency to `requirements.txt`.
+- `.mcp.json` puts `.venv/Scripts` first on the belief server's PATH, so `python` in `belief.yaml` run lines is the venv interpreter. Restart the MCP after changing `.mcp.json`.
 - `belief.yaml` changes take effect only after a human commits them.

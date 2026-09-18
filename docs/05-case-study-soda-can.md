@@ -94,7 +94,7 @@ Resulting policy, produced by the inverse layer and later distilled into a VLA:
 
 ## 7. Validation plan for this case
 
-1. **Analytic:** a pressurized cylinder's hoop/axial stress, and Hertz contact of the pad on the cylinder in the elastic regime
+1. **Analytic:** a pressurized cylinder's hoop/axial stress, and Hertz contact of a stiff spherical indenter on a thick elastic block, where Hertz's assumptions hold. The silicone pad on the can is *not* a Hertz problem: its contact half-width is about 0.14 R and comparable to the pad thickness (pads are 2–5 mm thick), while Hertz assumes a half-space many contact widths deep. That contact is validated against reference FEM and physical tests instead.
 2. **Reference FEM:** compare T2 to Abaqus/LS-DYNA on (a) lateral pad indentation of an empty can, (b) the same with 2.5 bar pressure, (c) axial crush
-3. **Physical:** an instrumented gripper (F/T sensor + calibrated pads) squeezes 30+ cans per condition to the onset of permanent deformation, measured with a 3D scanner before and after. This gives the empirical `F_max` distribution. Lift tests with wet/dry cans give `F_min`.
+3. **Physical:** an instrumented gripper (F/T sensor + calibrated pads) squeezes 30+ cans per condition to the onset of permanent deformation, measured with a 3D scanner before and after. This gives the empirical `F_max` distribution. Lift tests with wet/dry cans give `F_min`. Internal pressure of sealed cans is measured per product with a piercing pressure gauge.
 4. **Acceptance:** T2's predicted `F_max` distribution covers the measured one (for example, the measured median falls within the predicted 10–90% band), and T0's surrogate misses fewer than 1% of dent events on held-out tests.

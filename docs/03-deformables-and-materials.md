@@ -64,7 +64,7 @@ The **residual displacement check** is the ground-truth definition of "state cha
 Fully resolving fluids inside containers is too expensive for most uses and usually unnecessary. Lumped models:
 
 - **Enclosed gas:** ideal gas, optionally with CO₂ dissolution (Henry's law, temperature-dependent). Pressure `p = p(V, T, n)` acts as a follower load on the inner surface of the shell. The volume `V(q)` is computed from the shell mesh, and coupling is monolithic (the pressure term's energy is `−∫p dV`, which is added to the potential). **This is what makes a sealed can stiff.**
-- **Liquid fill:** mass, a free-surface height, and an equivalent-mechanical sloshing model (pendulum/spring-mass per mode, from linear slosh theory) that exerts time-varying force and moment on the container. Tuned against SPH/FLIP references offline.
+- **Liquid fill:** mass, a free-surface height, and an equivalent-mechanical sloshing model (pendulum/spring-mass per mode, from linear slosh theory) that exerts time-varying force and moment on the container. Tuned against SPH/FLIP references offline. Linear slosh theory holds only while the free surface tilts a little: lateral accelerations up to about 1 m/s² (tilt ≲ 6°). Beyond that the model switches to a particle fluid solve, and the planner treats larger lateral accelerations of open, filled containers as spill risk.
 - **Open vs sealed** is a discrete latent state. Opening changes the gas model from a closed volume to atmospheric.
 
 ## 6. Multiresolution for contact regions
@@ -77,3 +77,14 @@ Denting is local (a few mm under a fingertip), but the object is ~100 mm. Theref
 ## 7. Temperature (optional, phase 4)
 
 Temperature affects gas pressure (a warm can is more pressurized), polymer stiffness, and friction (condensation). The first version holds a scalar temperature per body as a lumped state. Full thermo-mechanical coupling is out of scope until the core is validated.
+
+## 8. Regime of validity
+
+Classical continuum models hold only in certain regimes, and each model states its own. The regime checks in [08](08-design-validation.md) enforce these limits.
+
+- **Continuum scale.** A 0.1 mm can wall is only about 5–20 grains thick after ironing. Homogenized J2/Hill48 plasticity is therefore used with parameters **calibrated on specimens cut from actual can walls** (same gauge and texture), not bulk handbook values. The fitted parameters absorb grain-size effects and are valid only for that gauge.
+- **Rate independence.** Aluminum at room temperature has strain-rate sensitivity m ≈ 0.002–0.012. Over the 10⁻³–10 s⁻¹ strain rates of grasping, flow stress can shift by up to ~11%. When a scenario's strain-rate span makes this exceed 5%, the Johnson–Cook rate term is switched on.
+- **Thin shell.** Kirchhoff–Love shells require t/R ≲ 0.05. The can wall has t/R ≈ 0.003.
+- **Quasi-static wall response.** Elastic waves cross the can in about 13 µs, far shorter than a 0.05–1 s squeeze, so wave effects inside the wall are negligible during grasping. Inertia is still simulated.
+- **Ideal gas.** CO₂ at can pressures deviates from ideal by about 2–3% (compressibility factor Z ≈ 0.98), within the 5% the pressure model tolerates.
+- **Nonrelativistic, non-quantum.** Speeds are ≲ 10 m/s and length scales ≳ 10⁻⁵ m, so neither relativity nor quantum effects enter.

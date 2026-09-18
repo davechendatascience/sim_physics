@@ -24,7 +24,7 @@ For every close primitive pair (point–triangle, edge–edge) at distance `d`:
 b(d) = −κ_b (d − d̂)² ln(d/d̂)   for 0 < d < d̂,   else 0
 ```
 - Guarantees no interpenetration and no tunneling, which is essential for 0.1 mm walls
-- `d̂` (activation distance) is set per material pair, around 10⁻⁵–10⁻⁴ m. It is small enough not to create visible gaps and large enough to keep conditioning sane.
+- `d̂` (activation distance) is set per material pair and **bounded by one tenth of the thinnest feature in contact**: 10⁻⁵ m for a 0.1 mm can wall, up to 10⁻⁴ m for bulky objects. A larger `d̂` would switch on contact forces across a whole wall thickness. It stays far above the ~10⁻⁸ m range of real intermolecular forces, so the barrier is a numerical device, not a model of adhesion.
 - Contact force = `−∂b/∂d`. We get **distributed pressure fields over contact patches** rather than a single point force. The patch field is exactly what tactile sensors and dent predictions need.
 
 ### Friction
@@ -49,6 +49,8 @@ For an object of mass `m` held by `k` contacts with normal forces `N_i`, the qua
 - Moments: with COM offset `r`, the patch torsion capacity must satisfy `Σ μ_i e_i N_i ≥ m ‖g + a‖ ‖r_⊥‖`. With liquid inside, `r` moves over time (slosh), see [03](03-deformables-and-materials.md) §5.
 
 The simulator computes this from full dynamics. The formula is used for **sanity checks** and as the **T0 fallback**.
+
+The bound assumes each contact normal stays perpendicular to the load. With **round fingertips** on a round object, slip tilts the contact normal, so the normal force gains a component along the load and pushes the object out of the grasp. In the design-validation reference model, a can slipping between round fingertips at 0.8 F_min slides about 4× faster than friction alone predicts, while flat pads match the prediction exactly. Grasp planning therefore uses flat or conforming pads, or evaluates the full contact geometry instead of the formula.
 
 ## 4. Grasp mechanics: maximum safe force
 
