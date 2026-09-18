@@ -183,6 +183,12 @@ equations:
     expr: "Eq(Py, EpI*(dky + 1/R)**2)"
     dims: {Py: M T^-2, EpI: M L^2 T^-2, dky: L^-1, R: L}
 
+  - id: EQ-profile-x
+    doc: 11-analytic-squeeze.md
+    quote: "x(θ) = √(2 sin θ) / λ"
+    expr: "Eq(x, sqrt(2*sin(th))/lam)"
+    dims: {x: L, th: "1", lam: L^-1}
+
 # Numbers stated in the docs, recomputed from their inputs by design/quantities.py.
 quantities:
   - {id: Q-hoop-stress, doc: 05-case-study-soda-can.md, quote: "≈ 80 MPa", fn: hoop_stress,
@@ -420,7 +426,7 @@ models:
     quote: "θ'' = λ² cos θ"
     oracle: design.oracles.elastica
     laws: [closed_forms_match_quadrature, small_load_limit, phase_continuity, inextensibility,
-           slope_continuity, tabulated_branch_accuracy]
+           slope_continuity, tabulated_branch_accuracy, shape_readout]
 
 # The same physical parameter stated in several docs must agree.
 shared_params:

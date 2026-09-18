@@ -60,6 +60,35 @@ class LongPadSqueeze:
             d[~flat] = self.EI / self.R ** 3 * _branch().deriv()(g[~flat] / self.R)
         return d if np.ndim(gap) else float(d[0])
 
+    def profile(self, gap, n=400):
+        """Deformed cross-section at pad gap `gap`: a closed curve (m, 2) in the
+        plane of the ring, pads normal to the first axis, centre at the origin
+        (docs/11 §1). No field solve: flat segment + elastica arc, by symmetry."""
+        g = float(gap)
+        P = self.force(g)
+        lam = np.sqrt(P / (2 * self.EI))
+        if g <= self.gap_flat:
+            kA, half_flat = 0.0, 0.5 * float(self.contact_length(g))
+        else:
+            kA, half_flat = float(_ka_branch()(g / self.R)) / self.R, 0.0
+        # quarter arc from the contact point (theta = 0) to the side (theta = pi/2); theta = u^2
+        u = np.linspace(0.0, np.sqrt(np.pi / 2), n)
+        th = u * u
+        d = np.sqrt(kA ** 2 + 2 * lam ** 2 * np.sin(th))
+        ds_du = 2 * u / np.where(d > 0, d, 1.0)
+        ds_du[0] = 2 / (np.sqrt(2) * lam) if kA == 0 else 0.0          # finite limit of 2u/d at u = 0
+        from scipy.integrate import cumulative_trapezoid
+        a = cumulative_trapezoid(ds_du * np.cos(th), u, initial=0.0)      # along the pad
+        b = cumulative_trapezoid(ds_du * np.sin(th), u, initial=0.0)      # away from the pad
+        # quarter in ring coordinates: pad normal = first axis, pad at -g/2
+        q = np.stack([-g / 2 + b, half_flat + a], 1)
+        q = np.concatenate([[[-g / 2, 0.0]], q])                          # flat segment from the axis
+        upper = q
+        lower = q[::-1] * [1, -1]
+        left_half = np.concatenate([lower, upper[1:]])
+        right_half = (left_half * [-1, 1])[::-1]
+        return np.concatenate([left_half, right_half[1:]])
+
     def contact_length(self, gap):
         """Flat contact length per pad (zero during line contact)."""
         return np.maximum(0.0, np.pi * self.R - VARPI ** 2 * np.asarray(gap, float) / np.pi)
@@ -84,10 +113,12 @@ class LongPadSqueeze:
             wide = gap > g                                        # not squeezed enough: more load
             lo, hi = np.where(wide, lam, lo), np.where(wide, hi, lam)
         lam = 0.5 * (lo + hi)
+        self._last_kA = 0.5 * (k_lo + k_hi)
         return 2 * self.EI * lam ** 2
 
 
 _BRANCH = None
+_KA_BRANCH = None
 
 
 def _branch():
@@ -103,7 +134,15 @@ def _branch():
         x = np.cos(np.pi * (np.arange(n) + 0.5) / n) * 0.5 * (2 - unit.gap_flat) + 0.5 * (2 + unit.gap_flat)
         P = unit._line_contact_force_exact(x)
         _BRANCH = np.polynomial.chebyshev.Chebyshev.fit(x, P, 12, domain=[unit.gap_flat, 2.0])
+        global _KA_BRANCH
+        _KA_BRANCH = np.polynomial.chebyshev.Chebyshev.fit(x, unit._last_kA, 12, domain=[unit.gap_flat, 2.0])
     return _BRANCH
+
+
+def _ka_branch():
+    """Contact curvature kA R against g/R in line contact (built with _branch)."""
+    _branch()
+    return _KA_BRANCH
 
 
 def can_wall():
@@ -119,8 +158,18 @@ def plot_curve(path, model=None):
     m = model or can_wall()
     g = np.linspace(m.gap_yield, 2 * m.R * 0.999, 400)       # elastic range only: the tier ends at first yield
     P = m.force(g)
-    fig, ax = plt.subplots(figsize=(6.4, 4.2))
-    ax.plot(g * 1e3, P, color="#2c7fb8", lw=2, label="elastic ring (closed form + line-contact solve)")
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(10.5, 4.2), gridspec_kw={"width_ratios": [1.6, 1]})
+    for gi, col in zip(np.linspace(2 * m.R * 0.999, m.gap_yield, 5), ["#c6dbef", "#9ecae1", "#6baed6", "#3182bd", "#d95f0e"]):
+        c = m.profile(gi) * 1e3
+        ax2.plot(np.append(c[:, 0], c[0, 0]), np.append(c[:, 1], c[0, 1]), color=col, lw=1.8,
+                 label=f"gap {gi * 1e3:.1f} mm")
+        ax2.axvline(gi / 2 * 1e3, color=col, lw=0.6, ls=":")
+        ax2.axvline(-gi / 2 * 1e3, color=col, lw=0.6, ls=":")
+    ax2.set_aspect("equal")
+    ax2.set_title("cross-section (readout, no solve)", fontsize=10)
+    ax2.set_xlabel("mm (pad direction)")
+    ax2.legend(frameon=False, fontsize=7, loc="upper right")
+    ax.plot(g * 1e3, P, color="#2c7fb8", lw=2, label="elastic ring (closed form + tabulated branch)")
     ax.axvspan(0.8 * m.gap_yield * 1e3, m.gap_yield * 1e3, color="#d95f0e", alpha=0.12)
     ax.text(m.gap_yield * 1e3, P.max() * 0.55, "permanent dent\n(beyond this tier) ", color="#d95f0e",
             fontsize=8, ha="left")

@@ -40,11 +40,24 @@ def box(size, center=(0.0, 0.0, 0.0), n=1):
     return np.array(verts) + np.asarray(center, float), np.array(faces)
 
 
-def cylinder(radius, height, n_theta, n_z, capped=True, center=(0.0, 0.0, 0.0)):
+def graded(breaks, spacings):
+    """1D coordinates from piecewise-constant target spacing: segment i runs from
+    breaks[i] to breaks[i+1] with roughly spacings[i] between nodes."""
+    out = [breaks[0]]
+    for a, b, h in zip(breaks[:-1], breaks[1:], spacings):
+        n = max(1, int(round((b - a) / h)))
+        out += list(np.linspace(a, b, n + 1)[1:])
+    return np.array(out)
+
+
+def cylinder(radius, height, n_theta, n_z, capped=True, center=(0.0, 0.0, 0.0), theta=None, z=None):
     """Cylindrical shell along z. Returns verts, faces, and a face label array:
-    0 = side wall, 1 = bottom cap, 2 = top cap. Caps are triangle fans."""
-    th = np.linspace(0, 2 * np.pi, n_theta, endpoint=False)
-    zs = np.linspace(-height / 2, height / 2, n_z + 1)
+    0 = side wall, 1 = bottom cap, 2 = top cap. Caps are triangle fans.
+    `theta` (angles in [0, 2pi), no endpoint) and `z` (from -height/2 to
+    height/2) may be given explicitly for a graded mesh."""
+    th = np.linspace(0, 2 * np.pi, n_theta, endpoint=False) if theta is None else np.asarray(theta)
+    zs = np.linspace(-height / 2, height / 2, n_z + 1) if z is None else np.asarray(z)
+    n_theta, n_z = len(th), len(zs) - 1
     verts = [[radius * np.cos(t), radius * np.sin(t), z] for z in zs for t in th]
     faces, label = [], []
     for k in range(n_z):

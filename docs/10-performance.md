@@ -17,6 +17,7 @@ All demos and scenes run on one physics library, `simphys`. The reference models
 | Newton iterations per step (pads in contact) | 9–64, often at the 120 cap | the squeeze protocol of [09](09-simulator.md) §5: supported can, pads on a prescribed path | 4–5 in the first steps of the squeeze; adaptive stiffness (§3) not yet built |
 | Everything else per Newton iteration (assembly, projection, broad phase, copies) | ~0.4–0.6 s | fused kernels, candidate reuse (§2) | whole iteration now 0.20 s |
 | Compilation at the start of every run | ~24 s | persistent compilation cache (§2) | ~4 s with a warm cache |
+| Faces of the can mesh | 2 400 uniform | graded mesh, fine only near the pads | **rejected**: 780 faces and 3–5× faster per step, but pad forces differed from the uniform mesh by 10–30% (peak 6.0 N vs 5.05 N at 0.8 mm travel) |
 
 Friction is not the iteration driver: with friction switched off, steps still took 9–39 iterations. Projecting negative Hessian eigenvalues to their absolute value instead of zero was also measured. It needed *more* iterations (for example 26 instead of 19 per step) for the same answer, so the design keeps clamping to zero.
 

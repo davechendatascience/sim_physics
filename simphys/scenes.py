@@ -43,8 +43,21 @@ def _pads(length, gap, width, thickness=0.01):
     return out
 
 
+def can_mesh(graded_mesh=True, n_theta=48, n_z=24):
+    """Can surface. Graded: 7.5 deg / 5 mm within +-30 deg of the pads (+-x) and
+    +-25 mm of mid-height, coarsening to ~22.5 deg / 15 mm elsewhere. Measured
+    against the uniform mesh it is 3x smaller but its pad forces differ by
+    10-30%, so it is not the default (docs/10 §1)."""
+    if not graded_mesh:
+        return G.cylinder(CAN_R, CAN_H, n_theta, n_z, capped=True)
+    d = np.radians
+    th = G.graded([d(-30), d(30), d(150), d(210), d(330)], [d(7.5), d(22.5), d(7.5), d(22.5)])[:-1] % (2 * np.pi)
+    zz = G.graded([-CAN_H / 2, -0.025, 0.025, CAN_H / 2], [0.015, 0.005, 0.015])
+    return G.cylinder(CAN_R, CAN_H, 0, 0, capped=True, theta=np.sort(th), z=zz)
+
+
 def can_squeeze(depth=4e-3, speed=0.016, hold=0.1, pad_width=0.015, pad_length=0.02, sealed=False,
-                p_gauge=2.5e5, n_theta=48, n_z=24, dt=5e-3):
+                p_gauge=2.5e5, n_theta=48, n_z=24, dt=5e-3, graded_mesh=False):
     """A soda can squeezed by two short pads (docs/09 §5).
 
     The can stands on a table (its bottom end is held fixed). Each pad follows a
@@ -53,7 +66,7 @@ def can_squeeze(depth=4e-3, speed=0.016, hold=0.1, pad_width=0.015, pad_length=0
     reaction. Open or sealed at p_gauge. After retraction, the ledger says
     whether the can was permanently altered.
     """
-    v, f, label = G.cylinder(CAN_R, CAN_H, n_theta, n_z, capped=True)
+    v, f, label = can_mesh(graded_mesh, n_theta, n_z)
     thickness = np.where(label == 0, CAN_T, 2.5e-4)          # ends are thicker (~0.25 mm)
     base = np.isclose(v[:, 2], -CAN_H / 2)
     can = Shell("can", v, f, ALUMINUM_CAN, thickness, fixed_verts=base, color="#bdc3c7")

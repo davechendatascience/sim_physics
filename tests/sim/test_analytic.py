@@ -58,3 +58,21 @@ def test_single_query_is_microseconds():
     for _ in range(1000):
         M.force(0.055)
     assert (time.perf_counter() - t0) / 1000 < 1e-4
+
+
+def _perimeter(curve):
+    return np.linalg.norm(np.diff(np.vstack([curve, curve[:1]]), axis=0), axis=1).sum()
+
+
+@pytest.mark.parametrize("gap", [0.062, 0.050, 0.040, 0.025])
+def test_profile_keeps_perimeter_and_touches_both_pads(gap):
+    c = M.profile(gap)
+    assert _perimeter(c) == pytest.approx(2 * np.pi * M.R, rel=2e-4)
+    assert c[:, 0].min() == pytest.approx(-gap / 2, abs=2e-6 * M.R)
+    assert c[:, 0].max() == pytest.approx(gap / 2, abs=2e-6 * M.R)
+
+
+def test_undeformed_limit_is_the_circle():
+    c = M.profile(2 * M.R * (1 - 1e-6))
+    r = np.linalg.norm(c, axis=1)
+    assert np.abs(r - M.R).max() < 1e-4 * M.R

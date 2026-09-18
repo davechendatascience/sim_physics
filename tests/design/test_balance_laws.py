@@ -343,3 +343,19 @@ def test_degree_12_chebyshev_reproduces_the_line_contact_branch():
     xt = np.linspace(G_STAR + 1e-6, 2 - 1e-6, 120)
     ref = np.array([_line_branch(v) for v in xt])
     assert np.abs(fit(xt) - ref).max() <= 1e-9 * _line_branch(G_STAR + 1e-6)
+
+
+@law("MOD-ring-elastica", "shape_readout", "11-analytic-squeeze.md")
+def test_flat_contact_profile_closed_form_matches_quadrature():
+    from scipy.integrate import quad
+    R = 1.0
+    g = 1.1                                           # flat-contact phase (g < g0 = 1.4355 R)
+    lam = np.sqrt(Qn.squeeze_flat_force(g, 1.0, 0.0, 12 ** (1 / 3)) / 2)     # E'I = 1
+    for th in (0.2, 0.8, 1.3, np.pi / 2):
+        xq = quad(lambda t: np.cos(t) / (lam * np.sqrt(2 * np.sin(t))), 0, th)[0]
+        assert np.sqrt(2 * np.sin(th)) / lam == pytest.approx(xq, rel=1e-10)
+    yB = quad(lambda t: np.sqrt(np.sin(t)), 0, np.pi / 2)[0] / (np.sqrt(2) * lam)
+    assert yB == pytest.approx(g / 2, rel=1e-10)                              # half the gap, exactly
+    free = quad(lambda t: 1 / (lam * np.sqrt(2 * np.sin(t))), 0, np.pi / 2)[0]
+    flat_half = Qn.squeeze_flat_contact_length(g, R) / 2
+    assert 4 * (free + flat_half) == pytest.approx(2 * np.pi * R, rel=1e-10)    # perimeter kept

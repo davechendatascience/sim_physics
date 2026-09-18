@@ -32,6 +32,14 @@ For the long-pad pinch this replaces the Newton solve entirely. Phase 2 is algeb
 
 **Phase 1 is tabulated once.** In the dimensionless variables g/R and P R²/(E'I), the line-contact branch contains no material constants. A degree-12 Chebyshev fit on g/R ∈ [1.4355, 2] reproduces the quadrature reference to 1.3×10⁻¹⁰ of the onset force, so every query costs about a dozen floating-point operations. The fit and its derivative join the flat-contact law with matching slope at g₀ (C¹), so a force-feedback loop sees no kink. This follows revision 2 of the user's brief (`docs/reference/engineering_brief_can_squeeze_speedup_via_ramanujan_mathematics.md` §4), with its first-yield rule corrected: in plane strain, first yield comes at σ₁₁ = σ_y/√(1 − ν + ν²), not σ_y.
 
+**The deformed shape is a readout too** (brief revision 3, §7.1). Every point of the can, at arc length s around the cross-section and at any height z, maps to the elastica at s; the cross-section is the same all along the pads. On the free arc of the flat-contact phase the profile is elementary:
+
+```
+x(θ) = √(2 sin θ) / λ,     y(θ) = (1/(√2 λ)) ∫₀^θ √(sin ϑ) dϑ
+```
+
+so y(π/2) = π/(√2 ϖ λ) is exactly half the gap. In line contact the same integrals carry κ_A² + 2λ² sin θ under the root, with κ_A taken from a second material-free Chebyshev fit. The whole cross-section follows by symmetry. A readout costs one 1D profile per load state and an interpolation per point, with no field solve.
+
 ## 2. Regime
 
 - **Long pads only.** The pads must span the whole can so that every cross-section deforms alike (plane strain). Short pads dent locally and need the 3D simulator. For them this tier gives a lower bound on the force.
@@ -45,5 +53,6 @@ For the long-pad pinch this replaces the Newton solve entirely. Phase 2 is algeb
 - **Small-load limit:** phase 1 must reproduce the linear ring compliance `(π/4 − 2/π) F R³/(E'I)` of [09](09-simulator.md) §4 as the load goes to zero.
 - **Phase continuity:** force, gap and slope must be continuous where line contact becomes flat contact.
 - **Tabulated branch:** the degree-12 fit must stay within 10⁻⁹ of the quadrature reference.
+- **Shape readout:** the closed-form profile must match the quadrature reference, reach exactly half the gap at the side point, and keep the perimeter at 2πR.
 - **Inextensibility:** the arc length stays πR/2 per quarter in both phases.
 - **The 3D simulator:** its long-can scene must agree with this tier.

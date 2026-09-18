@@ -1,6 +1,6 @@
 # Engineering Brief: Fast Thin-Walled Cylinder Crushing (Can Squeeze) via Ramanujan Mathematics
 
-*Revision 2 — 2026-09-19. Supersedes the earlier brief; folds in the design-gate corrections and re-checks every number.*
+*Revision 3 — 2026-09-19. Supersedes the earlier brief; folds in the design-gate corrections, re-checks every number, and adds the pointwise shape readout (§7) so no FEM solve sits in the per-point loop.*
 
 ## Executive Summary
 
@@ -12,10 +12,13 @@ The slowness we are fighting is not in evaluating elliptic integrals. It is in r
 | 1 | Replace the 3D model with the 1D inextensional ring elastica | 10³–10⁶× (microseconds per load) |
 | 2 | Closed form in the flat-contact phase (lemniscate constant); tabulated one-parameter branch in the point-contact phase | O(1), no root-find online |
 | 3 | Ramanujan's theta/nome series and perimeter formula for the remaining elliptic evaluations | ~10× on an already microsecond inner loop |
+| 4 | Pointwise shape readout: surface position at any (s, z) from the 1D profile, a mirror isometry, or an r-term reduced basis — never a per-point FEM query | O(1)–O(r) per grid point |
 
-Ramanujan's equations are the cherry, not the cake. Tiers 1–2 are where the orders of magnitude come from; Tier 3 removes the last quadrature loops and root-finds so the whole force–gap law is a handful of flops. This brief specifies all three tiers, states exactly where Ramanujan's machinery applies, and where it does not.
+Ramanujan's equations are the cherry, not the cake. Tiers 1–2 are where the orders of magnitude come from; Tier 3 removes the last quadrature loops and root-finds so the whole force–gap law is a handful of flops; Tier 4 makes the deformed geometry as cheap as the force. This brief specifies all four tiers, states exactly where Ramanujan's machinery applies, and where it does not.
 
-Scope: long rigid pads, elastic response up to first yield, open (unpressurised) cans. Short pads dent locally and stay on the 3D simulator (§7).
+The organizing fact behind Tiers 1 and 4 is that thin-shell deformation is nearly isometric: the geometry is fixed kinematically almost everywhere, and the expensive physics is confined to creases and ridges of width ~√(Rt) ≈ 1.8 mm. Anything that resolves the whole surface uniformly is paying for information the problem does not contain.
+
+Scope of the closed forms: long rigid pads, elastic response up to first yield, open (unpressurised) cans. Short pads dent locally and use the mirror-isometry readout (§7.2) or the reduced-order model (§7.3), not a full 3D solve per state (§8).
 
 ---
 
@@ -175,22 +178,70 @@ Error scales as h⁵. Comparing measured rim perimeter to 2πR then gives a stre
         └───────────────┬───────────────┘
                         ▼
         ┌───────────────────────────────┐
+        │  Shape readout (§7)            │──► any (s, z): profile / mirror / Φ·a
+        └───────────────┬───────────────┘
+                        ▼
+        ┌───────────────────────────────┐
         │  Rim metric (Ramanujan P_rim)  │──► vision-side stretch check
         └───────────────────────────────┘
 ```
 
 ---
 
-## 7. What Ramanujan Does Not Buy
+## 7. Pointwise Shape Readout: No FEM in the Per-Point Loop
+
+A field solve, when one is needed at all, is one global solve per load state; the displacement at a grid point is then a lookup. But for this problem the deformed shape is known in closed or near-closed form almost everywhere, so most load states need no field solve. Four readouts, cheapest first.
+
+### 7.1 Long pads: 1D profile extruded along the axis
+
+Every surface point (s, z) maps to the cross-section elastica at arc length s, independent of z. In the flat-contact phase the profile is the quadrature of θ'² = 2λ² sin θ from §2.2:
+
+$$x(\theta) = \int_0^{\theta} \frac{\cos\vartheta\, d\vartheta}{\lambda\sqrt{2\sin\vartheta}} = \frac{\sqrt{2\sin\theta}}{\lambda}, \qquad
+y(\theta) = \frac{1}{\lambda\sqrt{2}}\int_0^{\theta} \sqrt{\sin\vartheta}\, d\vartheta,$$
+
+so x is elementary and y is an incomplete lemniscatic integral (complete value π/ϖ at θ = π/2). In the point-contact phase the same integrals carry κ₀² + 2λ² sin θ under the root. Implementation: per load state, sample θ at ~50 Chebyshev nodes on one quarter arc, form (x, y, s)(θ) by one Clenshaw–Curtis pass, and evaluate any point by 1D interpolation in s. The four quarters follow by symmetry, and z is a copy. Cost per grid point: a 1D interpolation, ~10 flops, with the profile rebuilt in ~10 μs per state.
+
+### 7.2 Short pads and dents: Pogorelov mirror isometry plus a ridge
+
+A localized dent in a thin shell is, to leading order, the isometry obtained by reflecting the portion of the surface beyond the pad plane back across that plane. Reflection is an exact isometry, so the reflected cap carries no membrane energy; all the bending energy sits in a ridge along the intersection curve, of width
+
+$$\ell \sim \sqrt{Rt} \approx 1.8\ \text{mm}.$$
+
+Readout: for a point outside the ridge, deformed position = original position if on the unreflected side, else its mirror image across the pad plane. O(1), no solve. Inside the ridge, the cross-ridge profile is a boundary-layer elastica with a similarity form in the coordinate (n/ℓ), computed once per (dent depth, pad geometry) and blended in. This is the two-dimensional analogue of §7.1: kinematics fixes the shape, an elastica fixes the crease. Pogorelov's energy scaling, U ∝ E t^{5/2} d^{3/2}/R for dent depth d, gives the force–depth law of the dent for the same price. Cylinders are less clean than spheres here (dents lock into rhombic patterns at larger depth), so this readout is rated for shallow dents; beyond that, §7.3.
+
+### 7.3 General contact: reduced-order model from offline snapshots
+
+Where a genuine 3D solve is unavoidable (deep dents, off-axis pads, multiple contacts), it runs offline. Sweep the parameters (gap, pad width, pad position), collect displacement snapshots u(x; μ), and take the POD/PCA basis Φ ∈ ℝ^{3N × r} with r ≈ 10–30. Online, the state is the coefficient vector a(μ) ∈ ℝ^r found by Galerkin projection of the equilibrium equations, with DEIM to keep the nonlinear residual evaluation at O(r) cost independent of N. Any grid point is then
+
+$$u(x_i; \mu) = \Phi_i\, a(\mu),$$
+
+a dot product of length r. A Chebyshev-in-μ or neural-operator surrogate fitted to the same snapshots is a drop-in alternative that removes the online projection entirely; the POD form keeps the physics residual and is preferable when the design gate requires a computable error bound.
+
+### 7.4 Hybrid domain decomposition
+
+When the ridge model of §7.2 is not accurate enough, keep the analytic outer solution (§7.1 or the mirror isometry) everywhere and mesh only a strip of width ~3ℓ around the crease or contact zone, coupled through Dirichlet data from the outer solution. The mesh shrinks from 10⁴–10⁵ elements to a few hundred, and the outer region costs nothing per point.
+
+### 7.5 Which readout when
+
+| Situation | Readout | Per-point cost | Per-state cost |
+| :--- | :--- | :--- | :--- |
+| Long pads, elastic | §7.1 profile | ~10 flops | ~10 μs |
+| Short pad, shallow dent | §7.2 mirror + ridge | O(1) | one ridge ODE |
+| Deep dent, off-axis, multi-contact | §7.3 ROM | O(r) | O(r²)–O(r³) |
+| Design-gate accuracy needed in the crease | §7.4 hybrid | O(1) outside strip | few-hundred-element solve |
+
+---
+
+## 8. What Ramanujan Does Not Buy
 
 1. **Axial crush (Yoshimura pattern).** The earlier brief proposed Chowla–Selberg-type lattice-sum acceleration for the fold energy. The modular transformation is real mathematics, but the mapping from membrane energy to a Epstein zeta sum was never derived and the O(1) mode-selection claim is unverified. Out of scope until it passes the design gate.
-2. **Short pads.** Local denting is a genuinely 2D shell problem with a boundary layer of width √(Rt); it stays on the 3D simulator.
+2. **Short pads.** Local denting is a genuinely 2D shell problem with a boundary layer of width √(Rt). The shape outside the ridge is a mirror isometry (§7.2); the ridge and any deep-dent regime use the reduced-order model or hybrid strip (§7.3–7.4), not a full 3D solve per state. Ramanujan's identities play no role in that tier.
 3. **Plasticity.** Past g_y the moment–curvature law is no longer linear and the closed form ends. A tabulated elastic-plastic ring branch is possible but is a different brief.
 4. **Internal pressure.** Sealed cans carry membrane pre-stress that stiffens the ring; the inextensional elastica applies to open cans only.
 
 ---
 
-## 8. Corrections to the Earlier Brief
+## 9. Corrections to the Earlier Brief
 
 | Item | Earlier | Corrected |
 | :--- | :--- | :--- |
@@ -203,27 +254,29 @@ Error scales as h⁵. Comparing measured rim perimeter to 2πR then gives a stre
 
 ---
 
-## 9. Key Takeaways
+## 10. Key Takeaways
 
 1. The speed problem is solved by model reduction: a pinched can under long pads is a planar inextensional elastica, and that is microseconds, not minutes.
 2. Below 72% of the diameter the whole force–gap law is P = 4π²E'I/(ϖ²g²); the lemniscate constant is Ramanujan's first singular value showing up in a can.
 3. Above that, one dimensionless branch is tabulated once; Ramanujan's q-series or Gauss's AGM build it equally well.
 4. Ramanujan's perimeter formula is the right one-line rim-ovalization metric, with h⁵ error — but never a constraint.
-5. Everything outside long-pad, elastic, open-can pinching stays on the 3D simulator.
+5. The deformed geometry is as cheap as the force: a 1D profile for long pads, a mirror isometry plus a √(Rt) ridge for dents, an r-term basis for the rest. A FEM solve belongs offline, never in the per-point loop.
+6. Everything outside long-pad, elastic, open-can pinching is handled by the readouts of §7 or, past yield and pressure, by the 3D simulator run offline.
 
 ---
 
-## Review against the design gate (2026-09-19)
+## Review against the design gate (2026-09-19, revision 3)
 
 **Verified and adopted** ([docs/11](../11-analytic-squeeze.md), `simphys/analytic.py`):
 
-- §2.2: flat-contact closed forms, g* = π²R/ϖ², κ_max = 2π/(ϖ g), and the exact slope dP/dg = −2P/g.
-- §4: tabulating the material-free line-contact branch. A degree-12 Chebyshev fit matches the quadrature reference to 1.3×10⁻¹⁰, and a force query drops from 74 ms (nested root-finding) to 35 µs.
-- §4: the claim that both branches are C¹ at g*. The line-contact and flat-contact slopes agree at the onset.
-- §5: the corrected perimeter worst case of 4×10⁻⁴, for a completely flat ellipse. The earlier review wrongly accepted 4×10⁻⁵ as the worst case.
+- §2.2 closed forms, the exact slope, the C¹ join at g*, and the degree-12 tabulated branch (1.3×10⁻¹⁰ of the quadrature reference; a force query in 35 µs instead of 74 ms).
+- **§7.1 shape readout.** x(θ) = √(2 sin θ)/λ matches quadrature to 12 digits, y(π/2) is exactly half the gap, and the perimeter stays 2πR. The contact curvature κ₀ in line contact comes from a second material-free Chebyshev fit, as §4 proposes. A full cross-section costs about 130 µs per load state, with no field solve.
+- §5 perimeter worst case of 4×10⁻⁴.
 
-**Corrected here:**
+**Still to correct:** §2.2 and §2.4 use Δκ_y = 2σ_y/(E' t). A long pinched can is in plane strain: the elastic axial stress is νσ₁₁, so von Mises yield comes at σ₁₁ = σ_y/√(1 − ν + ν²), about 13% higher. With σ_y = 285 MPa from the material record, first yield is at **g_y = 21.1 mm and 83.4 N/m, about 8.3 N on a 100 mm pad**, not 23.4 mm, 68.0 N/m and 7 N.
 
-1. **First-yield rule (§2.2, §2.4).** Δκ_y = 2σ_y/(E't) treats the surface fiber as uniaxial. A long pinched can is in plane strain: with the axial strain held at zero, the elastic axial stress is νσ₁₁, and von Mises yield comes at σ₁₁ = σ_y/√(1 − ν + ν²), about 13% higher. The rule is therefore Δκ_y = 2σ_y/(√(1 − ν + ν²) E' t).
-2. **Worked numbers (§2.4).** With that rule and the material record's σ_y = 285 MPa (docs/03 §3), first yield is at **g_y = 21.1 mm, P_y = 83.4 N/m**, not 23.4 mm and 68.0 N/m. A 100 mm pad starts to yield the wall at about 8.3 N, not 7 N. The table's flat-phase forces at 40 mm and 33 mm (23.2 and 34.0 N/m) are correct.
-3. **Baseline (§1).** simphys does not use Riks continuation. Its 3D baseline is an IPC incremental-potential solver, measured in [docs/10](../10-performance.md) §1. The model-reduction argument is unchanged.
+**Not adopted yet (needs validation against the 3D simulator first):**
+
+- **§7.2 mirror isometry.** Pogorelov's construction and the U ∝ E t^{5/2} d^{3/2}/R scaling are derived for doubly curved (spherical) shells. A cylinder has one zero principal curvature, and the brief itself notes rhombic locking. The construction also describes the inverted dent after snap-through, not the elastic loading before it, and that loading is what sets the grasp limit F_max. It becomes a design claim only after the 3D simulator confirms it for the can.
+- **§7.3 reduced-order model.** This agrees with the design's T1 tier ([docs/01](../01-architecture.md) §4), and the 3D simulator is the offline snapshot source. Plasticity makes the response path-dependent, which a plain POD basis on displacements does not capture: the plastic state needs to be part of the reduced state. That is a separate design item.
+- **§7.4 hybrid strip.** Coupling a meshed strip to an analytic outer solution through Dirichlet data is only as accurate as the outer solution. For short pads there is no validated outer solution yet (see §7.2).
