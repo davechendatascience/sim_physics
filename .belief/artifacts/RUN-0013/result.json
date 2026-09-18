@@ -1,0 +1,44 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_solver::test_free_fall_matches_implicit_euler_exactly",
+        "claim": "tests.sim.test_solver::test_free_fall_matches_implicit_euler_exactly"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_solver::test_linear_momentum_is_conserved_through_a_frictional_collision",
+        "claim": "tests.sim.test_solver::test_linear_momentum_is_conserved_through_a_frictional_collision"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_solver::test_energy_never_increases_on_frictionless_ground",
+        "claim": "tests.sim.test_solver::test_energy_never_increases_on_frictionless_ground"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_solver::test_newton_converges_in_a_handful_of_iterations_for_a_resting_contact",
+        "claim": "tests.sim.test_solver::test_newton_converges_in_a_handful_of_iterations_for_a_resting_contact"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

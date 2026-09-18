@@ -1,0 +1,44 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_ledger::test_rigid_motion_is_not_an_alteration",
+        "claim": "tests.sim.test_ledger::test_rigid_motion_is_not_an_alteration"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_ledger::test_plastic_strain_above_threshold_is_an_alteration",
+        "claim": "tests.sim.test_ledger::test_plastic_strain_above_threshold_is_an_alteration"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_ledger::test_residual_dent_is_an_alteration",
+        "claim": "tests.sim.test_ledger::test_residual_dent_is_an_alteration"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_ledger::test_light_squeeze_and_release_leaves_the_can_unaltered",
+        "claim": "tests.sim.test_ledger::test_light_squeeze_and_release_leaves_the_can_unaltered"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

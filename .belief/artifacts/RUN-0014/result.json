@@ -1,0 +1,54 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_contact::test_tumbling_boxes_never_interpenetrate",
+        "claim": "tests.sim.test_contact::test_tumbling_boxes_never_interpenetrate"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_contact::test_block_sticks_below_the_friction_angle",
+        "claim": "tests.sim.test_contact::test_block_sticks_below_the_friction_angle"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_contact::test_block_slides_at_the_kinetic_rate_above_the_friction_angle",
+        "claim": "tests.sim.test_contact::test_block_slides_at_the_kinetic_rate_above_the_friction_angle"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_contact::test_shell_thickness_is_respected_by_contact",
+        "claim": "tests.sim.test_contact::test_shell_thickness_is_respected_by_contact"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_contact::test_fast_box_does_not_tunnel_through_a_thin_plate",
+        "claim": "tests.sim.test_contact::test_fast_box_does_not_tunnel_through_a_thin_plate"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

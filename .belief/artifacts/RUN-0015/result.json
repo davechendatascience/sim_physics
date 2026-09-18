@@ -1,0 +1,34 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_materials::test_return_map_agrees_with_the_design_reference_model",
+        "claim": "tests.sim.test_materials::test_return_map_agrees_with_the_design_reference_model"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_materials::test_return_map_is_the_identity_below_yield",
+        "claim": "tests.sim.test_materials::test_return_map_is_the_identity_below_yield"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_materials::test_sealed_can_swells_by_the_thin_wall_hoop_strain",
+        "claim": "tests.sim.test_materials::test_sealed_can_swells_by_the_thin_wall_hoop_strain"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

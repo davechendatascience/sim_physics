@@ -1,0 +1,4 @@
+python tools/design_trials.py C:\Users\ychen\OneDrive\文件\GitHub\sim_physics\.belief\artifacts\RUN-0018\result.json -- tests/sim/test_bodies.py -q
+exit=0
+test=TST-sim-bodies@6acbece5
+at=2026-09-18T16:54:09+00:00

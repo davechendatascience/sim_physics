@@ -1,0 +1,74 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_e2e::test_list_names_every_scene",
+        "claim": "tests.sim.test_e2e::test_list_names_every_scene"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[box_drop]",
+        "claim": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[box_drop]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[can_squeeze]",
+        "claim": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[can_squeeze]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[can_squeeze_long]",
+        "claim": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[can_squeeze_long]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[can_squeeze_sealed]",
+        "claim": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[can_squeeze_sealed]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[jelly_drop]",
+        "claim": "tests.sim.test_e2e::test_scene_runs_headless_and_writes_outputs[jelly_drop]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_e2e::test_unknown_scene_fails_cleanly",
+        "claim": "tests.sim.test_e2e::test_unknown_scene_fails_cleanly"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

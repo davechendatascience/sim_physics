@@ -1,0 +1,34 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_render::test_headless_writes_an_animated_gif_and_a_png",
+        "claim": "tests.sim.test_render::test_headless_writes_an_animated_gif_and_a_png"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_render::test_unknown_mode_is_rejected",
+        "claim": "tests.sim.test_render::test_unknown_mode_is_rejected"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": false
+      },
+      "conditions": {
+        "case": "tests.sim.test_render::test_window_mode_draws_live",
+        "claim": "tests.sim.test_render::test_window_mode_draws_live"
+      },
+      "outcome": "not_applicable"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_bodies::test_spinning_body_stays_exactly_rigid",
+        "claim": "tests.sim.test_bodies::test_spinning_body_stays_exactly_rigid"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_bodies::test_rigid_mass_properties_match_closed_form",
+        "claim": "tests.sim.test_bodies::test_rigid_mass_properties_match_closed_form"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_bodies::test_shell_bending_energy_of_a_rolled_strip_matches_plate_theory",
+        "claim": "tests.sim.test_bodies::test_shell_bending_energy_of_a_rolled_strip_matches_plate_theory"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_bodies::test_shell_energy_is_frame_indifferent",
+        "claim": "tests.sim.test_bodies::test_shell_energy_is_frame_indifferent"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_bodies::test_long_can_matches_ring_compliance_and_converges",
+        "claim": "tests.sim.test_bodies::test_long_can_matches_ring_compliance_and_converges"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_bodies::test_solid_at_rest_stays_at_rest",
+        "claim": "tests.sim.test_bodies::test_solid_at_rest_stays_at_rest"
+      },
+      "outcome": "pass"
+    }
+  ]
+}
