@@ -6,3 +6,4 @@ pillow>=10.0
 PyYAML>=6.0
 pytest>=8.0
 jax[cpu]>=0.4.30
+mpmath>=1.3

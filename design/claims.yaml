@@ -134,6 +134,23 @@ equations:
     expr: "Eq(pcr, 3*Ep*I/R**3)"
     dims: {pcr: M L^-1 T^-2, Ep: M L^-1 T^-2, I: L^3, R: L}
 
+  # docs/10 performance
+  - id: EQ-metric-displacement-form
+    doc: 10-performance.md
+    quote: "a − ā = E·Dᵀ + D·Eᵀ + D·Dᵀ"
+    expr: "Eq(da, E*D + D*E + D*D)"
+    dims: {da: L^2, E: L, D: L}
+  - id: EQ-ramanujan-perimeter
+    doc: 10-performance.md
+    quote: "P ≈ π (a + b) (1 + 3h / (10 + √(4 − 3h)))"
+    expr: "Eq(P, pi*(a + b)*(1 + 3*h/(10 + sqrt(4 - 3*h))))"
+    dims: {P: L, a: L, b: L, h: "1"}
+  - id: EQ-rim-hoop-strain
+    doc: 10-performance.md
+    quote: "The hoop strain is P / (2πR) − 1"
+    expr: "Eq(eps, P/(2*pi*R) - 1)"
+    dims: {eps: "1", P: L, R: L}
+
 # Numbers stated in the docs, recomputed from their inputs by design/quantities.py.
 quantities:
   - {id: Q-hoop-stress, doc: 05-case-study-soda-can.md, quote: "≈ 80 MPa", fn: hoop_stress,
@@ -202,6 +219,14 @@ quantities:
      fn: flat_plate_gap_at_yield, inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 0.018, rel_tol: 0.05}
   - {id: Q-small-deflection-load, doc: 09-simulator.md, quote: "F ≲ 2 N/m (δ ≤ 5% of R)",
      fn: small_deflection_load, inputs: {E: 69.0e9, nu: 0.33, t: 1.0e-4, R: 0.033, frac: 0.05}, stated: 2.0, rel_tol: 0.01}
+  - {id: Q-float32-naive-metric, doc: 10-performance.md, quote: "carries a relative error of 6×10⁻⁴ at 1 µm deformations",
+     fn: float32_metric_error, inputs: {mode: naive, amp: 1.0e-6}, stated: 6.0e-4, rel_tol: 0.1}
+  - {id: Q-float32-displacement-metric, doc: 10-performance.md, quote: "The float32 gradient error then drops to 2×10⁻⁷",
+     fn: float32_metric_error, inputs: {mode: displacement, amp: 1.0e-6}, stated: 2.0e-7, rel_tol: 0.1}
+  - {id: Q-ramanujan-margin, doc: 10-performance.md, quote: "at least 6×10⁴ times smaller than the 2×10⁻³ plastic-strain threshold",
+     fn: ramanujan_margin, inputs: {ovalization: 0.5, threshold: 2.0e-3}, stated: 6.0e4, rel_tol: 0.05}
+  - {id: Q-ramanujan-50pct, doc: 10-performance.md, quote: "3.3×10⁻⁸ at 50%",
+     fn: ramanujan_perimeter_error, inputs: {ovalization: 0.5}, stated: 3.3e-8, rel_tol: 0.05}
   # Measured on the reference model (design/oracles), not computed from a formula.
   - {id: Q-round-fingertip-slide, doc: 02-rigid-body-and-contact.md, quote: "slides about 4× faster than friction alone predicts",
      fn: oracle_round_fingertip_ratio, inputs: {k: 0.8}, stated: 4.0, rel_tol: 0.1}
@@ -244,6 +269,12 @@ regimes:
   - {id: R-ring-first-yield-thin-can, doc: 09-simulator.md, quote: "The first-yield and collapse rows do **not** apply to this can",
      fn: ring_deflection_ratio_range, inputs: {F: [51.2, 99.7], E: 69.0e9, nu: 0.33, t: 1.0e-4, R: 0.033}, limit: 0.05, sense: max,
      expect: violated, exclusion: "Those rows stay in the table as formulas for thicker rings, and they are excluded for the can"}
+  - {id: R-float32-displacement-uniform, doc: 10-performance.md, quote: "uniformly from 1 µm to 0.1 mm deformations",
+     fn: float32_metric_error_range, inputs: {mode: displacement, amp: [1.0e-6, 1.0e-4]}, limit: 1.0e-6, sense: max}
+  - {id: R-ramanujan-below-plastic-threshold, doc: 10-performance.md, quote: "the fast check can never flip a dent verdict by itself",
+     fn: ramanujan_error_over_threshold_range, inputs: {ovalization: [0.0, 0.5], threshold: 2.0e-3}, limit: 1.7e-5, sense: max}
+  - {id: R-ramanujan-small-ovalization, doc: 10-performance.md, quote: "below 10⁻¹⁵ up to 5% ovalization",
+     fn: ramanujan_error_range, inputs: {ovalization: [0.0, 0.05]}, limit: 1.0e-15, sense: max}
   - {id: R-nonrelativistic, doc: 03-deformables-and-materials.md, quote: "Speeds are ≲ 10 m/s",
      fn: ratio_range, inputs: {num: [0.0, 10.0], den: [2.998e8, 2.998e8]}, limit: 1.0e-6, sense: max}
 

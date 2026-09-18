@@ -260,3 +260,67 @@ def flat_plate_gap_at_yield(E, nu, sy, t, R):
 def small_deflection_load(E, nu, t, R, frac):
     """Line load giving a diametral deflection of frac * R."""
     return frac * R / ring_compliance(E, nu, 0.0, t, R)
+
+
+# --- docs/10: precision and Ramanujan's perimeter -------------------------------
+
+def float32_metric_error(mode, amp, seed=0, R=0.033, H=0.122, nt=48, nz=24):
+    """Relative error of the first-fundamental-form change a - abar on a can
+    wall, computed in float32, against float64. 'naive' subtracts current and
+    rest metrics; 'displacement' uses E.D^T + D.E^T + D.D^T (docs/10 §4)."""
+    th = np.linspace(0, 2 * np.pi, nt, endpoint=False)
+    zs = np.linspace(-H / 2, H / 2, nz + 1)
+    X = np.array([[R * np.cos(t), R * np.sin(t), z] for z in zs for t in th])
+    faces = np.array([[k * nt + j, k * nt + (j + 1) % nt, (k + 1) * nt + j] for k in range(nz) for j in range(nt)])
+    u = amp * np.random.default_rng(seed).normal(size=X.shape)
+
+    def da(dtype, displacement):
+        Xd, ud = X.astype(dtype), u.astype(dtype)
+        E = np.stack([Xd[faces[:, 1]] - Xd[faces[:, 0]], Xd[faces[:, 2]] - Xd[faces[:, 0]]], 1)
+        if displacement:
+            D = np.stack([ud[faces[:, 1]] - ud[faces[:, 0]], ud[faces[:, 2]] - ud[faces[:, 0]]], 1)
+            out = (np.einsum("fik,fjk->fij", E, D) + np.einsum("fik,fjk->fij", D, E)
+                   + np.einsum("fik,fjk->fij", D, D))
+        else:
+            x = Xd + ud
+            e = np.stack([x[faces[:, 1]] - x[faces[:, 0]], x[faces[:, 2]] - x[faces[:, 0]]], 1)
+            out = np.einsum("fik,fjk->fij", e, e) - np.einsum("fik,fjk->fij", E, E)
+        return out.astype(np.float64)
+
+    ref = da(np.float64, True)
+    return float(np.linalg.norm(da(np.float32, mode == "displacement") - ref) / np.linalg.norm(ref))
+
+
+def float32_metric_error_range(mode, amp):
+    vals = [float32_metric_error(mode, a) for a in np.geomspace(amp[0], amp[1], 5)]
+    return min(vals), max(vals)
+
+
+def ramanujan_perimeter(a, b):
+    h = ((a - b) / (a + b)) ** 2
+    return np.pi * (a + b) * (1 + 3 * h / (10 + np.sqrt(4 - 3 * h)))
+
+
+def ramanujan_perimeter_error(ovalization):
+    """Relative error of Ramanujan's second approximation against the exact
+    elliptic integral, for semi-axes 1 +/- ovalization."""
+    from mpmath import ellipe, mp
+    mp.dps = 40
+    a, b = 1 + ovalization, 1 - ovalization
+    exact = 4 * a * float(ellipe(1 - (b / a) ** 2)) if ovalization > 0 else 2 * np.pi
+    return abs(ramanujan_perimeter(a, b) / exact - 1)
+
+
+def ramanujan_error_range(ovalization):
+    vals = [ramanujan_perimeter_error(o) for o in np.linspace(ovalization[0], ovalization[1], 11)]
+    return min(vals), max(vals)
+
+
+def ramanujan_error_over_threshold_range(ovalization, threshold):
+    lo, hi = ramanujan_error_range(ovalization)
+    return lo / threshold, hi / threshold
+
+
+def ramanujan_margin(ovalization, threshold):
+    """How many times smaller the worst perimeter error is than the plastic threshold."""
+    return threshold / ramanujan_perimeter_error(ovalization)
