@@ -41,3 +41,20 @@ def test_curve_renders_to_png(tmp_path):
     path = plot_curve(tmp_path / "curve.png")
     with Image.open(path) as im:
         assert im.size[0] > 400
+
+
+def test_slope_matches_finite_differences_and_is_continuous():
+    for g in (0.060, 0.050, 0.040, 0.025):
+        h = 1e-7
+        fd = (M.force(g + h) - M.force(g - h)) / (2 * h)
+        assert M.slope(g) == pytest.approx(fd, rel=1e-5)
+    g0 = M.gap_flat
+    assert M.slope(g0 * (1 + 1e-9)) == pytest.approx(M.slope(g0 * (1 - 1e-9)), rel=1e-3)
+
+
+def test_single_query_is_microseconds():
+    M.force(0.055)
+    t0 = time.perf_counter()
+    for _ in range(1000):
+        M.force(0.055)
+    assert (time.perf_counter() - t0) / 1000 < 1e-4

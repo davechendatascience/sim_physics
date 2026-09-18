@@ -419,7 +419,8 @@ models:
     doc: 11-analytic-squeeze.md
     quote: "θ'' = λ² cos θ"
     oracle: design.oracles.elastica
-    laws: [closed_forms_match_quadrature, small_load_limit, phase_continuity, inextensibility]
+    laws: [closed_forms_match_quadrature, small_load_limit, phase_continuity, inextensibility,
+           slope_continuity, tabulated_branch_accuracy]
 
 # The same physical parameter stated in several docs must agree.
 shared_params:

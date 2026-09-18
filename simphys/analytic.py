@@ -47,8 +47,18 @@ class LongPadSqueeze:
         flat = g <= self.gap_flat
         P[flat] = 4 * np.pi ** 2 * self.EI / (VARPI ** 2 * g[flat] ** 2)
         if (~flat).any():
-            P[~flat] = self._line_contact_force(g[~flat])
+            P[~flat] = self.EI / self.R ** 2 * _branch()(g[~flat] / self.R)
         return P if np.ndim(gap) else float(P[0])
+
+    def slope(self, gap):
+        """dP/dg: exact (-2P/g) in flat contact, from the fitted branch in line contact."""
+        g = np.atleast_1d(np.asarray(gap, float))
+        d = np.empty_like(g)
+        flat = g <= self.gap_flat
+        d[flat] = -2 * self.force(g[flat]) / g[flat]
+        if (~flat).any():
+            d[~flat] = self.EI / self.R ** 3 * _branch().deriv()(g[~flat] / self.R)
+        return d if np.ndim(gap) else float(d[0])
 
     def contact_length(self, gap):
         """Flat contact length per pad (zero during line contact)."""
@@ -58,7 +68,7 @@ class LongPadSqueeze:
         """True where the pinch has passed first yield (a permanent change)."""
         return np.asarray(gap, float) < self.gap_yield
 
-    def _line_contact_force(self, g):
+    def _line_contact_force_exact(self, g):
         # bisection on lam for every gap at once; kA found by bisection on arc length
         R, L = self.R, np.pi * self.R / 2
         lam0 = np.sqrt(2) * np.pi / (VARPI * self.gap_flat)       # lam where flat contact begins
@@ -75,6 +85,25 @@ class LongPadSqueeze:
             lo, hi = np.where(wide, lam, lo), np.where(wide, hi, lam)
         lam = 0.5 * (lo + hi)
         return 2 * self.EI * lam ** 2
+
+
+_BRANCH = None
+
+
+def _branch():
+    """Degree-12 Chebyshev fit of the dimensionless line-contact branch
+    P R^2/(E'I) against g/R on [g0/R, 2] (docs/11 §1). Material-free, so it is
+    built once per process from the exact solver, in about a tenth of a second."""
+    global _BRANCH
+    if _BRANCH is None:
+        unit = LongPadSqueeze.__new__(LongPadSqueeze)
+        unit.R, unit.EI = 1.0, 1.0
+        unit.gap_flat = np.pi ** 2 / VARPI ** 2
+        n = 80
+        x = np.cos(np.pi * (np.arange(n) + 0.5) / n) * 0.5 * (2 - unit.gap_flat) + 0.5 * (2 + unit.gap_flat)
+        P = unit._line_contact_force_exact(x)
+        _BRANCH = np.polynomial.chebyshev.Chebyshev.fit(x, P, 12, domain=[unit.gap_flat, 2.0])
+    return _BRANCH
 
 
 def can_wall():

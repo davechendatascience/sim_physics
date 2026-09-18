@@ -317,3 +317,29 @@ def test_quarter_arc_length_is_conserved():
     R = RING["R"]
     for P in (0.0, 1.0, 10.0, 30.0, 80.0):
         assert EL.state(P, R, EPI)["arc"] == pytest.approx(np.pi * R / 2, rel=1e-8)
+
+
+def _line_branch(g):
+    """Dimensionless line-contact branch P R^2 / E'I at gap g/R (R = E'I = 1)."""
+    return EL.force_for_gap(g, 1.0, 1.0)
+
+
+G_STAR = np.pi ** 2 / Qn.lemniscate_constant() ** 2
+
+
+@law("MOD-ring-elastica", "slope_continuity", "11-analytic-squeeze.md")
+def test_force_gap_slope_is_continuous_at_flat_contact_onset():
+    h = 1e-4
+    above = (_line_branch(G_STAR + 2 * h) - _line_branch(G_STAR + h)) / h
+    below = -2 * Qn.squeeze_flat_force(G_STAR, 1.0, 0.0, 12 ** (1 / 3)) / G_STAR    # exact dP/dg = -2P/g
+    assert above == pytest.approx(below, rel=2e-3)                                  # 1st-order FD offset
+
+
+@law("MOD-ring-elastica", "tabulated_branch_accuracy", "11-analytic-squeeze.md")
+def test_degree_12_chebyshev_reproduces_the_line_contact_branch():
+    n = 80
+    x = np.cos(np.pi * (np.arange(n) + 0.5) / n) * 0.5 * (2 - G_STAR) + 0.5 * (2 + G_STAR)
+    fit = np.polynomial.chebyshev.Chebyshev.fit(x, [_line_branch(v) for v in x], 12, domain=[G_STAR, 2])
+    xt = np.linspace(G_STAR + 1e-6, 2 - 1e-6, 120)
+    ref = np.array([_line_branch(v) for v in xt])
+    assert np.abs(fit(xt) - ref).max() <= 1e-9 * _line_branch(G_STAR + 1e-6)

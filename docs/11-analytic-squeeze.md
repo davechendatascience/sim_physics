@@ -28,7 +28,9 @@ with `E' = E/(1 − ν²)` and `I = t³/12` per unit length. The wall is thin (R
 
 Here `Δκ_y = 2 σ_1y (1 − ν²) / (E t)` is the curvature change that brings the surface fiber to first yield (83 /m for this wall, [09](09-simulator.md) §4). The tightest curvature is at the side point B, `κ_B = √2 λ`, so that is where yield starts.
 
-For the long-pad pinch this replaces the Newton solve entirely. Phase 1 takes a few function evaluations and phase 2 is algebraic, instead of hours of 3D stepping.
+For the long-pad pinch this replaces the Newton solve entirely. Phase 2 is algebraic, with an exact slope `dP/dg = −2P/g`.
+
+**Phase 1 is tabulated once.** In the dimensionless variables g/R and P R²/(E'I), the line-contact branch contains no material constants. A degree-12 Chebyshev fit on g/R ∈ [1.4355, 2] reproduces the quadrature reference to 1.3×10⁻¹⁰ of the onset force, so every query costs about a dozen floating-point operations. The fit and its derivative join the flat-contact law with matching slope at g₀ (C¹), so a force-feedback loop sees no kink. This follows revision 2 of the user's brief (`docs/reference/engineering_brief_can_squeeze_speedup_via_ramanujan_mathematics.md` §4), with its first-yield rule corrected: in plane strain, first yield comes at σ₁₁ = σ_y/√(1 − ν + ν²), not σ_y.
 
 ## 2. Regime
 
@@ -41,6 +43,7 @@ For the long-pad pinch this replaces the Newton solve entirely. Phase 1 takes a 
 
 - **Reference model:** `design/oracles/elastica.py` integrates the elastica by quadrature and root-finding, with no closed forms. The closed forms above must match it.
 - **Small-load limit:** phase 1 must reproduce the linear ring compliance `(π/4 − 2/π) F R³/(E'I)` of [09](09-simulator.md) §4 as the load goes to zero.
-- **Phase continuity:** force and gap must be continuous where line contact becomes flat contact.
+- **Phase continuity:** force, gap and slope must be continuous where line contact becomes flat contact.
+- **Tabulated branch:** the degree-12 fit must stay within 10⁻⁹ of the quadrature reference.
 - **Inextensibility:** the arc length stays πR/2 per quarter in both phases.
 - **The 3D simulator:** its long-can scene must agree with this tier.
