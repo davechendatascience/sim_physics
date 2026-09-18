@@ -1,13 +1,13 @@
 # 02 — Rigid Bodies & Contact
 
-## 1. Rigid bodies as affine bodies
+## 1. Rigid bodies with exact rotations
 
-Classic rigid-body engines use reduced coordinates (position + quaternion) with constraint impulses. To share one solver with deformables, rigid bodies here are **affine bodies** (Affine Body Dynamics, Lan et al. 2022):
+Rigid bodies take part in the same incremental potential as deformables, so contact between any pair uses the same barrier. Each body has a position `p` and a rotation `Q`, and vertices are `x = Q X + p`.
 
-- DOFs: `x(X) = A X + p`, with 12 DOFs per body
-- An orthogonality potential `κ·V·‖AᵀA − I‖²_F` keeps `A` close to a rotation. Stiffness `κ` is large (for example 10⁸ Pa-scaled) but finite and handled implicitly.
-- Mass matrix is constant (no gyroscopic terms to integrate explicitly). Contact with deformables uses the same barrier as everything else.
-- For output, `A` is projected to the nearest rotation (polar decomposition) to report pose, angular velocity and so on.
+- **Newton on the rotation group.** Each Newton iteration solves for a translation increment and a rotation increment `ω`, then applies `Q ← exp([ω]ₓ) Q`. The rotation stays exactly orthogonal at every iterate, and no stiffness parameter is needed to keep it rigid.
+- **Rotational inertia** uses the matrix form `½ tr((Q − Q̃) J (Q − Q̃)ᵀ)/h²`, with `J = ∫ρ X Xᵀ dV` and `Q̃ = Q_n + h Q̇_n`. For a spinning body, `½ tr(Q̇ J Q̇ᵀ)` equals the rigid kinetic energy `½ ωᵀ I ω` exactly.
+- **Second-order geometric term.** Vertex positions are nonlinear in `ω`, so the Hessian includes the term from the curvature of the rotation map (projected to PSD), not only `Jᵀ H J`.
+- **Why not affine bodies.** Affine Body Dynamics (Lan et al. 2022) uses 12 DOF and an orthogonality potential `κ·V·‖AᵀA − I‖²_F`. It was the first design and is linear in its DOFs. Measured on the CPU solver, a tumbling box needed 120 Newton iterations per step (versus 3 in free flight). Along a rotation the potential grows as the fourth power of the angle and has zero curvature at the current iterate, so Newton's quadratic model cannot see it and overshoots. Exact rotations remove the stiff term.
 
 A body that is "rigid but can break or yield" (a plastic cup, a thin bracket) is authored as a `Solid` or `Shell` with stiff material, not as `Rigid`. `Rigid` is an explicit approximation declaration.
 

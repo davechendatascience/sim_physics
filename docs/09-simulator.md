@@ -10,14 +10,14 @@ The first implementation of the design. It is **3D** and runs on a laptop CPU. I
 |---|---|---|
 | `CMP-sim.solver` | [01](01-architecture.md) §3 | Incremental-potential step: sparse Newton with per-stencil PSD projection, CCD-bounded line search, lagged friction |
 | `CMP-sim.contact` | [02](02-rigid-body-and-contact.md) §2 | Point–triangle and edge–edge IPC barrier with shell-thickness offsets, conservative CCD, smoothed Coulomb friction |
-| `CMP-sim.bodies` | [02](02-rigid-body-and-contact.md) §1, [03](03-deformables-and-materials.md) §1 | Rigid bodies (affine, 12 DOF), thin shells (discrete Kirchhoff–Love triangles), solids (linear tetrahedra) |
+| `CMP-sim.bodies` | [02](02-rigid-body-and-contact.md) §1, [03](03-deformables-and-materials.md) §1 | Rigid bodies (exact rotations, 6 DOF), thin shells (discrete Kirchhoff–Love triangles), solids (linear tetrahedra) |
 | `CMP-sim.materials` | [03](03-deformables-and-materials.md) §2, §5 | Neo-Hookean solids, plane-stress J2 through the shell thickness, enclosed gas |
 | `CMP-sim.ledger` | [03](03-deformables-and-materials.md) §4 | Plastic strain, residual shape, "altered?" verdict |
 | `CMP-sim.render` | — | Headless (PNG/GIF) or windowed (matplotlib 3D) output |
 
 ## 2. Models
 
-- **Rigid bodies** are affine: x = A X + p with 12 DOF in 3D, plus the orthogonality potential of [02](02-rigid-body-and-contact.md) §1. The affine kinetic energy uses the body's second moment `J = ∫ρ X Xᵀ dV`. For a body spinning about any axis, it equals the rigid kinetic energy `½ ωᵀ I ω` exactly.
+- **Rigid bodies** have exact rotations: x = Q X + p, with Newton increments on the rotation group as in [02](02-rigid-body-and-contact.md) §1. The rotational inertia uses the body's second moment `J = ∫ρ X Xᵀ dV`. For a body spinning about any axis, `½ tr(Q̇ J Q̇ᵀ)` equals the rigid kinetic energy `½ ωᵀ I ω` exactly.
 - **Thin shells** are discrete Kirchhoff–Love triangles. Membrane strain comes from the first fundamental form of each face. Bending comes from the second fundamental form built from **mid-edge normals**: each edge's normal is the average of its two faces' normals. Both are expressed in the face's rest frame, so the energy does not change under rigid motion.
 - **Through-thickness integration** uses **composite Simpson split at the mid-surface (9 points)**. Fiber strain is `ε(z) = ε_m + z κ`, where ε_m and κ are 2×2 tensors. This rule is exact for the elastic bending stiffness, for first yield at the surface fiber, and for the fully plastic moment. Gauss–Lobatto rules underestimate the fully plastic moment: by 8.7% with 5 points, by 4.0% with 7.
 - **Shell plasticity** is plane-stress J2 at every fiber, with the closed-form spectral return map of Simo & Taylor and linear isotropic hardening.
@@ -37,7 +37,7 @@ A can squeezed along its **whole length** by two long flat pads is a ring in pla
 | Quantity | Formula | Value |
 |---|---|---|
 | Plane-strain modulus | `E' = E/(1 − ν²)` | E' = 77.4 GPa |
-| Diametral compliance | `δ = (π/4 − 2/π) F R³/(E' I)` | 8.29×10⁻⁴ m per N/m |
+| Diametral compliance (small deflection) | `δ = (π/4 − 2/π) F R³/(E' I)` | 8.29×10⁻⁴ m per N/m |
 | First-yield fiber stress (axial strain held at zero) | `σ_1y = σ_y/√(1 − ν + ν²)` | 323 MPa |
 | First-yield load | `F_y = π M_y / R` with `M_y = σ_1y t²/6` | 51.2 N/m |
 | Fully plastic fiber stress | `σ_y' = 2σ_y/√3` | σ_y' = 329 MPa |
@@ -47,7 +47,9 @@ A can squeezed along its **whole length** by two long flat pads is a ring in pla
 
 The last line is why a sealed can is hard to dent. Internal pressure is 464 times the ring's buckling pressure, so ovalization is stiffened by more than two orders of magnitude.
 
-The real question, a **short** pad on a can, has no closed form. That is what the 3D simulator is for. The long-cylinder numbers are a lower bound on it, because the shell around a short patch stiffens it.
+**Regime.** These are small-deflection results, valid while δ ≪ R. For the compliance check that means F ≲ 2 N/m (δ ≤ 5% of R); the simulator is validated at 1 N/m. The first-yield and collapse rows do **not** apply to this can: linear theory puts the deflection at "first yield" at 1.29 R, more than the radius. The wall is too thin for that. First yield needs a curvature change of 83 /m, while flattening the wall completely changes its curvature by only 30 /m. So a can squeezed by flat plates along its whole length flattens elastically; the plates must close to about 18 mm before the tightly curved ends yield. Those rows stay in the table as formulas for thicker rings, and they are excluded for the can.
+
+This is why the real question, a **short** pad on a can, needs the 3D simulator. Dents come from local indentation and buckling under the pad, which have no closed form here.
 
 ## 5. Running it
 

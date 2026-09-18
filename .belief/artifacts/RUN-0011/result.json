@@ -1,0 +1,148 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-thin-shell]",
+        "claim": "R-thin-shell",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-continuum-wall]",
+        "claim": "R-continuum-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-rate-independence]",
+        "claim": "R-rate-independence",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-quasi-static-wall]",
+        "claim": "R-quasi-static-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-ideal-gas]",
+        "claim": "R-ideal-gas",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-linear-slosh]",
+        "claim": "R-linear-slosh",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-hertz-benchmark]",
+        "claim": "R-hertz-benchmark",
+        "doc": "05-case-study-soda-can.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-hertz-pad-on-can]",
+        "claim": "R-hertz-pad-on-can",
+        "doc": "05-case-study-soda-can.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-barrier-vs-molecular]",
+        "claim": "R-barrier-vs-molecular",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-barrier-vs-wall]",
+        "claim": "R-barrier-vs-wall",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-thin-shell-sim]",
+        "claim": "R-thin-shell-sim",
+        "doc": "09-simulator.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_regime::test_regime_of_validity[R-nonrelativistic]",
+        "claim": "R-nonrelativistic",
+        "doc": "03-deformables-and-materials.md",
+        "law": "regime_of_validity"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

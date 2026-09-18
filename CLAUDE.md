@@ -13,6 +13,10 @@ The design process is a component (`CMP-design-process` in `belief.yaml`) and it
 
 Classical physics has limits. Every model states the regime where it holds (continuum scale, quasi-static, ideal gas, linear slosh, Hertz assumptions...), and the regime checks enforce those limits.
 
+## Rule: keep the README's feature list current
+
+Every new feature gets a row in the Features table of `README.md` (status + where it lives) in the same commit that introduces it. Keep feature work organised: one feature per commit where practical.
+
 ## Rule: CPU-only, renderable demos
 
 This machine has no usable GPU for the simulator. Prioritise small demos that test the most physics per unit of compute: 2D/low-DOF oracles, static matplotlib PNGs or short GIFs. Do not build demos that need a GPU or heavy rendering to view.

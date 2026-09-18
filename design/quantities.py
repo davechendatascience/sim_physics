@@ -233,3 +233,30 @@ def rule_plastic_moment_deficit(rule_name):
     from design.oracles.sim3d import rule
     xi, w = rule(rule_name)
     return 1 - float(np.sum(w * np.abs(xi)))
+
+
+def ring_deflection_ratio(F, E, nu, t, R):
+    """Small-deflection diametral deflection / R at line load F (N/m)."""
+    return ring_compliance(E, nu, 0.0, t, R) * F / R
+
+
+def ring_deflection_ratio_range(F, E, nu, t, R):
+    return _span(ring_deflection_ratio, {"F": F, "E": E, "nu": nu, "t": t, "R": R})
+
+
+def yield_curvature_change(E, nu, sy, t):
+    """Curvature change that brings the surface fiber to first yield in
+    cylindrical bending (axial strain held at zero)."""
+    eps_y = first_yield_stress(sy, nu) * (1 - nu ** 2) / E
+    return 2 * eps_y / t
+
+
+def flat_plate_gap_at_yield(E, nu, sy, t, R):
+    """Plate gap at which the ends of a ring flattened between plates (taken as
+    semicircles of diameter = gap) reach first yield."""
+    return 2 / (yield_curvature_change(E, nu, sy, t) + 1 / R)
+
+
+def small_deflection_load(E, nu, t, R, frac):
+    """Line load giving a diametral deflection of frac * R."""
+    return frac * R / ring_compliance(E, nu, 0.0, t, R)

@@ -198,8 +198,8 @@ def rot3(w, t):
     return np.eye(3) + np.sin(th) * K + (1 - np.cos(th)) * K @ K
 
 
-@law("MOD-affine-body", "rigid_kinetic_energy", "09-simulator.md")
-def test_affine_kinetic_energy_equals_rigid():
+@law("MOD-rigid-body", "rigid_kinetic_energy", "02-rigid-body-and-contact.md")
+def test_matrix_kinetic_energy_equals_rigid():
     m, J = S.box_mass_properties((0.3, 0.1, 0.05), 2700.0)
     I_body = np.trace(J) * np.eye(3) - J                    # inertia tensor from the second moment
     for _ in range(20):
@@ -210,13 +210,14 @@ def test_affine_kinetic_energy_equals_rigid():
         assert S.affine_kinetic(m, J, np.zeros(3), Adot @ R0.T @ R0) == pytest.approx(rigid, rel=1e-6)
 
 
-@law("MOD-affine-body", "rotation_costs_nothing", "09-simulator.md")
-def test_orthogonality_potential_is_zero_only_for_rotations():
-    for _ in range(20):
-        R = rot3(RNG3.normal(size=3), 1.0)
-        assert S.orthogonality_energy(R, 1e8, 1e-3) == pytest.approx(0.0, abs=1e-12)
-        sheared = R @ (np.eye(3) + 1e-3 * RNG3.normal(size=(3, 3)))
-        assert S.orthogonality_energy(sheared, 1e8, 1e-3) > 0
+@law("MOD-rigid-body", "rotation_stays_orthogonal", "02-rigid-body-and-contact.md")
+def test_rotation_increments_keep_the_body_rigid():
+    """Q <- exp([w]) Q, applied many times with large increments, never drifts off SO(3)."""
+    Q = np.eye(3)
+    for _ in range(10000):
+        Q = S.rotation_exp(RNG3.normal(scale=0.5, size=3)) @ Q
+    assert np.abs(Q.T @ Q - np.eye(3)).max() < 1e-12
+    assert np.linalg.det(Q) == pytest.approx(1.0, abs=1e-12)
 
 
 def _fd_grad(fn, pts, h=1e-7):

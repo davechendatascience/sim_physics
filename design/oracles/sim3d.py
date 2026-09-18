@@ -138,8 +138,21 @@ def affine_kinetic(m, J, pdot, Adot):
 
 
 def orthogonality_energy(A, kappa, V):
+    """The affine-body potential of the first design (kept for reference, docs/02 §1)."""
     D = A.T @ A - np.eye(3)
     return kappa * V * np.sum(D * D)
+
+
+def rotation_exp(w):
+    """exp([w]x) by Rodrigues' formula, re-orthonormalised to machine precision."""
+    th = np.linalg.norm(w)
+    K = np.array([[0, -w[2], w[1]], [w[2], 0, -w[0]], [-w[1], w[0], 0]])
+    if th < 1e-12:
+        R = np.eye(3) + K
+    else:
+        R = np.eye(3) + np.sin(th) / th * K + (1 - np.cos(th)) / th ** 2 * K @ K
+    U, _, Vt = np.linalg.svd(R)
+    return U @ Vt
 
 
 # --- distances -----------------------------------------------------------------

@@ -192,6 +192,16 @@ quantities:
      inputs: {rule_name: lobatto5}, stated: 0.087, rel_tol: 0.01}
   - {id: Q-lobatto7-plastic-moment, doc: 09-simulator.md, quote: "by 4.0% with 7", fn: rule_plastic_moment_deficit,
      inputs: {rule_name: lobatto7}, stated: 0.040, rel_tol: 0.01}
+  - {id: Q-ring-deflection-at-first-yield, doc: 09-simulator.md, quote: "puts the deflection at \"first yield\" at 1.29 R",
+     fn: ring_deflection_ratio, inputs: {F: 51.24, E: 69.0e9, nu: 0.33, t: 1.0e-4, R: 0.033}, stated: 1.29, rel_tol: 0.01}
+  - {id: Q-yield-curvature-change, doc: 09-simulator.md, quote: "First yield needs a curvature change of 83 /m",
+     fn: yield_curvature_change, inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4}, stated: 83.0, rel_tol: 0.01}
+  - {id: Q-can-wall-curvature, doc: 09-simulator.md, quote: "changes its curvature by only 30 /m",
+     fn: ratio, inputs: {num: 1.0, den: 0.033}, stated: 30.0, rel_tol: 0.02}
+  - {id: Q-flat-plate-gap-at-yield, doc: 09-simulator.md, quote: "the plates must close to about 18 mm",
+     fn: flat_plate_gap_at_yield, inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 0.018, rel_tol: 0.05}
+  - {id: Q-small-deflection-load, doc: 09-simulator.md, quote: "F ≲ 2 N/m (δ ≤ 5% of R)",
+     fn: small_deflection_load, inputs: {E: 69.0e9, nu: 0.33, t: 1.0e-4, R: 0.033, frac: 0.05}, stated: 2.0, rel_tol: 0.01}
   # Measured on the reference model (design/oracles), not computed from a formula.
   - {id: Q-round-fingertip-slide, doc: 02-rigid-body-and-contact.md, quote: "slides about 4× faster than friction alone predicts",
      fn: oracle_round_fingertip_ratio, inputs: {k: 0.8}, stated: 4.0, rel_tol: 0.1}
@@ -229,6 +239,11 @@ regimes:
      fn: ratio_range, inputs: {num: [1.0e-5, 1.0e-5], den: [1.0e-4, 1.0e-4]}, limit: 0.1, sense: max}
   - {id: R-thin-shell-sim, doc: 09-simulator.md, quote: "Thin shells** are discrete Kirchhoff–Love triangles",
      fn: ratio_range, inputs: {num: [0.95e-4, 1.05e-4], den: [0.033, 0.033]}, limit: 0.05, sense: max}
+  - {id: R-ring-compliance-check, doc: 09-simulator.md, quote: "the simulator is validated at 1 N/m",
+     fn: ring_deflection_ratio_range, inputs: {F: [1.0, 1.0], E: 69.0e9, nu: 0.33, t: 1.0e-4, R: 0.033}, limit: 0.05, sense: max}
+  - {id: R-ring-first-yield-thin-can, doc: 09-simulator.md, quote: "The first-yield and collapse rows do **not** apply to this can",
+     fn: ring_deflection_ratio_range, inputs: {F: [51.2, 99.7], E: 69.0e9, nu: 0.33, t: 1.0e-4, R: 0.033}, limit: 0.05, sense: max,
+     expect: violated, exclusion: "Those rows stay in the table as formulas for thicker rings, and they are excluded for the can"}
   - {id: R-nonrelativistic, doc: 03-deformables-and-materials.md, quote: "Speeds are ≲ 10 m/s",
      fn: ratio_range, inputs: {num: [0.0, 10.0], den: [2.998e8, 2.998e8]}, limit: 1.0e-6, sense: max}
 
@@ -303,11 +318,11 @@ models:
     quote: "**Plasticity is staggered.**"
     oracle: design.oracles.sim3d
     laws: [return_map_lowers_energy]
-  - id: MOD-affine-body
-    doc: 09-simulator.md
-    quote: "are affine: x = A X + p with 12 DOF in 3D"
+  - id: MOD-rigid-body
+    doc: 02-rigid-body-and-contact.md
+    quote: "Each body has a position p and a rotation Q, and vertices are x = Q X + p"
     oracle: design.oracles.sim3d
-    laws: [rigid_kinetic_energy, rotation_costs_nothing]
+    laws: [rigid_kinetic_energy, rotation_stays_orthogonal]
   - id: MOD-contact-distance
     doc: 09-simulator.md
     quote: "**Contact** is point–triangle plus edge–edge"

@@ -1,0 +1,364 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-hoop-stress]",
+        "claim": "Q-hoop-stress",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-bending-length]",
+        "claim": "Q-bending-length",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-dent-scale]",
+        "claim": "Q-dent-scale",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-fmin-full-dry]",
+        "claim": "Q-fmin-full-dry",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-fmin-full-wet]",
+        "claim": "Q-fmin-full-wet",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-fmin-empty-dry]",
+        "claim": "Q-fmin-empty-dry",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-fmin-empty-wet]",
+        "claim": "Q-fmin-empty-wet",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-condensation-ratio]",
+        "claim": "Q-condensation-ratio",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-full-can-mass]",
+        "claim": "Q-full-can-mass",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-t-over-R]",
+        "claim": "Q-t-over-R",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-wave-transit]",
+        "claim": "Q-wave-transit",
+        "doc": "03-deformables-and-materials.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-grains-through-wall]",
+        "claim": "Q-grains-through-wall",
+        "doc": "03-deformables-and-materials.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-rate-shift]",
+        "claim": "Q-rate-shift",
+        "doc": "03-deformables-and-materials.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-gas-compressibility]",
+        "claim": "Q-gas-compressibility",
+        "doc": "03-deformables-and-materials.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-slosh-tilt]",
+        "claim": "Q-slosh-tilt",
+        "doc": "03-deformables-and-materials.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-pad-contact-width]",
+        "claim": "Q-pad-contact-width",
+        "doc": "05-case-study-soda-can.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-dhat-can]",
+        "claim": "Q-dhat-can",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-can-plane-strain-modulus]",
+        "claim": "Q-can-plane-strain-modulus",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-can-first-yield-stress]",
+        "claim": "Q-can-first-yield-stress",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-can-fully-plastic-stress]",
+        "claim": "Q-can-fully-plastic-stress",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-ring-compliance]",
+        "claim": "Q-ring-compliance",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-ring-first-yield]",
+        "claim": "Q-ring-first-yield",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-ring-collapse]",
+        "claim": "Q-ring-collapse",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-ring-buckling-pressure]",
+        "claim": "Q-ring-buckling-pressure",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-ring-pressure-stiffening]",
+        "claim": "Q-ring-pressure-stiffening",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-ring-pressure-ratio]",
+        "claim": "Q-ring-pressure-ratio",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-lobatto5-plastic-moment]",
+        "claim": "Q-lobatto5-plastic-moment",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-lobatto7-plastic-moment]",
+        "claim": "Q-lobatto7-plastic-moment",
+        "doc": "09-simulator.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-round-fingertip-slide]",
+        "claim": "Q-round-fingertip-slide",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_quantities::test_stated_number_recomputes[Q-flat-pad-slide]",
+        "claim": "Q-flat-pad-slide",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "stated_number"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

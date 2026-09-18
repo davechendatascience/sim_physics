@@ -3,16 +3,20 @@
 # The server reads this file from git HEAD, not the working tree: edits take
 # effect only once a human commits them.
 #
-# The design process is the first component. Every implementation component
-# added later consumes its output through IFC-design__<component> and must not
-# be declared without one (see CLAUDE.md).
+# Layering. The belief server has no notion of one component containing
+# another, so containment is written into the ids: CMP-sim encloses
+# CMP-sim.solver, CMP-sim.contact, ... Its end-to-end test runs the whole
+# simulator; each part has its own component test, so diagnosis can say which
+# part is responsible. CMP-design-process gates every implementation component
+# through an IFC-design__<component> interface (see CLAUDE.md).
 
 components:
   - id: CMP-design-process
     purpose: >-
       Turn classical physics and materials knowledge into design claims
       (docs/ + design/claims.yaml) that implementation is allowed to build on
-    outputs: []
+    outputs: [IFC-design__sim.solver, IFC-design__sim.contact, IFC-design__sim.bodies,
+              IFC-design__sim.materials, IFC-design__sim.ledger, IFC-design__sim.render]
     testable_capability: >-
       Every physics statement in the design is registered, dimensionally
       consistent, satisfies classical balance and thermodynamic laws when run
@@ -30,9 +34,178 @@ components:
       wrong, fix the reference model with a stated reason. Never loosen a
       tolerance to make a check pass.
 
-interfaces: []
+  - id: CMP-sim
+    purpose: The 3D CPU simulator (simphys), enclosing the six components below
+    inputs: [IFC-solver__sim, IFC-ledger__sim, IFC-render__sim]
+    testable_capability: >-
+      Every built-in scene runs from the command line, headless, and writes
+      its animation, final frame, and ledger summary
+    failure_modes:
+      - {id: FM-sim-crash, observable: a built-in scene exits non-zero}
+      - {id: FM-sim-output, observable: a headless run does not write its GIF, PNG or JSON summary}
+    remediation: Diagnose which enclosed component fails its own contract first
+
+  - id: CMP-sim.solver
+    purpose: Incremental-potential time step with Newton on increments (rotations on SO(3))
+    inputs: [IFC-design__sim.solver, IFC-bodies__solver, IFC-contact__solver]
+    outputs: [IFC-solver__sim, IFC-solver__ledger, IFC-solver__render]
+    testable_capability: >-
+      Reproduces implicit Euler exactly in free fall, conserves linear momentum
+      through collisions, never increases energy without external work, and
+      converges in a handful of Newton iterations on resting contact
+    failure_modes:
+      - {id: FM-solver-momentum, observable: total momentum drifts in an isolated collision}
+      - {id: FM-solver-energy, observable: energy rises on frictionless ground}
+      - {id: FM-solver-stall, observable: Newton needs many iterations on a resting contact}
+    remediation: simphys/scene.py energy() and step(); check PSD projection and the rotation curvature term
+
+  - id: CMP-sim.contact
+    purpose: IPC barrier with shell-thickness offsets, Lipschitz-sampled CCD, lagged friction
+    inputs: [IFC-design__sim.contact]
+    outputs: [IFC-contact__solver]
+    testable_capability: >-
+      No interpenetration or tunnelling, shells keep their thickness, and a
+      block on an incline sticks or slides as Coulomb friction predicts
+    failure_modes:
+      - {id: FM-contact-penetration, observable: any contact gap reaches zero, or a fast body passes through a plate}
+      - {id: FM-contact-friction, observable: incline stick/slide disagrees with Coulomb}
+    remediation: simphys/collision.py (broad phase, ccd) and the contact kernels in simphys/kernels.py
+
+  - id: CMP-sim.bodies
+    purpose: Rigid bodies (exact rotations), discrete Kirchhoff-Love shells, Neo-Hookean tets
+    inputs: [IFC-design__sim.bodies, IFC-materials__bodies]
+    outputs: [IFC-bodies__solver]
+    testable_capability: >-
+      Rigid bodies stay exactly rigid; a rolled strip stores plate-theory
+      bending energy; a long can matches ring compliance and converges with
+      mesh refinement; shell energy is frame-indifferent
+    failure_modes:
+      - {id: FM-bodies-rigidity, observable: a spinning body's rotation drifts off SO(3)}
+      - {id: FM-bodies-shell, observable: shell bending or ring compliance disagrees with theory, or does not converge}
+    remediation: simphys/bodies.py and the shell kernel in simphys/kernels.py
+
+  - id: CMP-sim.materials
+    purpose: Plane-stress J2 through the shell thickness, isothermal enclosed gas
+    inputs: [IFC-design__sim.materials]
+    outputs: [IFC-materials__bodies]
+    testable_capability: >-
+      The return map agrees with the design's reference model, is the identity
+      below yield, and a sealed can swells by the thin-wall hoop strain
+    failure_modes:
+      - {id: FM-materials-return-map, observable: the return map disagrees with design/oracles/sim3d.py}
+      - {id: FM-materials-gas, observable: pressurised can expansion disagrees with pR/(tE)(1 - nu/2)}
+    remediation: simphys/materials.py and the gas terms in simphys/scene.py
+
+  - id: CMP-sim.ledger
+    purpose: Irreversible-state verdict per shell (plastic strain, residual shape)
+    inputs: [IFC-design__sim.ledger, IFC-solver__ledger]
+    outputs: [IFC-ledger__sim]
+    testable_capability: >-
+      Rigid motion is not an alteration; plastic strain or a residual dent
+      above the design thresholds is; a light squeeze and release leaves the
+      can unaltered
+    failure_modes:
+      - {id: FM-ledger-false-alarm, observable: a moved or elastically loaded can is reported altered}
+      - {id: FM-ledger-miss, observable: plastic strain or a dent above threshold is not reported}
+    remediation: simphys/ledger.py
+
+  - id: CMP-sim.render
+    purpose: CPU-only matplotlib rendering, headless (GIF/PNG) or windowed
+    inputs: [IFC-design__sim.render, IFC-solver__render]
+    outputs: [IFC-render__sim]
+    testable_capability: Headless runs write an animated GIF with one frame per draw and a final PNG
+    failure_modes:
+      - {id: FM-render-output, observable: frames or files missing, or an unknown mode accepted}
+    remediation: simphys/render.py
+
+interfaces:
+  - id: IFC-design__sim.solver
+    producer: CMP-design-process
+    consumer: CMP-sim.solver
+    semantics: The incremental-potential step of docs/01 §3 and its conservation properties
+    producer_guarantees: [linear momentum exact; energy and angular momentum first order and never gained]
+    consumer_assumptions: [linear momentum exact; energy and angular momentum first order and never gained]
+  - id: IFC-design__sim.contact
+    producer: CMP-design-process
+    consumer: CMP-sim.contact
+    semantics: IPC barrier, CCD and smoothed Coulomb friction of docs/02 §2, thickness offsets of docs/09
+    producer_guarantees: [barrier repulsive only and infinite at contact; friction bounded by Coulomb and dissipative]
+    consumer_assumptions: [barrier repulsive only and infinite at contact; friction bounded by Coulomb and dissipative]
+  - id: IFC-design__sim.bodies
+    producer: CMP-design-process
+    consumer: CMP-sim.bodies
+    semantics: Rigid bodies with exact rotations (docs/02 §1); shells and solids (docs/09 §2)
+    producer_guarantees: [rigid kinetic energy exact; shell integration exact for elastic, first-yield and plastic limits]
+    consumer_assumptions: [rigid kinetic energy exact; shell integration exact for elastic, first-yield and plastic limits]
+  - id: IFC-design__sim.materials
+    producer: CMP-design-process
+    consumer: CMP-sim.materials
+    semantics: Plane-stress J2 and enclosed gas (docs/03, docs/09 §2), validated against design/oracles
+    producer_guarantees: [return map dissipative and yield-consistent; gas force is minus the energy gradient]
+    consumer_assumptions: [return map dissipative and yield-consistent; gas force is minus the energy gradient]
+  - id: IFC-design__sim.ledger
+    producer: CMP-design-process
+    consumer: CMP-sim.ledger
+    semantics: Irreversibility thresholds of docs/03 §4
+    producer_guarantees: [plastic strain threshold 2e-3; residual shape threshold 0.1 mm]
+    consumer_assumptions: [plastic strain threshold 2e-3; residual shape threshold 0.1 mm]
+  - id: IFC-design__sim.render
+    producer: CMP-design-process
+    consumer: CMP-sim.render
+    semantics: CPU-only rendering of docs/09 §3
+    producer_guarantees: [matplotlib only, no GPU; shells coloured by plastic strain]
+    consumer_assumptions: [matplotlib only, no GPU; shells coloured by plastic strain]
+  - id: IFC-materials__bodies
+    producer: CMP-sim.materials
+    consumer: CMP-sim.bodies
+    semantics: Return map and material constants used by shell faces
+    producer_guarantees: [return map vectorised over faces and fibers; stress never outside the yield surface]
+    consumer_assumptions: [return map vectorised over faces and fibers; stress never outside the yield surface]
+  - id: IFC-bodies__solver
+    producer: CMP-sim.bodies
+    consumer: CMP-sim.solver
+    semantics: Per-stencil energies, gradients and Hessians; rigid mass properties
+    producer_guarantees: [stencil energies differentiable by JAX; rigid second moment J about the centre of mass]
+    consumer_assumptions: [stencil energies differentiable by JAX; rigid second moment J about the centre of mass]
+  - id: IFC-contact__solver
+    producer: CMP-sim.contact
+    consumer: CMP-sim.solver
+    semantics: Active pairs with offsets, a safe step fraction, friction lag data
+    producer_guarantees: [every pair within reach is found; the step fraction keeps every gap positive]
+    consumer_assumptions: [every pair within reach is found; the step fraction keeps every gap positive]
+  - id: IFC-solver__ledger
+    producer: CMP-sim.solver
+    consumer: CMP-sim.ledger
+    semantics: Converged shell configurations and plastic state after each step
+    producer_guarantees: [plastic state updated after every converged step]
+    consumer_assumptions: [plastic state updated after every converged step]
+  - id: IFC-solver__render
+    producer: CMP-sim.solver
+    consumer: CMP-sim.render
+    semantics: Vertex positions of every body at the current time
+    producer_guarantees: [positions of all bodies in one array with per-body offsets]
+    consumer_assumptions: [positions of all bodies in one array with per-body offsets]
+  - id: IFC-solver__sim
+    producer: CMP-sim.solver
+    consumer: CMP-sim
+    semantics: Stepping for every built-in scene
+    producer_guarantees: [every built-in scene steps without error]
+    consumer_assumptions: [every built-in scene steps without error]
+  - id: IFC-ledger__sim
+    producer: CMP-sim.ledger
+    consumer: CMP-sim
+    semantics: Ledger summary written with every run
+    producer_guarantees: [one report per shell body]
+    consumer_assumptions: [one report per shell body]
+  - id: IFC-render__sim
+    producer: CMP-sim.render
+    consumer: CMP-sim
+    semantics: Files written by headless runs
+    producer_guarantees: [GIF and PNG written next to the requested path]
+    consumer_assumptions: [GIF and PNG written next to the requested path]
 
 contracts:
+  # --- design process ---
   - id: CTR-design-dimensional
     subject: CMP-design-process
     claim_type: capability
@@ -87,6 +260,72 @@ contracts:
     evaluable_by: [TST-design-traceability]
     sufficiency: {n_min: 8, max_ci_width: 0.35}
 
+  # --- simulator: each part has few, expensive, deterministic checks, so the
+  # --- sufficiency bar is lower than the design's; a single failure still
+  # --- shows as a failed trial and is fixed immediately
+  - id: CTR-sim-e2e
+    subject: CMP-sim
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.6}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-e2e]
+    sufficiency: {n_min: 4, max_ci_width: 0.5}
+
+  - id: CTR-sim-solver
+    subject: CMP-sim.solver
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.6}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-solver]
+    sufficiency: {n_min: 4, max_ci_width: 0.5}
+
+  - id: CTR-sim-contact
+    subject: CMP-sim.contact
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.6}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-contact]
+    sufficiency: {n_min: 4, max_ci_width: 0.5}
+
+  - id: CTR-sim-bodies
+    subject: CMP-sim.bodies
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.6}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-bodies]
+    sufficiency: {n_min: 4, max_ci_width: 0.5}
+
+  - id: CTR-sim-materials
+    subject: CMP-sim.materials
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.5}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-materials]
+    sufficiency: {n_min: 3, max_ci_width: 0.6}
+
+  - id: CTR-sim-ledger
+    subject: CMP-sim.ledger
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.6}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-ledger]
+    sufficiency: {n_min: 4, max_ci_width: 0.5}
+
+  - id: CTR-sim-render
+    subject: CMP-sim.render
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.5}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-render]
+    sufficiency: {n_min: 2, max_ci_width: 0.7}
+
 tests:
   - id: TST-design-dimensional
     layer: component
@@ -134,6 +373,59 @@ tests:
     metrics: [passed]
     capture: [claim, doc, law]
 
+  - id: TST-sim-e2e
+    layer: e2e
+    targets: [CMP-sim]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_e2e.py -q
+    metrics: [passed]
+    capture: [claim]
+    timeout_s: 1800
+
+  - id: TST-sim-solver
+    layer: component
+    targets: [CMP-sim.solver]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_solver.py -q
+    metrics: [passed]
+    capture: [claim]
+    mandatory: true
+
+  - id: TST-sim-contact
+    layer: component
+    targets: [CMP-sim.contact]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_contact.py -q
+    metrics: [passed]
+    capture: [claim]
+    mandatory: true
+
+  - id: TST-sim-bodies
+    layer: component
+    targets: [CMP-sim.bodies]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_bodies.py -q
+    metrics: [passed]
+    capture: [claim]
+    timeout_s: 1800
+
+  - id: TST-sim-materials
+    layer: component
+    targets: [CMP-sim.materials]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_materials.py -q
+    metrics: [passed]
+    capture: [claim]
+
+  - id: TST-sim-ledger
+    layer: component
+    targets: [CMP-sim.ledger]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_ledger.py -q
+    metrics: [passed]
+    capture: [claim]
+
+  - id: TST-sim-render
+    layer: component
+    targets: [CMP-sim.render]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_render.py -q
+    metrics: [passed]
+    capture: [claim]
+
 priors: []
 
 policies:
@@ -145,5 +437,16 @@ policies:
       - {slice: CTR-design-quantities, require: supported}
       - {slice: CTR-design-regime, require: supported}
       - {slice: CTR-design-traceability, require: supported}
+    weights: null
+
+  - id: POL-sim-release
+    criteria:
+      - {slice: CTR-sim-e2e, require: supported}
+      - {slice: CTR-sim-solver, require: supported}
+      - {slice: CTR-sim-contact, require: supported}
+      - {slice: CTR-sim-bodies, require: supported}
+      - {slice: CTR-sim-materials, require: supported}
+      - {slice: CTR-sim-ledger, require: supported}
+      - {slice: CTR-sim-render, require: supported}
       - {safety_gates: all_passed}
     weights: null

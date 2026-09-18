@@ -8,7 +8,7 @@ Each phase ends with a demo and a validation report. Scope is deliberately narro
 - Core math, units, sparse linear algebra on GPU, autodiff glue
 - Incremental-potential Newton solver with line search
 - IPC contact barrier + CCD + smoothed friction
-- Affine rigid bodies. Tet FEM with Neo-Hookean material.
+- Rigid bodies with exact rotations. Tet FEM with Neo-Hookean material.
 - Validation suite skeleton: analytic benchmarks (below), regression tests, determinism tests
 - **Exit:** rigid stacking, elastic ball drop and Hertz contact match analytic solutions within 2%
 

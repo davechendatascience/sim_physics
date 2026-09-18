@@ -27,7 +27,7 @@ Each layer depends only on the layers below it. L4 treats L1–L3 as a different
 
 ### Scene
 - **Body**: a geometry plus a discretization plus a material assignment. Kinds:
-  - `Rigid`: affine body (12 DOF, stiffly constrained to rotation), see [02](02-rigid-body-and-contact.md)
+  - `Rigid`: position + exact rotation (6 DOF per Newton increment), see [02](02-rigid-body-and-contact.md)
   - `Solid`: tetrahedral FEM (volumetric: rubber, foam, food, fingertip pads)
   - `Shell`: triangle shell (thin walls: cans, bottles, sheet metal, packaging)
   - `Rod`: discrete elastic rod (cables, wires)
