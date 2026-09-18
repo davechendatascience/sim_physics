@@ -56,3 +56,19 @@ so y(π/2) = π/(√2 ϖ λ) is exactly half the gap. In line contact the same i
 - **Shape readout:** the closed-form profile must match the quadrature reference, reach exactly half the gap at the side point, and keep the perimeter at 2πR.
 - **Inextensibility:** the arc length stays πR/2 per quarter in both phases.
 - **The 3D simulator:** its long-can scene must agree with this tier.
+
+## 4. Short pads: what the 3D runs show
+
+Brief revision 3 (§7.2) proposed a Pogorelov mirror isometry as the short-pad readout. Three 3D squeezes were run to 6 mm of pad travel per side with `experiments/short_pad_squeeze.py`, and compared with `experiments/mirror_isometry_check.py`. Pads were 10 × 10, 15 × 20 and 30 × 30 mm, and the can was open.
+
+**The mirror isometry does not describe flat pads on a can.** Under the pad the simulated wall lies on the pad plane; it cannot pass beyond it. So its departure from the mirror prediction equals the pad travel, at every depth, for every pad size. Flattening a strip of a cylinder is itself an isometry, because the cylinder is developable, but it is a different one. Pogorelov's inverted cap needs an indenter smaller than the dent. The force grows as d^1.2 to d^1.3, not as Pogorelov's d^0.5 (which is derived for spheres).
+
+**First short-pad dent measurements** (provisional: the mesh, about 4 × 5 mm, is coarser than the 1.8 mm bending boundary layer, so these are not mesh-converged):
+
+| Pad | First yield (travel, force) | Plastic strain above 2×10⁻³ | After release |
+|---|---|---|---|
+| 10 × 10 mm | 2.40 mm, 12.2 N | 3.76 mm, 21.3 N | yielded; 0.08 mm residual shape change |
+| 15 × 20 mm | 2.48 mm, 14.2 N | 3.52 mm, 24.3 N | dented; 0.23 mm |
+| 30 × 30 mm | 1.84 mm, 9.7 N | 2.96 mm, 30.3 N | dented; 4.9 mm |
+
+These are consistent with the "tens of newtons" estimate of [05](05-case-study-soda-can.md) §4. They also show the short-pad regime yielding at far lower force per metre than the long-pad limit: 12–14 N on a 10–20 mm pad is 600–1 400 N/m, against 83.4 N/m. The short-pad regime therefore needs its own model. The next candidates are the long-pad cross-section applied under the pad with an axial transition zone, and the reduced-order model of brief §7.3, trained on runs like these after a mesh-convergence study.
