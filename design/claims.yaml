@@ -151,6 +151,38 @@ equations:
     expr: "Eq(eps, P/(2*pi*R) - 1)"
     dims: {eps: "1", P: L, R: L}
 
+  # docs/11 analytic squeeze (per unit length; E'I in N m)
+  - id: EQ-elastica
+    doc: 11-analytic-squeeze.md
+    quote: "λ² = P / (2 E'I)"
+    expr: "Eq(lam**2, P/(2*EpI))"
+    dims: {lam: L^-1, P: M T^-2, EpI: M L^2 T^-2}
+  - id: EQ-flat-onset-gap
+    doc: 11-analytic-squeeze.md
+    quote: "g₀ = π² R / ϖ²"
+    expr: "Eq(g0, pi**2*R/w**2)"
+    dims: {g0: L, R: L, w: "1"}
+  - id: EQ-flat-force-law
+    doc: 11-analytic-squeeze.md
+    quote: "P = 4π² E'I / (ϖ² g²)"
+    expr: "Eq(P, 4*pi**2*EpI/(w**2*g**2))"
+    dims: {P: M T^-2, EpI: M L^2 T^-2, w: "1", g: L}
+  - id: EQ-flat-contact-length
+    doc: 11-analytic-squeeze.md
+    quote: "c = π R − ϖ² g / π"
+    expr: "Eq(c, pi*R - w**2*g/pi)"
+    dims: {c: L, R: L, w: "1", g: L}
+  - id: EQ-first-yield-gap
+    doc: 11-analytic-squeeze.md
+    quote: "g_y = 2π / (ϖ (Δκ_y + 1/R))"
+    expr: "Eq(gy, 2*pi/(w*(dky + 1/R)))"
+    dims: {gy: L, w: "1", dky: L^-1, R: L}
+  - id: EQ-first-yield-force
+    doc: 11-analytic-squeeze.md
+    quote: "P_y = E'I (Δκ_y + 1/R)²"
+    expr: "Eq(Py, EpI*(dky + 1/R)**2)"
+    dims: {Py: M T^-2, EpI: M L^2 T^-2, dky: L^-1, R: L}
+
 # Numbers stated in the docs, recomputed from their inputs by design/quantities.py.
 quantities:
   - {id: Q-hoop-stress, doc: 05-case-study-soda-can.md, quote: "≈ 80 MPa", fn: hoop_stress,
@@ -229,6 +261,18 @@ quantities:
      fn: ramanujan_perimeter_error, inputs: {ovalization: 0.5}, stated: 3.3e-8, rel_tol: 0.05}
   - {id: Q-can-ovalization-period, doc: 09-simulator.md, quote: "59 ms for the whole can",
      fn: can_ovalization_period, inputs: {length: 0.122, mass: 0.013}, stated: 0.059, rel_tol: 0.02}
+  - {id: Q-lemniscate-constant, doc: 11-analytic-squeeze.md, quote: "ϖ = 2.62206", fn: lemniscate_constant,
+     inputs: {}, stated: 2.62206, rel_tol: 1.0e-5}
+  - {id: Q-flat-onset-gap, doc: 11-analytic-squeeze.md, quote: "| 47.4 mm |", fn: squeeze_flat_onset_gap,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 0.0474, rel_tol: 0.002}
+  - {id: Q-flat-onset-force, doc: 11-analytic-squeeze.md, quote: "| 16.5 N/m |", fn: squeeze_flat_onset_force,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 16.5, rel_tol: 0.003}
+  - {id: Q-first-yield-gap, doc: 11-analytic-squeeze.md, quote: "| 21.1 mm |", fn: squeeze_first_yield_gap,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 0.0211, rel_tol: 0.003}
+  - {id: Q-first-yield-force, doc: 11-analytic-squeeze.md, quote: "| 83.4 N/m |", fn: squeeze_first_yield_force,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 83.4, rel_tol: 0.002}
+  - {id: Q-can-R-over-t, doc: 11-analytic-squeeze.md, quote: "R/t ≈ 330", fn: ratio,
+     inputs: {num: 0.033, den: 1.0e-4}, stated: 330.0, rel_tol: 0.01}
   # Measured on the reference model (design/oracles), not computed from a formula.
   - {id: Q-round-fingertip-slide, doc: 02-rigid-body-and-contact.md, quote: "slides about 4× faster than friction alone predicts",
      fn: oracle_round_fingertip_ratio, inputs: {k: 0.8}, stated: 4.0, rel_tol: 0.1}
@@ -279,6 +323,8 @@ regimes:
      fn: ramanujan_error_range, inputs: {ovalization: [0.0, 0.05]}, limit: 1.0e-15, sense: max}
   - {id: R-squeeze-quasi-static, doc: 09-simulator.md, quote: "A 0.5 s squeeze leaves inertia negligible",
      fn: squeeze_period_ratio_range, inputs: {length: 0.122, mass: 0.013, load_time: [0.5, 1.0]}, limit: 0.2, sense: max}
+  - {id: R-elastica-inextensible, doc: 11-analytic-squeeze.md, quote: "Membrane stretching is negligible next to bending",
+     fn: ratio_range, inputs: {num: [0.95e-4, 1.05e-4], den: [0.033, 0.033]}, limit: 0.01, sense: max}
   - {id: R-nonrelativistic, doc: 03-deformables-and-materials.md, quote: "Speeds are ≲ 10 m/s",
      fn: ratio_range, inputs: {num: [0.0, 10.0], den: [2.998e8, 2.998e8]}, limit: 1.0e-6, sense: max}
 
@@ -368,6 +414,12 @@ models:
     quote: "**Enclosed gas** is isothermal"
     oracle: design.oracles.sim3d
     laws: [potential_consistency, net_force_zero]
+
+  - id: MOD-ring-elastica
+    doc: 11-analytic-squeeze.md
+    quote: "θ'' = λ² cos θ"
+    oracle: design.oracles.elastica
+    laws: [closed_forms_match_quadrature, small_load_limit, phase_continuity, inextensibility]
 
 # The same physical parameter stated in several docs must agree.
 shared_params:

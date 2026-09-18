@@ -5,7 +5,7 @@
 #
 # Layering. The belief server has no notion of one component containing
 # another, so containment is written into the ids: CMP-sim encloses
-# CMP-sim.solver, CMP-sim.contact, ... Its end-to-end test runs the whole
+# CMP-sim.solver, CMP-sim.contact, ..., CMP-sim.analytic. Its end-to-end test runs the whole
 # simulator; each part has its own component test, so diagnosis can say which
 # part is responsible. CMP-design-process gates every implementation component
 # through an IFC-design__<component> interface (see CLAUDE.md).
@@ -16,7 +16,8 @@ components:
       Turn classical physics and materials knowledge into design claims
       (docs/ + design/claims.yaml) that implementation is allowed to build on
     outputs: [IFC-design__sim.solver, IFC-design__sim.contact, IFC-design__sim.bodies,
-              IFC-design__sim.materials, IFC-design__sim.ledger, IFC-design__sim.render]
+              IFC-design__sim.materials, IFC-design__sim.ledger, IFC-design__sim.render,
+              IFC-design__sim.analytic]
     testable_capability: >-
       Every physics statement in the design is registered, dimensionally
       consistent, satisfies classical balance and thermodynamic laws when run
@@ -35,8 +36,8 @@ components:
       tolerance to make a check pass.
 
   - id: CMP-sim
-    purpose: The 3D CPU simulator (simphys), enclosing the six components below
-    inputs: [IFC-solver__sim, IFC-ledger__sim, IFC-render__sim]
+    purpose: The simulator (simphys), enclosing the seven components below
+    inputs: [IFC-solver__sim, IFC-ledger__sim, IFC-render__sim, IFC-analytic__sim]
     testable_capability: >-
       Every built-in scene runs from the command line, headless, and writes
       its animation, final frame, and ledger summary
@@ -109,6 +110,19 @@ components:
       - {id: FM-ledger-miss, observable: plastic strain or a dent above threshold is not reported}
     remediation: simphys/ledger.py
 
+  - id: CMP-sim.analytic
+    purpose: Fast analytic tier - a can pinched between long flat pads (ring elastica, docs/11)
+    inputs: [IFC-design__sim.analytic]
+    outputs: [IFC-analytic__sim]
+    testable_capability: >-
+      Force-gap curve, flat-contact onset and first yield agree with the
+      design's quadrature reference model in both contact phases, and a whole
+      curve evaluates in well under a second
+    failure_modes:
+      - {id: FM-analytic-mismatch, observable: force disagrees with design/oracles/elastica.py}
+      - {id: FM-analytic-regime, observable: results reported past first yield or for short pads}
+    remediation: simphys/analytic.py
+
   - id: CMP-sim.render
     purpose: CPU-only matplotlib rendering, headless (GIF/PNG) or windowed
     inputs: [IFC-design__sim.render, IFC-solver__render]
@@ -155,6 +169,18 @@ interfaces:
     semantics: CPU-only rendering of docs/09 §3
     producer_guarantees: [matplotlib only, no GPU; shells coloured by plastic strain]
     consumer_assumptions: [matplotlib only, no GPU; shells coloured by plastic strain]
+  - id: IFC-design__sim.analytic
+    producer: CMP-design-process
+    consumer: CMP-sim.analytic
+    semantics: Ring-elastica closed forms of docs/11 and their regime (long pads, elastic, open can)
+    producer_guarantees: [closed forms match quadrature to 1e-7; valid only up to first yield for long pads]
+    consumer_assumptions: [closed forms match quadrature to 1e-7; valid only up to first yield for long pads]
+  - id: IFC-analytic__sim
+    producer: CMP-sim.analytic
+    consumer: CMP-sim
+    semantics: Force-gap curve and first-yield verdict for the long-pad pinch
+    producer_guarantees: [no result past first yield is reported as elastic]
+    consumer_assumptions: [no result past first yield is reported as elastic]
   - id: IFC-materials__bodies
     producer: CMP-sim.materials
     consumer: CMP-sim.bodies
@@ -317,6 +343,15 @@ contracts:
     evaluable_by: [TST-sim-ledger]
     sufficiency: {n_min: 4, max_ci_width: 0.5}
 
+  - id: CTR-sim-analytic
+    subject: CMP-sim.analytic
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.6}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-analytic]
+    sufficiency: {n_min: 4, max_ci_width: 0.5}
+
   - id: CTR-sim-render
     subject: CMP-sim.render
     claim_type: capability
@@ -419,6 +454,13 @@ tests:
     metrics: [passed]
     capture: [claim]
 
+  - id: TST-sim-analytic
+    layer: component
+    targets: [CMP-sim.analytic]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_analytic.py -q
+    metrics: [passed]
+    capture: [claim]
+
   - id: TST-sim-render
     layer: component
     targets: [CMP-sim.render]
@@ -448,5 +490,6 @@ policies:
       - {slice: CTR-sim-materials, require: supported}
       - {slice: CTR-sim-ledger, require: supported}
       - {slice: CTR-sim-render, require: supported}
+      - {slice: CTR-sim-analytic, require: supported}
       - {safety_gates: all_passed}
     weights: null

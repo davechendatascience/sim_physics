@@ -336,3 +336,42 @@ def can_ovalization_period(length, mass, E=69e9, nu=0.33, t=1e-4, R=0.033):
 def squeeze_period_ratio_range(length, mass, load_time):
     T = can_ovalization_period(length, mass)
     return T / max(load_time), T / min(load_time)
+
+
+# --- docs/11: closed forms of the ring pinched between long flat pads ----------
+
+def lemniscate_constant():
+    from scipy.special import gamma
+    return gamma(0.25) ** 2 / (2 * np.sqrt(2 * np.pi))
+
+
+def _squeeze(E, nu, sy, t, R):
+    EpI = E / (1 - nu ** 2) * t ** 3 / 12
+    return EpI, yield_curvature_change(E, nu, sy, t), lemniscate_constant()
+
+
+def squeeze_flat_onset_gap(E, nu, sy, t, R):
+    return np.pi ** 2 * R / lemniscate_constant() ** 2
+
+
+def squeeze_flat_force(g, E, nu, t):
+    EpI = E / (1 - nu ** 2) * t ** 3 / 12
+    return 4 * np.pi ** 2 * EpI / (lemniscate_constant() ** 2 * g ** 2)
+
+
+def squeeze_flat_onset_force(E, nu, sy, t, R):
+    return squeeze_flat_force(squeeze_flat_onset_gap(E, nu, sy, t, R), E, nu, t)
+
+
+def squeeze_first_yield_gap(E, nu, sy, t, R):
+    _, dky, w = _squeeze(E, nu, sy, t, R)
+    return 2 * np.pi / (w * (dky + 1 / R))
+
+
+def squeeze_first_yield_force(E, nu, sy, t, R):
+    EpI, dky, _ = _squeeze(E, nu, sy, t, R)
+    return EpI * (dky + 1 / R) ** 2
+
+
+def squeeze_flat_contact_length(g, R):
+    return np.pi * R - lemniscate_constant() ** 2 * g / np.pi

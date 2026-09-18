@@ -131,3 +131,16 @@ A modern elasticity engine can incorporate Ramanujan’s formulations as a speci
 
 ### Strategic Recommendation
 Ramanujan’s mathematics should not be viewed merely as esoteric number theory, but as an advanced **special-function toolset for non-Euclidean geometries and nonlinear kinematics**. Integrating these formulations within classical mechanics software stacks replaces brute-force quadrature and iterative search with exact algebraic and modular series, yielding dramatic speedups in thin-shell and elastica simulation workflows.
+
+---
+
+## Corrections (added 2026-09-19 after checking against the design gate)
+
+The applicability of each section to this simulator is assessed in [docs/10](../10-performance.md) §5. In short:
+
+1. **§2.1 (elastica)** applies, and is implemented for the long-pad can pinch ([docs/11](../11-analytic-squeeze.md)). The flat-contact phase closes through the lemniscate constant.
+2. **§2.2** does not speed up discrete shells. Flat triangular elements have exact metrics with no quadrature to replace, and the through-thickness rule is already exact.
+3. **§2.4.** A rational (continued-fraction) approximation of the contact barrier would lose its blow-up at contact, which is the non-penetration guarantee, so it is not used.
+4. **§2.3** needs periodic metamaterial shells, which are not modeled.
+5. **Complexity claims** such as reducing O(N³) to O(log N) apply to the special geometries named, not to a general contact-driven 3D solver.
+6. **The perimeter formula's error** is quoted in §2.2 as reaching machine precision "with higher-order terms". The second approximation alone is 10⁻¹⁶ at small ovalization and 3×10⁻⁸ at 50%, which is ample here.

@@ -13,6 +13,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="simphys", description="3D CPU physics simulator")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("list", help="list built-in scenes")
+    sc = sub.add_parser("squeeze-curve", help="force-gap curve of a can pinched by long pads (analytic, docs/11)")
+    sc.add_argument("--out", default="out/squeeze_curve.png")
     run = sub.add_parser("run", help="run a scene")
     run.add_argument("scene")
     mode = run.add_mutually_exclusive_group()
@@ -24,6 +26,16 @@ def main(argv=None):
     run.add_argument("--fps", type=int, default=20)
     run.add_argument("--no-render", action="store_true", help="simulate only; print the ledger")
     args = ap.parse_args(argv)
+
+    if args.cmd == "squeeze-curve":
+        from .analytic import can_wall, plot_curve
+        m = can_wall()
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
+        plot_curve(args.out, m)
+        print(f"flat contact begins at gap {m.gap_flat * 1e3:.1f} mm, {m.force(m.gap_flat):.1f} N/m")
+        print(f"first yield (permanent dent) at gap {m.gap_yield * 1e3:.1f} mm, {m.force_yield:.1f} N/m")
+        print(f"wrote {args.out}")
+        return 0
 
     from .scenes import SCENES
     if args.cmd == "list":

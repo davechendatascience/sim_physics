@@ -269,3 +269,51 @@ def test_pressurised_vessel_exerts_no_net_force_on_itself():
     x = x * 0.03 + RNG3.normal(scale=2e-3, size=x.shape)
     f = S.gas_force(x, faces, 50.0)
     assert np.allclose(f.sum(axis=0), 0.0, atol=1e-9 * np.abs(f).max())
+
+
+# --- Ring pinched between long flat pads (docs/11) --------------------------------
+
+from design import quantities as Qn             # noqa: E402
+from design.oracles import elastica as EL        # noqa: E402
+
+RING = dict(E=69e9, nu=0.33, sy=285e6, t=1e-4, R=0.033)
+EPI = RING["E"] / (1 - RING["nu"] ** 2) * RING["t"] ** 3 / 12
+
+
+@law("MOD-ring-elastica", "closed_forms_match_quadrature", "11-analytic-squeeze.md")
+def test_flat_contact_closed_forms_match_the_quadrature_model():
+    R = RING["R"]
+    g0 = Qn.squeeze_flat_onset_gap(**RING)
+    assert EL.state(EL.flat_onset_lam(R) ** 2 * 2 * EPI, R, EPI)["gap"] == pytest.approx(g0, rel=1e-8)
+    for g in np.linspace(0.02, 0.99 * g0, 6):
+        P = EL.force_for_gap(g, R, EPI)
+        assert P == pytest.approx(Qn.squeeze_flat_force(g, RING["E"], RING["nu"], RING["t"]), rel=1e-7)
+        assert EL.state(P, R, EPI)["c"] == pytest.approx(Qn.squeeze_flat_contact_length(g, R), rel=1e-6, abs=1e-12)
+    gy = Qn.squeeze_first_yield_gap(**RING)
+    st = EL.state(EL.force_for_gap(gy, R, EPI), R, EPI)
+    assert st["kB"] - 1 / R == pytest.approx(yield_dk := Qn.yield_curvature_change(RING["E"], RING["nu"], RING["sy"], RING["t"]), rel=1e-7)
+    assert EL.force_for_gap(gy, R, EPI) == pytest.approx(Qn.squeeze_first_yield_force(**RING), rel=1e-7)
+
+
+@law("MOD-ring-elastica", "small_load_limit", "11-analytic-squeeze.md")
+def test_small_loads_reproduce_linear_ring_compliance():
+    R = RING["R"]
+    P = 1e-3        # N/m: delta/R ~ 2.5e-5, so the first-order nonlinear correction is below the tolerance
+    delta = 2 * R - EL.state(P, R, EPI)["gap"]
+    assert delta == pytest.approx(Qn.ring_compliance(RING["E"], RING["nu"], 0.0, RING["t"], R) * P, rel=1e-4)
+
+
+@law("MOD-ring-elastica", "phase_continuity", "11-analytic-squeeze.md")
+def test_line_contact_joins_flat_contact_continuously():
+    R = RING["R"]
+    P0 = 2 * EPI * EL.flat_onset_lam(R) ** 2
+    below, above = EL.state(P0 * (1 - 1e-7), R, EPI), EL.state(P0 * (1 + 1e-7), R, EPI)
+    assert below["gap"] == pytest.approx(above["gap"], rel=1e-6)
+    assert below["kA"] < 1e-2 / R and above["c"] < 1e-6 * R
+
+
+@law("MOD-ring-elastica", "inextensibility", "11-analytic-squeeze.md")
+def test_quarter_arc_length_is_conserved():
+    R = RING["R"]
+    for P in (0.0, 1.0, 10.0, 30.0, 80.0):
+        assert EL.state(P, R, EPI)["arc"] == pytest.approx(np.pi * R / 2, rel=1e-8)

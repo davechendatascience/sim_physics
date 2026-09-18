@@ -27,6 +27,7 @@ The gap: nothing combines **engineering-grade constitutive models**, **tracking 
 8. [Design validation](08-design-validation.md): how the design is checked against classical physics before implementation
 9. [CPU simulator](09-simulator.md): the first implementation (3D, CPU-only), its components, and the closed-form checks it must pass
 10. [Performance](10-performance.md): fast on CPU, built for GPU, without changing the physics
+11. [Analytic squeeze tier](11-analytic-squeeze.md): the long-pad can pinch in closed form (ring elastica, lemniscate constant)
 
 ## Core ideas in one page
 

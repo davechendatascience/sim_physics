@@ -119,3 +119,17 @@ $$P_{\text{ring}} \approx \pi (a + b) \left( 1 + \frac{3h}{10 + \sqrt{4 - 3h}} \
 ## 4. Key Takeaways
 1. **Targeted Domain:** Ramanujan's mathematical toolkit does not replace arbitrary unstructured continuum solvers, but acts as an exact accelerator for geometries governed by elliptic kinematics, modular symmetries, and isometric foldings.
 2. **Practical Value:** For interactive mechanical simulation, real-time haptic feedback, and thin-shell metamaterial design, Ramanujan-based semi-analytical formulations remove the convergence failures and latency typical of traditional FE solvers.
+
+---
+
+## Corrections (added 2026-09-19 after checking against the design gate)
+
+The core idea of §1.1 holds and is implemented as `CMP-sim.analytic` ([docs/11](../11-analytic-squeeze.md)). Checking it found these corrections:
+
+1. **R/t for a beverage can is about 330** (R = 33 mm, t = 0.1 mm), not 1000–2000. The inextensibility argument still holds.
+2. **§1.1 force balance.** With the load P applied across the diameter, each quarter ring carries P/2, so λ² = P/(2EI) per unit length with the plane-strain E' = E/(1 − ν²). Up-down symmetry between the two pads makes the horizontal internal force zero, which leaves θ'' = λ² cos θ.
+3. **§1.1 closed form.** Once the ring lies flat on the pads, the free arc starts straight, and the whole force–gap law is closed-form through the **lemniscate constant** ϖ = Γ(¼)²/(2√(2π)): P = 4π² E'I/(ϖ² g²). First yield is at g_y = 2π/(ϖ(Δκ_y + 1/R)). No q-series inversion is needed in that phase. Before flat contact, one scalar root-find per load suffices; its cost is the same with Ramanujan's q-series or with standard quadrature or AGM.
+4. **§1.3.** The 4×10⁻⁵ error bound of Ramanujan's perimeter formula is the worst case, a completely flat ellipse. At can-relevant ovalization it is 10⁻¹⁶ (5%) to 3×10⁻⁸ (50%).
+5. **§1.3 constraint.** A pinched ring is not an ellipse: it is flat where it touches the pads and tighter at the sides. Enforcing an elliptical perimeter would impose the wrong shape. The elastica is inextensible by construction, so no perimeter constraint is needed. The ellipse formula is still useful for measuring an ovalized rim ([docs/10](../10-performance.md) §5).
+6. **§1.2 (Yoshimura, lattice sums)** covers axial crush and is not verified here. It is out of scope until it passes the design process.
+7. **§3.** The analytic tier covers long pads, elastic behaviour, and open cans only. Short pads dent locally and still need the 3D simulator, as §4.1 of this brief says.

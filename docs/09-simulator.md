@@ -13,7 +13,8 @@ The first implementation of the design. It is **3D** and runs on a laptop CPU. I
 | `CMP-sim.bodies` | [02](02-rigid-body-and-contact.md) §1, [03](03-deformables-and-materials.md) §1 | Rigid bodies (exact rotations, 6 DOF), thin shells (discrete Kirchhoff–Love triangles), solids (linear tetrahedra) |
 | `CMP-sim.materials` | [03](03-deformables-and-materials.md) §2, §5 | Neo-Hookean solids, plane-stress J2 through the shell thickness, enclosed gas |
 | `CMP-sim.ledger` | [03](03-deformables-and-materials.md) §4 | Plastic strain, residual shape, "altered?" verdict |
-| `CMP-sim.render` | — | Headless (PNG/GIF) or windowed (matplotlib 3D) output |
+| `CMP-sim.render` | [09](09-simulator.md) §3 | Headless (PNG/GIF) or windowed (matplotlib 3D) output |
+| `CMP-sim.analytic` | [11](11-analytic-squeeze.md) | Closed-form tier for a can pinched between long pads (microseconds, no stepping) |
 
 ## 2. Models
 

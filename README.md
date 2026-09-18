@@ -23,6 +23,7 @@ Two things make it different from a typical robotics simulator:
 | **Irreversible-state ledger**: plastic strain + residual shape → "was it altered?" | ✅ | [`simphys/ledger.py`](simphys/ledger.py) |
 | **Rendering**: headless (GIF + PNG) or live window, matplotlib only (no GPU) | ✅ | [`simphys/render.py`](simphys/render.py) |
 | Built-in scenes: box drop, gelatin jelly drop (squash, bounce, rock), can squeeze (open/sealed), long-can validation | ✅ | [`simphys/scenes.py`](simphys/scenes.py) |
+| **Analytic squeeze tier**: can pinched by long pads, ring elastica in closed form (lemniscate constant), force–gap curve + first yield in milliseconds | ✅ matches the quadrature reference to 1e-6 | [`simphys/analytic.py`](simphys/analytic.py), [docs/11](docs/11-analytic-squeeze.md) |
 | Inverse queries (`grasp_envelope`, state estimation), VLA environment API | 🔜 designed | [docs/04](docs/04-inverse-problems.md), [docs/06](docs/06-vla-integration.md) |
 
 ## Quick start
@@ -35,6 +36,7 @@ python -m venv .venv
 .venv/Scripts/python -m simphys run box_drop --headless            # writes out/box_drop.gif, .png, .json
 .venv/Scripts/python -m simphys run jelly_drop --window            # draws live in a window
 .venv/Scripts/python -m simphys run can_squeeze --headless --steps 40
+.venv/Scripts/python -m simphys squeeze-curve                     # long-pad pinch force-gap curve, instantly
 ```
 
 Headless runs print and save a **ledger** for every shell: its maximum plastic strain, its shape change after rigid alignment, and whether it was altered by the design's thresholds (docs/03 §4).
@@ -70,7 +72,7 @@ belief.yaml    components, interfaces, contracts, tests (read from git HEAD)
 
 ## Components (belief graph)
 
-`CMP-design-process` feeds every implementation component through an `IFC-design__*` interface. `CMP-sim` encloses `CMP-sim.solver`, `.contact`, `.bodies`, `.materials`, `.ledger` and `.render`, each with its own contract and test. Check the current state with the belief server: `status(view="diagnose")`, then `run_test(...)`, then `status(view="belief")`.
+`CMP-design-process` feeds every implementation component through an `IFC-design__*` interface. `CMP-sim` encloses `CMP-sim.solver`, `.contact`, `.bodies`, `.materials`, `.ledger`, `.render` and `.analytic`, each with its own contract and test. Check the current state with the belief server: `status(view="diagnose")`, then `run_test(...)`, then `status(view="belief")`.
 
 ## Development rules
 
