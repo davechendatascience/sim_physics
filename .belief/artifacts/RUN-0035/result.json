@@ -1,0 +1,124 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_force_matches_the_quadrature_reference_in_both_phases",
+        "claim": "tests.sim.test_analytic::test_force_matches_the_quadrature_reference_in_both_phases"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_first_yield_and_flat_onset_match_the_design",
+        "claim": "tests.sim.test_analytic::test_first_yield_and_flat_onset_match_the_design"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_force_rises_monotonically_as_the_pads_close",
+        "claim": "tests.sim.test_analytic::test_force_rises_monotonically_as_the_pads_close"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_a_whole_curve_is_fast",
+        "claim": "tests.sim.test_analytic::test_a_whole_curve_is_fast"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_curve_renders_to_png",
+        "claim": "tests.sim.test_analytic::test_curve_renders_to_png"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_slope_matches_finite_differences_and_is_continuous",
+        "claim": "tests.sim.test_analytic::test_slope_matches_finite_differences_and_is_continuous"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_single_query_is_microseconds",
+        "claim": "tests.sim.test_analytic::test_single_query_is_microseconds"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.062]",
+        "claim": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.062]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.05]",
+        "claim": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.05]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.04]",
+        "claim": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.04]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.025]",
+        "claim": "tests.sim.test_analytic::test_profile_keeps_perimeter_and_touches_both_pads[0.025]"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.sim.test_analytic::test_undeformed_limit_is_the_circle",
+        "claim": "tests.sim.test_analytic::test_undeformed_limit_is_the_circle"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_linear_momentum_exact",
+        "claim": "MOD-ip-step:linear_momentum",
+        "doc": "01-architecture.md",
+        "law": "linear_momentum"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_contact_forces_equal_and_opposite",
+        "claim": "MOD-ip-step:newton_third",
+        "doc": "01-architecture.md",
+        "law": "newton_third"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_energy_never_increases",
+        "claim": "MOD-ip-step:energy_nonincrease",
+        "doc": "01-architecture.md",
+        "law": "energy_nonincrease"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_energy_error_is_first_order",
+        "claim": "MOD-ip-step:energy_first_order",
+        "doc": "01-architecture.md",
+        "law": "energy_first_order"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_angular_momentum_error_is_first_order",
+        "claim": "MOD-ip-step:angular_momentum_first_order",
+        "doc": "01-architecture.md",
+        "law": "angular_momentum_first_order"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_galilean_invariance",
+        "claim": "MOD-ip-step:galilean_invariance",
+        "doc": "01-architecture.md",
+        "law": "galilean_invariance"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_no_penetration_or_tunnelling_at_large_steps",
+        "claim": "MOD-ip-step:non_penetration",
+        "doc": "01-architecture.md",
+        "law": "non_penetration"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_friction_never_exceeds_coulomb_bound",
+        "claim": "MOD-friction:coulomb_bound",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "coulomb_bound"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_block_sticks_when_slope_below_friction_angle",
+        "claim": "MOD-friction:stick_below_limit",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "stick_below_limit"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_sliding_block_matches_kinetic_friction",
+        "claim": "MOD-friction:kinetic_slide_rate",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "kinetic_slide_rate"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_friction_only_removes_energy",
+        "claim": "MOD-friction:dissipation_nonneg",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dissipation_nonneg"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_flat_pad_grasp_holds_above_and_slips_below_fmin",
+        "claim": "MOD-friction:grasp_threshold",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "grasp_threshold"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_matrix_kinetic_energy_equals_rigid",
+        "claim": "MOD-rigid-body:rigid_kinetic_energy",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "rigid_kinetic_energy"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_rotation_increments_keep_the_body_rigid",
+        "claim": "MOD-rigid-body:rotation_stays_orthogonal",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "rotation_stays_orthogonal"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_contact_distance_gradients_match_finite_differences",
+        "claim": "MOD-contact-distance:gradient_consistency",
+        "doc": "09-simulator.md",
+        "law": "gradient_consistency"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_contact_distance_is_continuous_across_regions",
+        "claim": "MOD-contact-distance:distance_lipschitz",
+        "doc": "09-simulator.md",
+        "law": "distance_lipschitz"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_ccd_bound_never_allows_contact",
+        "claim": "MOD-contact-distance:ccd_conservative",
+        "doc": "09-simulator.md",
+        "law": "ccd_conservative"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_pressurised_vessel_exerts_no_net_force_on_itself",
+        "claim": "MOD-gas-3d:net_force_zero",
+        "doc": "09-simulator.md",
+        "law": "net_force_zero"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_flat_contact_closed_forms_match_the_quadrature_model",
+        "claim": "MOD-ring-elastica:closed_forms_match_quadrature",
+        "doc": "11-analytic-squeeze.md",
+        "law": "closed_forms_match_quadrature"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_small_loads_reproduce_linear_ring_compliance",
+        "claim": "MOD-ring-elastica:small_load_limit",
+        "doc": "11-analytic-squeeze.md",
+        "law": "small_load_limit"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_line_contact_joins_flat_contact_continuously",
+        "claim": "MOD-ring-elastica:phase_continuity",
+        "doc": "11-analytic-squeeze.md",
+        "law": "phase_continuity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_quarter_arc_length_is_conserved",
+        "claim": "MOD-ring-elastica:inextensibility",
+        "doc": "11-analytic-squeeze.md",
+        "law": "inextensibility"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_force_gap_slope_is_continuous_at_flat_contact_onset",
+        "claim": "MOD-ring-elastica:slope_continuity",
+        "doc": "11-analytic-squeeze.md",
+        "law": "slope_continuity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_degree_12_chebyshev_reproduces_the_line_contact_branch",
+        "claim": "MOD-ring-elastica:tabulated_branch_accuracy",
+        "doc": "11-analytic-squeeze.md",
+        "law": "tabulated_branch_accuracy"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_flat_contact_profile_closed_form_matches_quadrature",
+        "claim": "MOD-ring-elastica:shape_readout",
+        "doc": "11-analytic-squeeze.md",
+        "law": "shape_readout"
+      },
+      "outcome": "pass"
+    }
+  ]
+}
