@@ -1,0 +1,4 @@
+python tools/design_trials.py C:\Users\ychen\OneDrive\文件\GitHub\sim_physics\.belief\artifacts\RUN-0006\result.json -- tests/design/test_traceability.py -q
+exit=0
+test=TST-design-traceability@c9751c09
+at=2026-09-18T15:43:49+00:00

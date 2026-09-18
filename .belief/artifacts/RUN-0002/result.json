@@ -1,0 +1,148 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_linear_momentum_exact",
+        "claim": "MOD-ip-step:linear_momentum",
+        "doc": "01-architecture.md",
+        "law": "linear_momentum"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_contact_forces_equal_and_opposite",
+        "claim": "MOD-ip-step:newton_third",
+        "doc": "01-architecture.md",
+        "law": "newton_third"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_energy_never_increases",
+        "claim": "MOD-ip-step:energy_nonincrease",
+        "doc": "01-architecture.md",
+        "law": "energy_nonincrease"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_energy_error_is_first_order",
+        "claim": "MOD-ip-step:energy_first_order",
+        "doc": "01-architecture.md",
+        "law": "energy_first_order"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_angular_momentum_error_is_first_order",
+        "claim": "MOD-ip-step:angular_momentum_first_order",
+        "doc": "01-architecture.md",
+        "law": "angular_momentum_first_order"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_galilean_invariance",
+        "claim": "MOD-ip-step:galilean_invariance",
+        "doc": "01-architecture.md",
+        "law": "galilean_invariance"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_no_penetration_or_tunnelling_at_large_steps",
+        "claim": "MOD-ip-step:non_penetration",
+        "doc": "01-architecture.md",
+        "law": "non_penetration"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_friction_never_exceeds_coulomb_bound",
+        "claim": "MOD-friction:coulomb_bound",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "coulomb_bound"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_block_sticks_when_slope_below_friction_angle",
+        "claim": "MOD-friction:stick_below_limit",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "stick_below_limit"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_sliding_block_matches_kinetic_friction",
+        "claim": "MOD-friction:kinetic_slide_rate",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "kinetic_slide_rate"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_friction_only_removes_energy",
+        "claim": "MOD-friction:dissipation_nonneg",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dissipation_nonneg"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_balance_laws::test_flat_pad_grasp_holds_above_and_slips_below_fmin",
+        "claim": "MOD-friction:grasp_threshold",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "grasp_threshold"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

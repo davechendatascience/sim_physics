@@ -1,0 +1,4 @@
+........................................................................ [ 73%]
+..........................                                               [100%]
+- generated xml file: C:\Users\ychen\AppData\Local\Temp\tmpoefa1j49\junit.xml -
+98 passed in 0.24s

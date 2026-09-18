@@ -1,0 +1,244 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-predictor]",
+        "claim": "EQ-predictor",
+        "doc": "01-architecture.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-inertia-energy]",
+        "claim": "EQ-inertia-energy",
+        "doc": "01-architecture.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-velocity-update]",
+        "claim": "EQ-velocity-update",
+        "doc": "01-architecture.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-affine-orthogonality]",
+        "claim": "EQ-affine-orthogonality",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-impedance]",
+        "claim": "EQ-impedance",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-barrier]",
+        "claim": "EQ-barrier",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-friction-potential]",
+        "claim": "EQ-friction-potential",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-pressure-friction]",
+        "claim": "EQ-pressure-friction",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-soft-finger]",
+        "claim": "EQ-soft-finger",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-grasp-translational]",
+        "claim": "EQ-grasp-translational",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-grasp-torsion]",
+        "claim": "EQ-grasp-torsion",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-gas-energy]",
+        "claim": "EQ-gas-energy",
+        "doc": "03-deformables-and-materials.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-hoop-stress]",
+        "claim": "EQ-hoop-stress",
+        "doc": "05-case-study-soda-can.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-fmin]",
+        "claim": "EQ-fmin",
+        "doc": "05-case-study-soda-can.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-bending-length]",
+        "claim": "EQ-bending-length",
+        "doc": "05-case-study-soda-can.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_equation_is_homogeneous[EQ-dent-scale]",
+        "claim": "EQ-dent-scale",
+        "doc": "05-case-study-soda-can.md",
+        "law": "dimensional_homogeneity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_checker_rejects_bad_physics[hoop stress missing thickness]",
+        "claim": "CHK-dimensional:hoop stress missing thickness",
+        "doc": "08-design-validation.md",
+        "law": "checker_negative_control"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_checker_rejects_bad_physics[log of a length]",
+        "claim": "CHK-dimensional:log of a length",
+        "doc": "08-design-validation.md",
+        "law": "checker_negative_control"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_checker_rejects_bad_physics[adding force to pressure]",
+        "claim": "CHK-dimensional:adding force to pressure",
+        "doc": "08-design-validation.md",
+        "law": "checker_negative_control"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_dimensional::test_checker_rejects_bad_physics[dimensioned exponent]",
+        "claim": "CHK-dimensional:dimensioned exponent",
+        "doc": "08-design-validation.md",
+        "law": "checker_negative_control"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

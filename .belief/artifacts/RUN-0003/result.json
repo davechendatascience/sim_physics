@@ -1,0 +1,268 @@
+{
+  "trials": [
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_barrier_force_is_repulsive_only",
+        "claim": "MOD-barrier:repulsive_only",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "repulsive_only"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_barrier_blocks_contact",
+        "claim": "MOD-barrier:infinite_at_contact",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "infinite_at_contact"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_barrier_switches_on_smoothly",
+        "claim": "MOD-barrier:smooth_activation",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "smooth_activation"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_is_frame_indifferent",
+        "claim": "MOD-neo-hookean:objectivity",
+        "doc": "03-deformables-and-materials.md",
+        "law": "objectivity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_reference_is_stress_free",
+        "claim": "MOD-neo-hookean:stress_free_reference",
+        "doc": "03-deformables-and-materials.md",
+        "law": "stress_free_reference"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_stress_derives_from_energy",
+        "claim": "MOD-neo-hookean:potential_consistency",
+        "doc": "03-deformables-and-materials.md",
+        "law": "potential_consistency"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_matches_hooke_at_small_strain",
+        "claim": "MOD-neo-hookean:linear_limit",
+        "doc": "03-deformables-and-materials.md",
+        "law": "linear_limit"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_energy_blows_up_at_zero_volume",
+        "claim": "MOD-neo-hookean:growth",
+        "doc": "03-deformables-and-materials.md",
+        "law": "growth"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_is_elliptic_in_its_working_range",
+        "claim": "MOD-neo-hookean:ellipticity",
+        "doc": "03-deformables-and-materials.md",
+        "law": "ellipticity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_cauchy_stress_is_symmetric",
+        "claim": "MOD-neo-hookean:cauchy_symmetry",
+        "doc": "03-deformables-and-materials.md",
+        "law": "cauchy_symmetry"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_neo_hookean_returns_all_work_on_a_closed_path",
+        "claim": "MOD-neo-hookean:closed_cycle_work",
+        "doc": "03-deformables-and-materials.md",
+        "law": "closed_cycle_work"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_j2_stress_stays_on_or_inside_yield_surface",
+        "claim": "MOD-j2:yield_consistency",
+        "doc": "03-deformables-and-materials.md",
+        "law": "yield_consistency"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_j2_plastic_dissipation_is_non_negative",
+        "claim": "MOD-j2:dissipation_nonneg",
+        "doc": "03-deformables-and-materials.md",
+        "law": "dissipation_nonneg"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_j2_plastic_flow_preserves_volume",
+        "claim": "MOD-j2:plastic_incompressibility",
+        "doc": "03-deformables-and-materials.md",
+        "law": "plastic_incompressibility"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_j2_closed_strain_cycle_absorbs_work",
+        "claim": "MOD-j2:drucker_ilyushin",
+        "doc": "03-deformables-and-materials.md",
+        "law": "drucker_ilyushin"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_j2_elastic_cycle_is_lossless",
+        "claim": "MOD-j2:elastic_cycle_no_dissipation",
+        "doc": "03-deformables-and-materials.md",
+        "law": "elastic_cycle_no_dissipation"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_j2_pure_shear_saturates_at_von_mises_limit",
+        "claim": "MOD-j2:shear_limit",
+        "doc": "03-deformables-and-materials.md",
+        "law": "shear_limit"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_hill48_from_can_r_values_is_convex",
+        "claim": "MOD-hill48:convexity",
+        "doc": "03-deformables-and-materials.md",
+        "law": "convexity"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_hill48_reduces_to_von_mises_when_isotropic",
+        "claim": "MOD-hill48:von_mises_limit",
+        "doc": "03-deformables-and-materials.md",
+        "law": "von_mises_limit"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_gas_pressure_is_minus_energy_derivative",
+        "claim": "MOD-gas:potential_consistency",
+        "doc": "03-deformables-and-materials.md",
+        "law": "potential_consistency"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_gas_returns_all_work_on_a_closed_volume_cycle",
+        "claim": "MOD-gas:closed_cycle_work",
+        "doc": "03-deformables-and-materials.md",
+        "law": "closed_cycle_work"
+      },
+      "outcome": "pass"
+    },
+    {
+      "metrics": {
+        "passed": true
+      },
+      "conditions": {
+        "case": "tests.design.test_admissibility::test_pad_friction_force_grows_with_pressure",
+        "claim": "MOD-pressure-friction:friction_force_monotone",
+        "doc": "02-rigid-body-and-contact.md",
+        "law": "friction_force_monotone"
+      },
+      "outcome": "pass"
+    }
+  ]
+}

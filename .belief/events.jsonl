@@ -1,0 +1,6 @@
+{"actor": "agent", "payload": {"exit_code": 0, "n_records": 20, "run_id": "RUN-0001", "synthesized": false, "test": "TST-design-dimensional@2a72ff0f"}, "session": "", "timestamp": "2026-09-18T15:43:19+00:00", "tool": "run_test"}
+{"actor": "agent", "payload": {"exit_code": 0, "n_records": 12, "run_id": "RUN-0002", "synthesized": false, "test": "TST-design-balance@d7d6a50c"}, "session": "", "timestamp": "2026-09-18T15:43:27+00:00", "tool": "run_test"}
+{"actor": "agent", "payload": {"exit_code": 0, "n_records": 22, "run_id": "RUN-0003", "synthesized": false, "test": "TST-design-admissibility@0fae6d08"}, "session": "", "timestamp": "2026-09-18T15:43:34+00:00", "tool": "run_test"}
+{"actor": "agent", "payload": {"exit_code": 0, "n_records": 19, "run_id": "RUN-0004", "synthesized": false, "test": "TST-design-quantities@3586ce32"}, "session": "", "timestamp": "2026-09-18T15:43:39+00:00", "tool": "run_test"}
+{"actor": "agent", "payload": {"exit_code": 0, "n_records": 11, "run_id": "RUN-0005", "synthesized": false, "test": "TST-design-regime@430bf025"}, "session": "", "timestamp": "2026-09-18T15:43:44+00:00", "tool": "run_test"}
+{"actor": "agent", "payload": {"exit_code": 0, "n_records": 98, "run_id": "RUN-0006", "synthesized": false, "test": "TST-design-traceability@c9751c09"}, "session": "", "timestamp": "2026-09-18T15:43:50+00:00", "tool": "run_test"}
