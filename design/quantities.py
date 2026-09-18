@@ -170,3 +170,66 @@ def oracle_round_fingertip_ratio(k):
 def oracle_flat_pad_ratio(k):
     got, predicted = _grasp_slide_speed(k, round_fingertips=False)
     return got / predicted
+
+
+# --- long-cylinder limit of the 3D shell (docs/09 §4), per unit length ----------
+
+def plane_strain_modulus(E, nu):
+    return E / (1 - nu ** 2)
+
+
+def plane_strain_yield(sy):
+    """Fully plastic in-plane fiber stress with the axial strain held at zero."""
+    return 2 * sy / np.sqrt(3)
+
+
+def first_yield_stress(sy, nu):
+    """Elastic fiber stress at first yield with the axial strain held at zero
+    (sigma_22 = nu sigma_11 while elastic)."""
+    return sy / np.sqrt(1 - nu + nu ** 2)
+
+
+def _ring(E, nu, t):
+    return E / (1 - nu ** 2), t ** 3 / 12
+
+
+def ring_compliance(E, nu, sy, t, R):
+    Ep, I = _ring(E, nu, t)
+    return (np.pi / 4 - 2 / np.pi) * R ** 3 / (Ep * I)
+
+
+def ring_first_yield(E, nu, sy, t, R):
+    return np.pi * (first_yield_stress(sy, nu) * t ** 2 / 6) / R
+
+
+def ring_collapse(E, nu, sy, t, R):
+    return 4 * (plane_strain_yield(sy) * t ** 2 / 4) / R
+
+
+def ring_buckling_pressure(E, nu, sy, t, R):
+    Ep, I = _ring(E, nu, t)
+    return 3 * Ep * I / R ** 3
+
+
+def ring_compliance_pressurized(E, nu, sy, t, R, p, n_max=20000):
+    """Diametral compliance of an inextensible ring under internal pressure: a sum
+    over even Fourier modes n, each stiffened by the follower pressure load."""
+    Ep, I = _ring(E, nu, t)
+    beta = p * R ** 3 / (Ep * I)
+    n = np.arange(2, n_max + 1, 2)
+    return 4 / np.pi * R ** 3 / (Ep * I) * np.sum(1 / ((n ** 2 - 1) * ((n ** 2 - 1) + beta)))
+
+
+def ring_pressure_stiffening(E, nu, sy, t, R, p):
+    return ring_compliance_pressurized(E, nu, sy, t, R, 0.0) / ring_compliance_pressurized(E, nu, sy, t, R, p)
+
+
+def ring_pressure_ratio(E, nu, sy, t, R, p):
+    return p / ring_buckling_pressure(E, nu, sy, t, R)
+
+
+def rule_plastic_moment_deficit(rule_name):
+    """1 - (quadrature of |xi|) / (exact integral of |xi| over [-1, 1], which is 1)."""
+    from design.oracles.sim3d import rule
+    xi, w = rule(rule_name)
+    return 1 - float(np.sum(w * np.abs(xi)))

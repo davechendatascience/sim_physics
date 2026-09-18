@@ -264,3 +264,112 @@ def test_pad_friction_force_grows_with_pressure():
         mu = pressure_dependent_mu(p, 0.9, 1e5, n)
         assert np.all(np.diff(mu) < 0)
         assert np.all(np.diff(mu * p) > 0)
+
+
+# --- Shell fiber section (docs/09 §2): plane-stress J2 through the thickness --
+
+from design.oracles import sim3d as S           # noqa: E402
+
+CAN = dict(E=69e9, nu=0.33, sigma_y=285e6, t=1e-4)
+
+
+def cylindrical_bending(sec, k):
+    """Curvature about one axis with the other in-plane strain held at zero (long cylinder)."""
+    return sec.update(np.zeros((2, 2)), np.diag([k, 0.0]))
+
+
+@law("MOD-fiber-section", "elastic_bending_stiffness", "09-simulator.md")
+def test_section_elastic_bending_is_exact():
+    sec = S.FiberSection(**CAN)
+    k = 1e-3
+    _, M, _ = cylindrical_bending(sec, k)
+    Ep = CAN["E"] / (1 - CAN["nu"] ** 2)
+    assert M[0, 0] == pytest.approx(Ep * CAN["t"] ** 3 / 12 * k, rel=1e-12)
+
+
+@law("MOD-fiber-section", "first_yield_at_surface", "09-simulator.md")
+def test_section_first_yield_is_at_the_surface_fiber():
+    s1y = CAN["sigma_y"] / np.sqrt(1 - CAN["nu"] + CAN["nu"] ** 2)
+    k_y = s1y * (1 - CAN["nu"] ** 2) / CAN["E"] / (CAN["t"] / 2)
+    below, above = S.FiberSection(**CAN), S.FiberSection(**CAN)
+    cylindrical_bending(below, 0.999 * k_y)
+    cylindrical_bending(above, 1.001 * k_y)
+    assert np.all(below.alpha == 0)
+    assert above.alpha[0] > 0 and above.alpha[-1] > 0 and np.all(above.alpha[1:-1] == 0)
+
+
+@law("MOD-fiber-section", "plastic_moment_limit", "09-simulator.md")
+def test_section_moment_saturates_at_fully_plastic_value():
+    sec = S.FiberSection(**CAN)
+    for k in np.linspace(0, 8000.0, 400):     # ~100x the first-yield curvature (83 /m)
+        _, M, _ = cylindrical_bending(sec, k)
+    Mp = 2 * CAN["sigma_y"] / np.sqrt(3) * CAN["t"] ** 2 / 4
+    assert M[0, 0] == pytest.approx(Mp, rel=0.005)
+
+
+def _random_path(seed, n=300):
+    rng = np.random.default_rng(seed)
+    for P in np.cumsum(rng.normal(scale=20.0, size=(n, 2, 2)), axis=0):   # curvature, 1/m
+        kappa = 0.5 * (P + P.T)                                          # wanders well past yield
+        yield 1e-5 * kappa, kappa
+
+
+@law("MOD-fiber-section", "dissipation_nonneg", "09-simulator.md")
+def test_section_dissipation_is_non_negative():
+    sec = S.FiberSection(**CAN)
+    total = 0.0
+    for eps_m, kappa in _random_path(3):
+        _, _, diss = sec.update(eps_m, kappa)
+        assert diss >= -1e-12
+        total += diss
+    assert total > 0
+
+
+@law("MOD-fiber-section", "yield_consistency", "09-simulator.md")
+def test_section_stress_stays_inside_yield_surface():
+    sec = S.FiberSection(**CAN)
+    for eps_m, kappa in _random_path(4):
+        sec.update(eps_m, kappa)
+        assert sec.max_yield_violation(eps_m, kappa) <= 1e-6 * CAN["sigma_y"]
+
+
+@law("MOD-staggered-plasticity", "return_map_lowers_energy", "09-simulator.md")
+def test_return_map_never_raises_stored_energy():
+    sec = S.FiberSection(**CAN)
+    for eps_m, kappa in _random_path(5, 200):
+        before = sec.stored_energy(eps_m, kappa)
+        sec.update(eps_m, kappa)
+        assert sec.stored_energy(eps_m, kappa) <= before * (1 + 1e-12) + 1e-18
+
+
+def uv_sphere(n=12):
+    """A closed, outward-oriented triangulated unit sphere."""
+    th = np.linspace(0, np.pi, n + 1)[1:-1]
+    ph = np.linspace(0, 2 * np.pi, 2 * n, endpoint=False)
+    m = len(ph)
+    verts = [[0, 0, 1]] + [[np.sin(a) * np.cos(b), np.sin(a) * np.sin(b), np.cos(a)]
+                           for a in th for b in ph] + [[0, 0, -1]]
+    faces = [[0, 1 + j, 1 + (j + 1) % m] for j in range(m)]
+    for i in range(len(th) - 1):
+        for j in range(m):
+            a, b = 1 + i * m + j, 1 + i * m + (j + 1) % m
+            faces += [[a, a + m, b], [b, a + m, b + m]]
+    last, base = len(verts) - 1, 1 + (len(th) - 1) * m
+    faces += [[last, base + (j + 1) % m, base + j] for j in range(m)]
+    return np.array(verts, float), np.array(faces)
+
+
+@law("MOD-gas-3d", "potential_consistency", "09-simulator.md")
+def test_gas_force_is_minus_energy_gradient():
+    x, faces = uv_sphere()
+    x = x * 0.03 + RNG.normal(scale=1e-3, size=x.shape)
+    assert S.mesh_volume(x, faces) > 0
+    nRT, h = 50.0, 1e-8
+    f = S.gas_force(x, faces, nRT)
+    for v in RNG.choice(len(x), 5, replace=False):
+        for k in range(3):
+            xp, xm = x.copy(), x.copy()
+            xp[v, k] += h
+            xm[v, k] -= h
+            fd = -(S.gas_energy(xp, faces, nRT) - S.gas_energy(xm, faces, nRT)) / (2 * h)
+            assert fd == pytest.approx(f[v, k], rel=1e-5, abs=1e-6 * np.abs(f).max())

@@ -6,7 +6,7 @@ The simulator's claim to be different rests on this layer. Robotics simulators u
 
 - Deformation gradient `F = ∂x/∂X`. Large-deformation (finite strain) throughout.
 - Multiplicative split for elastoplasticity: `F = F_e F_p`, where `F_p` is stored per quadrature point as history
-- Shells: Kirchhoff–Love discrete shells (membrane + bending from mid-surface) for thin walls with `t/R ≪ 1`. Reissner–Mindlin/solid-shell elements are an option for thicker walls. Through-thickness integration (5–7 Gauss points) is used so plasticity can start at the surface fibers and spread inward. Bending-driven denting needs this.
+- Shells: Kirchhoff–Love discrete shells (membrane + bending from mid-surface) for thin walls with `t/R ≪ 1`. Reissner–Mindlin/solid-shell elements are an option for thicker walls. Through-thickness integration lets plasticity start at the surface fibers and spread inward. Bending-driven denting needs this. The rule is composite Simpson split at the mid-surface (9 points), which is exact for elastic bending stiffness, first yield at the surface, and the fully plastic moment. Gauss–Lobatto rules (5–7 points) underestimate the fully plastic moment by 4–9%.
 - **Why shells matter:** a can wall has t/R ≈ 0.003. Tetrahedral meshes of that wall would need either absurd element counts or would lock badly. Getting this wrong is the most common way a "soft body sim" misses denting entirely.
 
 ## 2. Constitutive model library

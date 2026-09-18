@@ -87,6 +87,52 @@ equations:
     quote: "P_dent ~ C · σ_y · t^{3/2} · R^{1/2}"
     expr: "Eq(P, C*sy*t**Rational(3, 2)*R**Rational(1, 2))"
     dims: {P: M L T^-2, C: "1", sy: M L^-1 T^-2, t: L, R: L}
+  # docs/09 long-cylinder limit: per unit length of can (F in N/m, I and M per metre)
+  - id: EQ-plane-strain-modulus
+    doc: 09-simulator.md
+    quote: "E' = E/(1 − ν²)"
+    expr: "Eq(Ep, E/(1 - nu**2))"
+    dims: {Ep: M L^-1 T^-2, E: M L^-1 T^-2, nu: "1"}
+  - id: EQ-fiber-strain
+    doc: 09-simulator.md
+    quote: "ε(z) = ε_m + z κ"
+    expr: "Eq(eps, eps_m + z*kappa)"
+    dims: {eps: "1", eps_m: "1", z: L, kappa: L^-1}
+  - id: EQ-ring-compliance
+    doc: 09-simulator.md
+    quote: "δ = (π/4 − 2/π) F R³/(E' I)"
+    expr: "Eq(delta, (pi/4 - 2/pi)*F*R**3/(Ep*I))"
+    dims: {delta: L, F: M T^-2, R: L, Ep: M L^-1 T^-2, I: L^3}
+  - id: EQ-first-yield-stress
+    doc: 09-simulator.md
+    quote: "σ_1y = σ_y/√(1 − ν + ν²)"
+    expr: "Eq(s1y, sy/sqrt(1 - nu + nu**2))"
+    dims: {s1y: M L^-1 T^-2, sy: M L^-1 T^-2, nu: "1"}
+  - id: EQ-first-yield-load
+    doc: 09-simulator.md
+    quote: "F_y = π M_y / R"
+    expr: "Eq(Fy, pi*My/R)"
+    dims: {Fy: M T^-2, My: M L T^-2, R: L}
+  - id: EQ-first-yield-moment
+    doc: 09-simulator.md
+    quote: "M_y = σ_1y t²/6"
+    expr: "Eq(My, s1y*t**2/6)"
+    dims: {My: M L T^-2, s1y: M L^-1 T^-2, t: L}
+  - id: EQ-plastic-moment
+    doc: 09-simulator.md
+    quote: "M_p = σ_y' t²/4"
+    expr: "Eq(Mp, syp*t**2/4)"
+    dims: {Mp: M L T^-2, syp: M L^-1 T^-2, t: L}
+  - id: EQ-collapse-load
+    doc: 09-simulator.md
+    quote: "F_c = 4 M_p / R"
+    expr: "Eq(Fc, 4*Mp/R)"
+    dims: {Fc: M T^-2, Mp: M L T^-2, R: L}
+  - id: EQ-ring-buckling
+    doc: 09-simulator.md
+    quote: "p_cr = 3 E' I / R³"
+    expr: "Eq(pcr, 3*Ep*I/R**3)"
+    dims: {pcr: M L^-1 T^-2, Ep: M L^-1 T^-2, I: L^3, R: L}
 
 # Numbers stated in the docs, recomputed from their inputs by design/quantities.py.
 quantities:
@@ -124,6 +170,28 @@ quantities:
      fn: hertz_line_ratio, inputs: {F: 10.0, width: 0.015, E_pad: 1.0e6, nu_pad: 0.5, R: 0.033}, stated: 0.14, rel_tol: 0.1}
   - {id: Q-dhat-can, doc: 02-rigid-body-and-contact.md, quote: "10⁻⁵ m for a 0.1 mm can wall",
      fn: ratio, inputs: {num: 1.0e-4, den: 10.0}, stated: 1.0e-5, rel_tol: 0.01}
+  - {id: Q-can-plane-strain-modulus, doc: 09-simulator.md, quote: "E' = 77.4 GPa", fn: plane_strain_modulus,
+     inputs: {E: 69.0e9, nu: 0.33}, stated: 77.4e9, rel_tol: 0.002}
+  - {id: Q-can-first-yield-stress, doc: 09-simulator.md, quote: "| 323 MPa |", fn: first_yield_stress,
+     inputs: {sy: 285.0e6, nu: 0.33}, stated: 323.0e6, rel_tol: 0.002}
+  - {id: Q-can-fully-plastic-stress, doc: 09-simulator.md, quote: "σ_y' = 329 MPa", fn: plane_strain_yield,
+     inputs: {sy: 285.0e6}, stated: 329.0e6, rel_tol: 0.002}
+  - {id: Q-ring-compliance, doc: 09-simulator.md, quote: "8.29×10⁻⁴ m per N/m", fn: ring_compliance,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 8.29e-4, rel_tol: 0.002}
+  - {id: Q-ring-first-yield, doc: 09-simulator.md, quote: "51.2 N/m", fn: ring_first_yield,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 51.2, rel_tol: 0.002}
+  - {id: Q-ring-collapse, doc: 09-simulator.md, quote: "99.7 N/m", fn: ring_collapse,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 99.7, rel_tol: 0.002}
+  - {id: Q-ring-buckling-pressure, doc: 09-simulator.md, quote: "539 Pa", fn: ring_buckling_pressure,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033}, stated: 539.0, rel_tol: 0.002}
+  - {id: Q-ring-pressure-stiffening, doc: 09-simulator.md, quote: "339×", fn: ring_pressure_stiffening,
+     inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033, p: 2.5e5}, stated: 339.0, rel_tol: 0.003}
+  - {id: Q-ring-pressure-ratio, doc: 09-simulator.md, quote: "Internal pressure is 464 times the ring's buckling pressure",
+     fn: ring_pressure_ratio, inputs: {E: 69.0e9, nu: 0.33, sy: 285.0e6, t: 1.0e-4, R: 0.033, p: 2.5e5}, stated: 464.0, rel_tol: 0.003}
+  - {id: Q-lobatto5-plastic-moment, doc: 09-simulator.md, quote: "by 8.7% with 5 points", fn: rule_plastic_moment_deficit,
+     inputs: {rule_name: lobatto5}, stated: 0.087, rel_tol: 0.01}
+  - {id: Q-lobatto7-plastic-moment, doc: 09-simulator.md, quote: "by 4.0% with 7", fn: rule_plastic_moment_deficit,
+     inputs: {rule_name: lobatto7}, stated: 0.040, rel_tol: 0.01}
   # Measured on the reference model (design/oracles), not computed from a formula.
   - {id: Q-round-fingertip-slide, doc: 02-rigid-body-and-contact.md, quote: "slides about 4× faster than friction alone predicts",
      fn: oracle_round_fingertip_ratio, inputs: {k: 0.8}, stated: 4.0, rel_tol: 0.1}
@@ -159,6 +227,8 @@ regimes:
      fn: ratio_range, inputs: {num: [1.0e-5, 1.0e-4], den: [1.0e-8, 1.0e-8]}, limit: 100.0, sense: min}
   - {id: R-barrier-vs-wall, doc: 02-rigid-body-and-contact.md, quote: "bounded by one tenth of the thinnest feature in contact",
      fn: ratio_range, inputs: {num: [1.0e-5, 1.0e-5], den: [1.0e-4, 1.0e-4]}, limit: 0.1, sense: max}
+  - {id: R-thin-shell-sim, doc: 09-simulator.md, quote: "Thin shells** are discrete Kirchhoff–Love triangles",
+     fn: ratio_range, inputs: {num: [0.95e-4, 1.05e-4], den: [0.033, 0.033]}, limit: 0.05, sense: max}
   - {id: R-nonrelativistic, doc: 03-deformables-and-materials.md, quote: "Speeds are ≲ 10 m/s",
      fn: ratio_range, inputs: {num: [0.0, 10.0], den: [2.998e8, 2.998e8]}, limit: 1.0e-6, sense: max}
 
@@ -221,6 +291,33 @@ models:
     quote: "**Pressure-dependent friction** for elastomer pads"
     oracle: design.oracles.contact
     laws: [friction_force_monotone]
+
+  - id: MOD-fiber-section
+    doc: 09-simulator.md
+    quote: "composite Simpson split at the mid-surface (9 points)"
+    oracle: design.oracles.sim3d
+    laws: [elastic_bending_stiffness, first_yield_at_surface, plastic_moment_limit, dissipation_nonneg,
+           yield_consistency]
+  - id: MOD-staggered-plasticity
+    doc: 09-simulator.md
+    quote: "**Plasticity is staggered.**"
+    oracle: design.oracles.sim3d
+    laws: [return_map_lowers_energy]
+  - id: MOD-affine-body
+    doc: 09-simulator.md
+    quote: "are affine: x = A X + p with 12 DOF in 3D"
+    oracle: design.oracles.sim3d
+    laws: [rigid_kinetic_energy, rotation_costs_nothing]
+  - id: MOD-contact-distance
+    doc: 09-simulator.md
+    quote: "**Contact** is point–triangle plus edge–edge"
+    oracle: design.oracles.sim3d
+    laws: [gradient_consistency, distance_lipschitz, ccd_conservative]
+  - id: MOD-gas-3d
+    doc: 09-simulator.md
+    quote: "**Enclosed gas** is isothermal"
+    oracle: design.oracles.sim3d
+    laws: [potential_consistency, net_force_zero]
 
 # The same physical parameter stated in several docs must agree.
 shared_params:

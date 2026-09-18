@@ -181,3 +181,90 @@ def test_flat_pad_grasp_holds_above_and_slips_below_fmin():
     slid, predicted = _grasp_slide_speed(0.95, round_fingertips=False)
     assert abs(held) < 2e-3
     assert slid == pytest.approx(predicted, rel=0.02)
+
+
+# --- 3D simulator pieces (docs/09 §2) -------------------------------------------
+
+from design.oracles import sim3d as S            # noqa: E402
+
+RNG3 = np.random.default_rng(11)
+
+
+def rot3(w, t):
+    """Rotation matrix exp(t [w]x) (Rodrigues)."""
+    th = np.linalg.norm(w) * t
+    k = w / np.linalg.norm(w)
+    K = np.array([[0, -k[2], k[1]], [k[2], 0, -k[0]], [-k[1], k[0], 0]])
+    return np.eye(3) + np.sin(th) * K + (1 - np.cos(th)) * K @ K
+
+
+@law("MOD-affine-body", "rigid_kinetic_energy", "09-simulator.md")
+def test_affine_kinetic_energy_equals_rigid():
+    m, J = S.box_mass_properties((0.3, 0.1, 0.05), 2700.0)
+    I_body = np.trace(J) * np.eye(3) - J                    # inertia tensor from the second moment
+    for _ in range(20):
+        w = RNG3.normal(size=3)
+        R0 = rot3(RNG3.normal(size=3), 1.0)
+        Adot = (rot3(w, 1e-6) @ R0 - rot3(w, -1e-6) @ R0) / 2e-6   # d/dt exp(t[w]) R0 at t = 0
+        rigid = 0.5 * w @ (R0 @ I_body @ R0.T) @ w
+        assert S.affine_kinetic(m, J, np.zeros(3), Adot @ R0.T @ R0) == pytest.approx(rigid, rel=1e-6)
+
+
+@law("MOD-affine-body", "rotation_costs_nothing", "09-simulator.md")
+def test_orthogonality_potential_is_zero_only_for_rotations():
+    for _ in range(20):
+        R = rot3(RNG3.normal(size=3), 1.0)
+        assert S.orthogonality_energy(R, 1e8, 1e-3) == pytest.approx(0.0, abs=1e-12)
+        sheared = R @ (np.eye(3) + 1e-3 * RNG3.normal(size=(3, 3)))
+        assert S.orthogonality_energy(sheared, 1e8, 1e-3) > 0
+
+
+def _fd_grad(fn, pts, h=1e-7):
+    g = np.zeros(pts.size)
+    flat = pts.ravel()
+    for k in range(flat.size):
+        p, m = flat.copy(), flat.copy()
+        p[k] += h
+        m[k] -= h
+        g[k] = (fn(*p.reshape(pts.shape))[0] - fn(*m.reshape(pts.shape))[0]) / (2 * h)
+    return g
+
+
+@law("MOD-contact-distance", "gradient_consistency", "09-simulator.md")
+def test_contact_distance_gradients_match_finite_differences():
+    for _ in range(30):
+        pts = RNG3.normal(size=(4, 3))
+        for fn in (S.point_triangle, S.edge_edge):
+            _, g = fn(*pts)
+            assert np.allclose(g, _fd_grad(fn, pts), atol=1e-5)
+
+
+@law("MOD-contact-distance", "distance_lipschitz", "09-simulator.md")
+def test_contact_distance_is_continuous_across_regions():
+    """Distance changes no faster than the vertices move: no jumps between closest-feature regions."""
+    for _ in range(200):
+        pts = RNG3.normal(size=(4, 3))
+        delta = 1e-4 * RNG3.normal(size=(4, 3))
+        for fn in (S.point_triangle, S.edge_edge):
+            d0, d1 = fn(*pts)[0], fn(*(pts + delta))[0]
+            assert abs(d1 - d0) <= np.linalg.norm(delta, axis=1).sum() + 1e-12
+
+
+@law("MOD-contact-distance", "ccd_conservative", "09-simulator.md")
+def test_ccd_bound_never_allows_contact():
+    for _ in range(200):
+        pts = RNG3.normal(size=(4, 3))
+        disp = 2.0 * RNG3.normal(size=(4, 3))
+        for fn, split in ((S.point_triangle, 1), (S.edge_edge, 2)):
+            alpha = S.ccd_bound(fn(*pts)[0], disp[:split], disp[split:])
+            for t in np.linspace(0, alpha, 200):
+                assert fn(*(pts + t * disp))[0] > 0
+
+
+@law("MOD-gas-3d", "net_force_zero", "09-simulator.md")
+def test_pressurised_vessel_exerts_no_net_force_on_itself():
+    from tests.design.test_admissibility import uv_sphere
+    x, faces = uv_sphere()
+    x = x * 0.03 + RNG3.normal(scale=2e-3, size=x.shape)
+    f = S.gas_force(x, faces, 50.0)
+    assert np.allclose(f.sum(axis=0), 0.0, atol=1e-9 * np.abs(f).max())

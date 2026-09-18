@@ -25,6 +25,7 @@ The gap: nothing combines **engineering-grade constitutive models**, **tracking 
 6. [VLA integration](06-vla-integration.md): APIs, data generation, labels, sim-to-real
 7. [Roadmap & validation](07-roadmap-and-validation.md): phases, benchmarks, risks, open questions
 8. [Design validation](08-design-validation.md): how the design is checked against classical physics before implementation
+9. [CPU simulator](09-simulator.md): the first implementation (3D, CPU-only), its components, and the closed-form checks it must pass
 
 ## Core ideas in one page
 

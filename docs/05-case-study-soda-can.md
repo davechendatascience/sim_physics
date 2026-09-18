@@ -84,7 +84,7 @@ Resulting policy, produced by the inverse layer and later distilled into a VLA:
 
 ## 6. What the simulator must get right for this to work
 
-- [ ] Thin-shell elastoplasticity with Hill48 anisotropy and through-thickness integration
+- [ ] Thin-shell elastoplasticity with Hill48 anisotropy and through-thickness integration (first version with isotropic J2: [09](09-simulator.md))
 - [ ] Geometric imperfection fields (dent threshold and buckling scatter)
 - [ ] Enclosed gas pressure monolithically coupled to shell volume
 - [ ] Liquid mass + slosh lumped model
