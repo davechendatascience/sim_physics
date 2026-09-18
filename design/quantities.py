@@ -324,3 +324,15 @@ def ramanujan_error_over_threshold_range(ovalization, threshold):
 def ramanujan_margin(ovalization, threshold):
     """How many times smaller the worst perimeter error is than the plastic threshold."""
     return threshold / ramanujan_perimeter_error(ovalization)
+
+
+def can_ovalization_period(length, mass, E=69e9, nu=0.33, t=1e-4, R=0.033):
+    """Period of the can's ovalization mode: small-deflection ring stiffness over
+    the whole length, with the can's mass (docs/09 §5)."""
+    k = length / ring_compliance(E, nu, 0.0, t, R)
+    return 2 * np.pi * np.sqrt(mass / k)
+
+
+def squeeze_period_ratio_range(length, mass, load_time):
+    T = can_ovalization_period(length, mass)
+    return T / max(load_time), T / min(load_time)

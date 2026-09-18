@@ -77,7 +77,7 @@ class Scene:
         self.drives, self.gases = list(drives), list(gases)
         self.newton_tol, self.max_newton, self.friction_iters = newton_tol, max_newton, friction_iters
         self.t = 0.0
-        self.stats = {"newton": []}
+        self.stats = {"newton": [], "drive_force": {d.body: [] for d in self.drives}}
 
         nd = nv = 0
         for b in bodies:
@@ -409,6 +409,12 @@ class Scene:
             b.Qdot = (Q - b.Q) / h
         self.load(st)
         self.t += h
+        for d in self.drives:                             # force each actuator applies to its body
+            b = self.by_name[d.body]
+            k = np.asarray(d.stiffness, float)
+            tgt = d.target(self.t) if d.target else np.zeros(3)
+            f = d.force(self.t) if d.force else np.zeros(3)
+            self.stats["drive_force"][d.body].append(-k * (b.p - tgt) + f)
         self._plasticity()
         self.stats["newton"].append(iters)
         return iters

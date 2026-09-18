@@ -51,7 +51,15 @@ The last line is why a sealed can is hard to dent. Internal pressure is 464 time
 
 This is why the real question, a **short** pad on a can, needs the 3D simulator. Dents come from local indentation and buckling under the pad, which have no closed form here.
 
-## 5. Running it
+## 5. The squeeze protocol
+
+A can squeeze is posed the way a lab runs it, as a slow, displacement-controlled test on a supported can:
+
+- **The can stands on a table.** Its bottom end is held fixed, modelling the base resting on the table with friction. A free-floating can is held only by its own 13 g of inertia, so the solver sees almost no stiffness against drift next to very stiff contact. That mismatch made Newton stall at its iteration cap.
+- **The pads follow a prescribed path** at constant speed to a set squeeze depth, then retract. Each pad is tied to its path by a stiff spring, and the spring's force is the measured reaction force. The test therefore yields a force–displacement curve, which is what the grasp envelope needs. Pushing the pads with a prescribed force instead turned the test into a dynamics problem, with light pads accelerating into a very soft ring.
+- **Quasi-static regime.** Loading must be slow compared with the can's ovalization period, 59 ms for the whole can (stiffness 147 N/m, mass 13 g). A 0.5 s squeeze leaves inertia negligible, at a period-to-load-time ratio of 0.12.
+
+## 6. Running it
 
 ```bash
 .venv/Scripts/python -m simphys list

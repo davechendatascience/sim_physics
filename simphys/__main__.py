@@ -53,7 +53,11 @@ def main(argv=None):
     print(f"\nsimulated {steps} steps in {time.time() - t0:.1f} s")
 
     summary = {"scene": args.scene, "steps": steps, "t": scene.t, "ledger": ledger.report(scene),
-               "newton_iterations": sum(scene.stats["newton"])}
+               "newton_iterations": sum(scene.stats["newton"]),
+               "peak_drive_force_N": {k: float(max((abs(f[0]) for f in v), default=0.0))
+                                      for k, v in scene.stats["drive_force"].items()}}
+    for k, v in summary["peak_drive_force_N"].items():
+        print(f"peak force on {k}: {v:.2f} N")
     for r in summary["ledger"]:
         print(f"ledger[{r['body']}]: max plastic strain {r['max_plastic_strain']:.2e}, "
               f"shape change {r['max_shape_change_mm']:.3f} mm, "

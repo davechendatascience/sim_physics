@@ -43,36 +43,43 @@ def _pads(length, gap, width, thickness=0.01):
     return out
 
 
-def can_squeeze(force=40.0, pad_width=0.015, pad_length=0.02, sealed=False, p_gauge=2.5e5,
-                n_theta=48, n_z=24, ramp=0.25, hold=0.1, release=0.15, dt=5e-3):
-    """A soda can squeezed by two short pads, force-controlled: ramp to `force`
-    (per pad), hold, release. Open (no pressure) or sealed at p_gauge.
-    The can's residual shape after release is what the ledger judges."""
+def can_squeeze(depth=4e-3, speed=0.016, hold=0.1, pad_width=0.015, pad_length=0.02, sealed=False,
+                p_gauge=2.5e5, n_theta=48, n_z=24, dt=5e-3):
+    """A soda can squeezed by two short pads (docs/09 §5).
+
+    The can stands on a table (its bottom end is held fixed). Each pad follows a
+    prescribed path at `speed` to `depth` into the wall, holds, and retracts;
+    a stiff spring ties it to the path, and the spring force is the measured
+    reaction. Open or sealed at p_gauge. After retraction, the ledger says
+    whether the can was permanently altered.
+    """
     v, f, label = G.cylinder(CAN_R, CAN_H, n_theta, n_z, capped=True)
     thickness = np.where(label == 0, CAN_T, 2.5e-4)          # ends are thicker (~0.25 mm)
-    can = Shell("can", v, f, ALUMINUM_CAN, thickness, color="#bdc3c7")
+    base = np.isclose(v[:, 2], -CAN_H / 2)
+    can = Shell("can", v, f, ALUMINUM_CAN, thickness, fixed_verts=base, color="#bdc3c7")
     pads = _pads(pad_length, gap=5e-6, width=pad_width)
-    total = ramp + hold + release
+    t_in = depth / speed
+    total = 2 * t_in + hold
 
-    def profile(t):
-        if t < ramp:
-            return force * t / ramp
-        if t < ramp + hold:
-            return force
-        return max(0.0, force * (1 - (t - ramp - hold) / release))
+    def travel(t):
+        if t < t_in:
+            return speed * t
+        if t < t_in + hold:
+            return depth
+        return max(0.0, depth - speed * (t - t_in - hold))
 
-    drives = [Drive(p.name, stiffness=(0.0, 1e4, 1e4), target=lambda t: np.zeros(3),
-                    force=(lambda t, s=s: np.array([s * profile(t), 0.0, 0.0])), rot_stiffness=1e3)
-              for p, s in zip(pads, (1, -1))]
-    for d, p in zip(drives, pads):
+    drives = []
+    for p, side in zip(pads, (-1, 1)):
         c = p.com0.copy()
-        d.target = (lambda t, c=c: c)
+        drives.append(Drive(p.name, stiffness=(1e6, 1e4, 1e4),
+                            target=(lambda t, c=c, side=side: c - side * np.array([travel(t), 0.0, 0.0])),
+                            rot_stiffness=1e3))
     gases = [Gas("can", p_gauge)] if sealed else []
     # 1 um per step is ample resolution for a dent verdict; the strict default is
     # kept for the validation scenes, where it measurably matters (docs/09 §4)
-    scene = Scene([can] + pads, dt=dt, gravity=(0, 0, 0), dhat=1e-5, kappa=1e3, eps_v=1e-4,
+    scene = Scene([can] + pads, dt=dt, dhat=1e-5, kappa=1e3, eps_v=1e-4,
                   drives=drives, gases=gases, newton_tol=2e-4)
-    return scene, {"steps": int(round(total / dt)), "force": profile, "view": (15, -70)}
+    return scene, {"steps": int(round(total / dt)), "travel": travel, "view": (15, -70)}
 
 
 def can_squeeze_long(force_per_length=1.0, n_theta=48, n_z=12, length=0.12, steps=80, dt=5e-3):
