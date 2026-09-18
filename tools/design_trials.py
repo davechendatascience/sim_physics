@@ -19,6 +19,17 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
+def project_python() -> str:
+    """The project venv's interpreter if it exists, else the current one, so a
+    belief run uses the dependencies in requirements.txt whichever `python`
+    the server happened to launch this script with."""
+    root = Path(__file__).resolve().parents[1]
+    for cand in (root / ".venv" / "Scripts" / "python.exe", root / ".venv" / "bin" / "python"):
+        if cand.exists():
+            return str(cand)
+    return sys.executable
+
+
 def main(argv: list[str]) -> int:
     if not argv:
         print("usage: design_trials.py <out.json> [-- <pytest args>]", file=sys.stderr)
@@ -30,7 +41,7 @@ def main(argv: list[str]) -> int:
     with tempfile.TemporaryDirectory() as tmp:
         junit = Path(tmp) / "junit.xml"
         completed = subprocess.run(
-            [sys.executable, "-m", "pytest", f"--junit-xml={junit}",
+            [project_python(), "-m", "pytest", f"--junit-xml={junit}",
              "-o", "junit_family=xunit1", "-p", "no:cacheprovider", *pytest_args],
             capture_output=True, text=True, stdin=subprocess.DEVNULL,
         )
