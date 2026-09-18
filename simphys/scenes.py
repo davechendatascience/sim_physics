@@ -90,7 +90,9 @@ def can_squeeze(depth=4e-3, speed=0.016, hold=0.1, pad_width=0.015, pad_length=0
     gases = [Gas("can", p_gauge)] if sealed else []
     # 1 um per step is ample resolution for a dent verdict; the strict default is
     # kept for the validation scenes, where it measurably matters (docs/09 §4)
-    scene = Scene([can] + pads, dt=dt, dhat=1e-5, kappa=1e3, eps_v=1e-4,
+    # kappa = 1e5 keeps contact gaps a healthy fraction of d-hat under ~10 N pad
+    # loads; at 1e3 a sliding pair sat at 0.05 um and CCD locked the solve (docs/10 §1)
+    scene = Scene([can] + pads, dt=dt, dhat=1e-5, kappa=1e5, eps_v=1e-4,
                   drives=drives, gases=gases, newton_tol=2e-4)
     return scene, {"steps": int(round(total / dt)), "travel": travel, "view": (15, -70)}
 

@@ -134,7 +134,7 @@ def split(kind):
     return 1 if kind == "pt" else 2
 
 
-def ccd(kind, x4, dx4, offset, keep_fraction=0.1, n_max=1024):
+def ccd(kind, x4, dx4, offset, keep_fraction=0.1, n_max=65536, chunk_points=2_000_000):
     """Largest safe step fraction for each pair (see module docstring)."""
     m = len(x4)
     if m == 0:
@@ -149,16 +149,19 @@ def ccd(kind, x4, dx4, offset, keep_fraction=0.1, n_max=1024):
     need = np.where(moving, np.ceil(2 * L / np.maximum(g0 - floor, 1e-300)), 1)
     N_all = np.minimum(2 ** np.ceil(np.log2(np.maximum(need, 1))), n_max).astype(int)
     for N in np.unique(N_all[moving]):
-        sel = np.where(moving & (N_all == N))[0]
+        group = np.where(moving & (N_all == N))[0]
         t = np.linspace(0, 1, N + 1)
-        xs = x4[sel][:, None] + t[None, :, None, None] * dx4[sel][:, None]
-        g = distance(kind, xs.reshape(-1, 4, 3)).reshape(len(sel), N + 1) - offset[sel][:, None]
-        lower = (g[:, :-1] + g[:, 1:] - L[sel][:, None] / N) / 2
-        bad = lower <= floor[sel][:, None]
-        first = np.where(bad.any(1), bad.argmax(1), N)          # first failing interval
-        a_s = t[first]                                          # start of that interval (safe)
-        a_c = (1 - keep_fraction) * g0[sel] / L[sel]            # one-shot conservative bound
-        alpha[sel] = np.clip(np.maximum(a_s, a_c), 0, 1)
+        per = max(1, chunk_points // (N + 1))                   # pairs per chunk: bounded memory
+        for c0 in range(0, len(group), per):
+            sel = group[c0:c0 + per]
+            xs = x4[sel][:, None] + t[None, :, None, None] * dx4[sel][:, None]
+            g = distance(kind, xs.reshape(-1, 4, 3)).reshape(len(sel), N + 1) - offset[sel][:, None]
+            lower = (g[:, :-1] + g[:, 1:] - L[sel][:, None] / N) / 2
+            bad = lower <= floor[sel][:, None]
+            first = np.where(bad.any(1), bad.argmax(1), N)      # first failing interval
+            a_s = t[first]                                      # start of that interval (safe)
+            a_c = (1 - keep_fraction) * g0[sel] / L[sel]        # one-shot conservative bound
+            alpha[sel] = np.clip(np.maximum(a_s, a_c), 0, 1)
     return alpha
 
 
