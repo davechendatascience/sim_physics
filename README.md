@@ -22,7 +22,7 @@ Two things make it different from a typical robotics simulator:
 | **Friction**: lagged, smoothed Coulomb | ✅ matches incline stick/slide | [`simphys/kernels.py`](simphys/kernels.py) |
 | **Irreversible-state ledger**: plastic strain + residual shape → "was it altered?" | ✅ | [`simphys/ledger.py`](simphys/ledger.py) |
 | **Rendering**: headless (GIF + PNG) or live window, matplotlib only (no GPU) | ✅ | [`simphys/render.py`](simphys/render.py) |
-| Built-in scenes: box drop, jelly drop, can squeeze (open/sealed), long-can validation | ✅ | [`simphys/scenes.py`](simphys/scenes.py) |
+| Built-in scenes: box drop, gelatin jelly drop (squash, bounce, rock), can squeeze (open/sealed), long-can validation | ✅ | [`simphys/scenes.py`](simphys/scenes.py) |
 | Inverse queries (`grasp_envelope`, state estimation), VLA environment API | 🔜 designed | [docs/04](docs/04-inverse-problems.md), [docs/06](docs/06-vla-integration.md) |
 
 ## Quick start

@@ -28,6 +28,8 @@ ALUMINUM_CAN = Material("AA3004-H19 can body", rho=2720.0, E=69e9, nu=0.33, sigm
 STEEL = Material("steel", rho=7850.0, E=210e9, nu=0.3, friction=0.5)
 WOOD = Material("wood", rho=600.0, E=10e9, nu=0.3, friction=0.5)
 SILICONE = Material("silicone pad", rho=1100.0, E=1e6, nu=0.45, friction=0.8)
+# gelatin dessert: E ~ 10-100 kPa in the food-rheology literature (placeholder, untested)
+GELATIN = Material("gelatin jelly", rho=1050.0, E=5e4, nu=0.45, friction=0.6)
 GROUND = Material("ground", rho=2000.0, E=30e9, nu=0.2, friction=0.6)
 
 

@@ -7,7 +7,7 @@ import numpy as np
 
 from . import geometry as G
 from .bodies import Rigid, Shell, Solid
-from .materials import ALUMINUM_CAN, GROUND, SILICONE, STEEL, WOOD, Material
+from .materials import ALUMINUM_CAN, GELATIN, GROUND, SILICONE, STEEL, WOOD, Material
 from .scene import Drive, Gas, Scene
 
 CAN_R, CAN_H, CAN_T = 0.033, 0.122, 1.0e-4
@@ -93,19 +93,28 @@ def can_squeeze_long(force_per_length=1.0, n_theta=48, n_z=12, length=0.12, step
     return scene, {"steps": steps, "view": (25, -60)}
 
 
-def jelly_drop():
-    """A soft Neo-Hookean block dropped on the ground."""
-    gv, gf = G.box((0.3, 0.3, 0.05), center=(0, 0, -0.025))
-    tv, tets = G.tet_box((0.1, 0.1, 0.1), 4, center=(0, 0, 0.12))
-    jelly = Solid("jelly", tv, tets, SILICONE, color="#e67e22")
+def jelly_drop(height=0.25, tilt_deg=12.0, dt=2.5e-3):
+    """A gelatin block dropped tilted onto the ground: it squashes, wobbles and bounces.
+
+    The time step resolves the impact: contact lasts pi*sqrt(m/k) ~ 45 ms for
+    this block, so h = 2.5 ms gives ~18 steps per contact. At h = 10 ms the
+    implicit solver's numerical damping would remove almost all of the bounce.
+    """
+    gv, gf = G.box((0.7, 0.7, 0.05), center=(0, 0, -0.025))
+    tv, tets = G.tet_box((0.1, 0.1, 0.1), 5)
+    a = np.radians(tilt_deg)
+    Rx = np.array([[1, 0, 0], [0, np.cos(a), -np.sin(a)], [0, np.sin(a), np.cos(a)]])
+    Ry = np.array([[np.cos(a), 0, np.sin(a)], [0, 1, 0], [-np.sin(a), 0, np.cos(a)]])
+    tv = tv @ Rx.T + np.array([0, 0, height])     # tilt about one axis: it lands on an edge and rocks
+    jelly = Solid("jelly", tv, tets, GELATIN, color="#e74c3c")
     scene = Scene([Rigid("ground", gv, gf, GROUND, fixed=True, color="#8a8a8a"), jelly],
-                  dt=1 / 100, dhat=1e-3, kappa=1e3)
-    return scene, {"steps": 80, "view": (20, -60)}
+                  dt=dt, dhat=1e-3, kappa=1e3, newton_tol=1e-4)
+    return scene, {"steps": int(round(0.9 / dt)), "view": (12, -60)}
 
 
 SCENES = {
     "box_drop": (box_drop, "Rigid boxes dropped with spin onto the ground (contact + friction)"),
-    "jelly_drop": (jelly_drop, "Soft Neo-Hookean block dropped on the ground"),
+    "jelly_drop": (jelly_drop, "Gelatin block dropped tilted: squashes, wobbles, bounces (Neo-Hookean)"),
     "can_squeeze": (can_squeeze, "Open soda can squeezed by two short pads, then released (plasticity)"),
     "can_squeeze_sealed": (lambda: can_squeeze(sealed=True), "Sealed can (2.5 bar) squeezed the same way"),
     "can_squeeze_long": (can_squeeze_long, "Validation: long pads on a long can vs ring theory"),
