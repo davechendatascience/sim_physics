@@ -359,3 +359,79 @@ def test_flat_contact_profile_closed_form_matches_quadrature():
     free = quad(lambda t: 1 / (lam * np.sqrt(2 * np.sin(t))), 0, np.pi / 2)[0]
     flat_half = Qn.squeeze_flat_contact_length(g, R) / 2
     assert 4 * (free + flat_half) == pytest.approx(2 * np.pi * R, rel=1e-10)    # perimeter kept
+
+
+
+# --- Differentiable stepping (docs/12) ------------------------------------------
+
+from design.oracles import adjoint as AD           # noqa: E402
+
+
+@law("MOD-differentiable-step", "implicit_matches_finite_differences", "12-differentiable.md")
+def test_implicit_derivatives_match_finite_differences():
+    s, k = AD.compressed_example()
+    x, _ = s.solve(k)
+    d = 1e-5 * k
+    fd_k = (s.solve(k + d)[0] - s.solve(k - d)[0]) / (2 * d)
+    assert np.allclose(s.implicit_dx_dk(x, k), fd_k, rtol=1e-6, atol=1e-9 * np.abs(fd_k).max())
+    assert np.allclose(s.implicit_dx_dxt(x, k), s.fd_dx_dxt(k), rtol=1e-6, atol=1e-8)
+
+
+@law("MOD-differentiable-step", "exact_hessian_required", "12-differentiable.md")
+def test_projected_hessian_gives_a_wrong_step_derivative():
+    s, k = AD.compressed_example()
+    x, _ = s.solve(k)
+    assert np.linalg.eigvalsh(s.spring_hessian(x, k)).min() < 0 < np.linalg.eigvalsh(s.hessian(x, k)).min()
+    fd = s.fd_dx_dxt(k)
+    err = lambda J: np.linalg.norm(J - fd) / np.linalg.norm(fd)
+    assert err(s.implicit_dx_dxt(x, k)) < 1e-7
+    assert err(s.implicit_dx_dxt(x, k, project=True)) > 0.1
+
+
+@law("MOD-differentiable-step", "converge_before_differentiating", "12-differentiable.md")
+def test_derivative_error_falls_with_the_residual():
+    s, k = AD.compressed_example()
+    fd = s.fd_dx_dxt(k)
+    x_star, _ = s.solve(k)
+    x0 = s.xt.ravel()
+    errs, residuals = [], []
+    for frac in (0.5, 0.9, 0.99, 1.0):                  # unconverged points on the way to x*
+        x = x0 + frac * (x_star - x0)
+        residuals.append(np.linalg.norm(s.grad(x, k)))
+        errs.append(np.linalg.norm(s.implicit_dx_dxt(x, k) - fd) / np.linalg.norm(fd))
+    assert residuals[0] > residuals[1] > residuals[2] > residuals[3]
+    assert errs[0] > errs[1] > errs[2] > errs[3] and errs[3] < 1e-7
+
+
+@law("MOD-differentiable-step", "consistent_tangent_symmetric", "12-differentiable.md")
+def test_j2_consistent_tangent_is_symmetric():
+    import copy
+    from design.oracles import constitutive as C
+    base = C.J2(E=69e9, nu=0.33, sigma_y0=285e6, H=1e9)
+    eps0 = np.diag([6e-3, -2e-3, -1e-3]) + 1e-3 * (np.ones((3, 3)) - np.eye(3))
+    base.update(0.5 * eps0)                            # load into the plastic range first
+    idx = [(0, 0), (1, 1), (2, 2), (1, 2), (0, 2), (0, 1)]
+    h = 1e-9
+    T = np.zeros((6, 6))
+    for j, (a, b) in enumerate(idx):
+        d = np.zeros((3, 3)); d[a, b] = d[b, a] = h
+        sp, _ = copy.deepcopy(base).update(eps0 + d)
+        sm, _ = copy.deepcopy(base).update(eps0 - d)
+        T[:, j] = [((sp - sm) / (2 * h))[p, q] for p, q in idx]
+    T[:, 3:] /= 2                                       # engineering vs tensor shear
+    assert copy.deepcopy(base).update(eps0)[1].any()    # plastic flow on this step
+    assert np.allclose(T, T.T, rtol=1e-4, atol=1e-4 * np.abs(T).max())
+
+
+@law("MOD-differentiable-step", "backward_smoothing_only", "12-differentiable.md")
+def test_backward_smoothing_leaves_forward_exact_and_converges():
+    E, sy, H = 69e9, 285e6, 1e9
+    ey = sy / E
+    eps = np.linspace(0.5 * ey, 2 * ey, 2001)
+    forward = AD.fiber_stress(eps, E, sy, H)
+    assert np.allclose(forward, np.where(eps <= ey, E * eps, sy + E * H / (E + H) * (eps - ey)))
+    for width in (1e-4 * ey, 1e-6 * ey):
+        away = np.abs(eps - ey) > 1e3 * width
+        exact = np.where(eps < ey, E, E * H / (E + H))
+        smooth = AD.fiber_tangent_smoothed(eps, E, sy, H, width)
+        assert np.allclose(smooth[away], exact[away], rtol=1e-9)

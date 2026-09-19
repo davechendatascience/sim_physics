@@ -280,6 +280,8 @@ quantities:
   - {id: Q-can-R-over-t, doc: 11-analytic-squeeze.md, quote: "R/t ≈ 330", fn: ratio,
      inputs: {num: 0.033, den: 1.0e-4}, stated: 330.0, rel_tol: 0.01}
   # Measured on the reference model (design/oracles), not computed from a formula.
+  - {id: Q-projected-hessian-derivative-error, doc: 12-differentiable.md, quote: "but is 20% wrong with the projected one",
+     fn: projected_hessian_derivative_error, inputs: {}, stated: 0.20, rel_tol: 0.05}
   - {id: Q-round-fingertip-slide, doc: 02-rigid-body-and-contact.md, quote: "slides about 4× faster than friction alone predicts",
      fn: oracle_round_fingertip_ratio, inputs: {k: 0.8}, stated: 4.0, rel_tol: 0.1}
   - {id: Q-flat-pad-slide, doc: 02-rigid-body-and-contact.md, quote: "flat pads match the prediction exactly",
@@ -427,6 +429,13 @@ models:
     oracle: design.oracles.elastica
     laws: [closed_forms_match_quadrature, small_load_limit, phase_continuity, inextensibility,
            slope_continuity, tabulated_branch_accuracy, shape_readout]
+
+  - id: MOD-differentiable-step
+    doc: 12-differentiable.md
+    quote: "dx*/dθ = −H⁻¹ ∂²E/∂x∂θ"
+    oracle: design.oracles.adjoint
+    laws: [implicit_matches_finite_differences, exact_hessian_required, converge_before_differentiating,
+           consistent_tangent_symmetric, backward_smoothing_only]
 
 # The same physical parameter stated in several docs must agree.
 shared_params:

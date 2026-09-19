@@ -28,6 +28,7 @@ The gap: nothing combines **engineering-grade constitutive models**, **tracking 
 9. [CPU simulator](09-simulator.md): the first implementation (3D, CPU-only), its components, and the closed-form checks it must pass
 10. [Performance](10-performance.md): fast on CPU, built for GPU, without changing the physics
 11. [Analytic squeeze tier](11-analytic-squeeze.md): the long-pad can pinch in closed form (ring elastica, lemniscate constant)
+12. [Differentiable simulation](12-differentiable.md): exact forward physics, implicit derivatives, backward-only smoothing at events
 
 ## Core ideas in one page
 

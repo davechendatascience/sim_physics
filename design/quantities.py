@@ -375,3 +375,13 @@ def squeeze_first_yield_force(E, nu, sy, t, R):
 
 def squeeze_flat_contact_length(g, R):
     return np.pi * R - lemniscate_constant() ** 2 * g / np.pi
+
+
+def projected_hessian_derivative_error():
+    """Relative error of dx*/dx~ formed with the per-stencil projected Hessian
+    on the design's reference step (docs/12 §2)."""
+    from design.oracles.adjoint import compressed_example
+    s, k = compressed_example()
+    x, _ = s.solve(k)
+    fd = s.fd_dx_dxt(k)
+    return float(np.linalg.norm(s.implicit_dx_dxt(x, k, project=True) - fd) / np.linalg.norm(fd))
