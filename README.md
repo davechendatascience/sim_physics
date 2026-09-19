@@ -24,6 +24,7 @@ Two things make it different from a typical robotics simulator:
 | **Rendering**: headless (GIF + PNG) or live window, matplotlib only (no GPU) | ✅ | [`simphys/render.py`](simphys/render.py) |
 | Built-in scenes: box drop, gelatin jelly drop (squash, bounce, rock), can squeeze (open/sealed), long-can validation | ✅ | [`simphys/scenes.py`](simphys/scenes.py) |
 | **Analytic squeeze tier**: can pinched by long pads, ring elastica in closed form (lemniscate constant), force–gap curve + first yield (35 µs per query) and the deformed cross-section (~130 µs per state), no field solve | ✅ matches the quadrature reference to 1e-6 | [`simphys/analytic.py`](simphys/analytic.py), [docs/11](docs/11-analytic-squeeze.md) |
+| **Differentiable simulation**: implicit derivatives through time with the exact Hessian (material parameters, initial state; deformables and rigid bodies) | ✅ matches finite differences of the full run; plastic flow refused (v1) | [`simphys/adjoint.py`](simphys/adjoint.py), [docs/12](docs/12-differentiable.md) |
 | Inverse queries (`grasp_envelope`, state estimation), VLA environment API | 🔜 designed | [docs/04](docs/04-inverse-problems.md), [docs/06](docs/06-vla-integration.md) |
 
 ## Quick start
@@ -72,7 +73,7 @@ belief.yaml    components, interfaces, contracts, tests (read from git HEAD)
 
 ## Components (belief graph)
 
-`CMP-design-process` feeds every implementation component through an `IFC-design__*` interface. `CMP-sim` encloses `CMP-sim.solver`, `.contact`, `.bodies`, `.materials`, `.ledger`, `.render` and `.analytic`, each with its own contract and test. Check the current state with the belief server: `status(view="diagnose")`, then `run_test(...)`, then `status(view="belief")`.
+`CMP-design-process` feeds every implementation component through an `IFC-design__*` interface. `CMP-sim` encloses `CMP-sim.solver`, `.contact`, `.bodies`, `.materials`, `.ledger`, `.render`, `.analytic` and `.adjoint`, each with its own contract and test. Check the current state with the belief server: `status(view="diagnose")`, then `run_test(...)`, then `status(view="belief")`.
 
 ## Development rules
 

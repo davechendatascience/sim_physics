@@ -101,6 +101,7 @@ class Scene:
         self.face_body = np.concatenate([np.full(len(b.faces), i) for i, b in enumerate(bodies)])
         self.edge_body = np.concatenate([np.full(len(b.edges), i) for i, b in enumerate(bodies)])
         self.half_t = np.concatenate([b.half_thickness() for b in bodies])
+        self.rest_x = np.concatenate([b.rest for b in bodies])     # for the edge-edge mollifier
         nb = len(bodies)
         static = np.array([isinstance(b, Rigid) and b.fixed for b in bodies])
         self.pair_ok = ~np.eye(nb, dtype=bool) & ~(static[:, None] & static[None, :])
@@ -113,6 +114,7 @@ class Scene:
         self.lag = {}
         self._cand_cache = None
         self.cand_margin = 20 * dhat
+        self.recorder = None           # a list: step() appends what the adjoint needs (docs/12 §7)
 
     # --- state -------------------------------------------------------------
     def state(self):
@@ -236,8 +238,11 @@ class Scene:
                                   (mu * lam)[keep], np.full(keep.sum(), eps))
 
     # --- energy ----------------------------------------------------------------
-    def energy(self, st, targets, derivs=True):
-        """E at state st; with derivs, also the gradient and PSD Hessian w.r.t. increments."""
+    def energy(self, st, targets, derivs=True, project=True):
+        """E at state st; with derivs, also the gradient and Hessian w.r.t. increments.
+
+        project=True (Newton) projects every stencil Hessian to PSD; project=False
+        gives the exact Hessian, which the adjoint needs (docs/12 §2.1)."""
         h = self.dt
         x = self.x(st)
         E = 0.0
@@ -259,7 +264,7 @@ class Scene:
             hx_r.append(np.repeat(dofs, k, axis=1).ravel())
             hx_c.append(np.tile(dofs, (1, k)).ravel())
             H = H.reshape(len(verts), k, k)
-            hx_v.append((H if projected else psd(H)).ravel())
+            hx_v.append((H if (projected or not project) else psd(H)).ravel())
 
         def run(kern, args, verts):
             """kern = (energy kernel, fused kernel); one compiled call when derivatives are needed."""
@@ -270,7 +275,11 @@ class Scene:
                     return False
                 E += float(e.sum())
                 return True
-            e, G, Hp = kernels.call(kern[1], *args)
+            if project:
+                e, G, Hp = kernels.call(kern[1], *args)
+            else:                                     # exact Hessian: separate unprojected kernels
+                e = kernels.call(kern[0], *args)
+                G, Hp = kernels.call(kern[2], *args), kernels.call(kern[3], *args)
             if not np.all(np.isfinite(e)):
                 return False
             E += float(e.sum())
@@ -308,7 +317,8 @@ class Scene:
                 add_q(ip, b.mass * (p - p_t) / h ** 2 - b.mass * self.gravity, np.eye(3) * b.mass / h ** 2)
                 args = (np.zeros((1, 3)), Q[None], Q_t[None], b.J[None], np.array([h]), np.array([k_rot]))
                 Gr = kernels.call(kernels.rot_G, *args)[0]
-                Hr = psd(kernels.call(kernels.rot_H, *args))[0]
+                Hr = kernels.call(kernels.rot_H, *args)
+                Hr = (psd(Hr) if project else Hr)[0]
                 add_q(np.arange(b.dof0 + 3, b.dof0 + 6), Gr, Hr)
 
         # elasticity
@@ -317,14 +327,14 @@ class Scene:
                 stn = b.stencil + b.vert0
                 nF = len(b.faces)
                 m = b.material
-                run((kernels.shell_E, kernels.shell_F),
+                run((kernels.shell_E, kernels.shell_F, kernels.shell_G, kernels.shell_H),
                     (x[stn], b.has_nb, b.Ainv, b.abar, b.IIbar, b.area, b.thickness,
                      np.full(nF, m.E), np.full(nF, m.nu), b.eps_p), stn)
             elif isinstance(b, Solid):
                 stn = b.tets + b.vert0
                 mu, lam = b.material.lame
                 nT = len(b.tets)
-                if not run((kernels.tet_E, kernels.tet_F),
+                if not run((kernels.tet_E, kernels.tet_F, kernels.tet_G, kernels.tet_H),
                            (x[stn], b.Dm_inv, b.vol, np.full(nT, mu), np.full(nT, lam)), stn):
                     return np.inf, None, None
 
@@ -344,12 +354,16 @@ class Scene:
         for kind, (stn, off) in self._pairs(x).items():
             if len(stn):
                 n = len(stn)
-                kern = (kernels.pt_E, kernels.pt_F) if kind == "pt" else \
-                       (kernels.ee_E, kernels.ee_F)
-                if not run(kern, (x[stn], off, np.full(n, self.dhat), np.full(n, self.kappa)), stn):
+                if kind == "pt":
+                    kern = (kernels.pt_E, kernels.pt_F, kernels.pt_G, kernels.pt_H)
+                    args = (x[stn], off, np.full(n, self.dhat), np.full(n, self.kappa))
+                else:
+                    kern = (kernels.ee_E, kernels.ee_F, kernels.ee_G, kernels.ee_H)
+                    args = (x[stn], self.rest_x[stn], off, np.full(n, self.dhat), np.full(n, self.kappa))
+                if not run(kern, args, stn):
                     return np.inf, None, None
         for kind, (stn, xp, w, T, mulam, eps) in self.lag.items():
-            run((kernels.fr_E, kernels.fr_F), (x[stn], xp, w, T, mulam, eps), stn)
+            run((kernels.fr_E, kernels.fr_F, kernels.fr_G, kernels.fr_H), (x[stn], xp, w, T, mulam, eps), stn)
 
         if not derivs:
             return E, None, None
@@ -367,7 +381,7 @@ class Scene:
             r = b.X @ Q.T
             gv = gx.reshape(-1, 3)[b.vert0:b.vert0 + b.n_verts]
             G2 = 0.5 * (gv.T @ r + r.T @ gv) - np.sum(gv * r) * np.eye(3)
-            G2 = psd(G2[None])[0]
+            G2 = psd(G2[None])[0] if project else G2
             idx = np.arange(b.dof0 + 3, b.dof0 + 6)
             H = H + sp.csr_matrix((G2.ravel(), (np.repeat(idx, 3), np.tile(idx, 3))), shape=(self.nd, self.nd))
         return E, g, H.tocsr()
@@ -401,6 +415,9 @@ class Scene:
             targets[b.name] = (b.p + h * b.vp, b.Q + h * b.Qdot)
         st = start
         iters = 0
+        t_start = self.t
+        alpha_start = [b.alpha.copy() for b in self.deformables if isinstance(b, Shell)]
+        g, f = np.zeros(self.nd), self.free
         for _ in range(self.friction_iters):
             self._update_lag(self.x(st), x_start)
             for _ in range(self.max_newton):
@@ -412,8 +429,10 @@ class Scene:
                 move = np.abs(self.x(self.retract(st, delta, 1.0)) - self.x(st)).max()
                 if move / h < self.newton_tol:
                     break
-                alpha = self._ccd(st, delta)
                 slope = g @ delta
+                if -slope <= 16 * np.finfo(float).eps * abs(E):
+                    break          # predicted decrease below E's floating-point resolution: converged
+                alpha = self._ccd(st, delta)
                 while alpha > 1e-12:
                     trial = self.retract(st, delta, alpha)
                     E_new, _, _ = self.energy(trial, targets, derivs=False)
@@ -433,6 +452,10 @@ class Scene:
             b.Qdot = (Q - b.Q) / h
         self.load(st)
         self.t += h
+        if self.recorder is not None:
+            self.recorder.append({"start": start, "targets": targets, "lag": dict(self.lag), "t": t_start,
+                                  "final": self.state(), "residual": float(np.linalg.norm(g[f])),
+                                  "alpha_start": alpha_start})
         for d in self.drives:                             # force each actuator applies to its body
             b = self.by_name[d.body]
             k = np.asarray(d.stiffness, float)

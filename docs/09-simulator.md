@@ -15,6 +15,7 @@ The first implementation of the design. It is **3D** and runs on a laptop CPU. I
 | `CMP-sim.ledger` | [03](03-deformables-and-materials.md) §4 | Plastic strain, residual shape, "altered?" verdict |
 | `CMP-sim.render` | [09](09-simulator.md) §3 | Headless (PNG/GIF) or windowed (matplotlib 3D) output |
 | `CMP-sim.analytic` | [11](11-analytic-squeeze.md) | Closed-form tier for a can pinched between long pads (microseconds, no stepping) |
+| `CMP-sim.adjoint` | [12](12-differentiable.md) | Implicit derivatives through time: exact Hessian, material parameters, initial state |
 
 ## 2. Models
 

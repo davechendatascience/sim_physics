@@ -17,7 +17,7 @@ components:
       (docs/ + design/claims.yaml) that implementation is allowed to build on
     outputs: [IFC-design__sim.solver, IFC-design__sim.contact, IFC-design__sim.bodies,
               IFC-design__sim.materials, IFC-design__sim.ledger, IFC-design__sim.render,
-              IFC-design__sim.analytic]
+              IFC-design__sim.analytic, IFC-design__sim.adjoint]
     testable_capability: >-
       Every physics statement in the design is registered, dimensionally
       consistent, satisfies classical balance and thermodynamic laws when run
@@ -36,8 +36,8 @@ components:
       tolerance to make a check pass.
 
   - id: CMP-sim
-    purpose: The simulator (simphys), enclosing the seven components below
-    inputs: [IFC-solver__sim, IFC-ledger__sim, IFC-render__sim, IFC-analytic__sim]
+    purpose: The simulator (simphys), enclosing the eight components below
+    inputs: [IFC-solver__sim, IFC-ledger__sim, IFC-render__sim, IFC-analytic__sim, IFC-adjoint__sim]
     testable_capability: >-
       Every built-in scene runs from the command line, headless, and writes
       its animation, final frame, and ledger summary
@@ -49,7 +49,7 @@ components:
   - id: CMP-sim.solver
     purpose: Incremental-potential time step with Newton on increments (rotations on SO(3))
     inputs: [IFC-design__sim.solver, IFC-bodies__solver, IFC-contact__solver]
-    outputs: [IFC-solver__sim, IFC-solver__ledger, IFC-solver__render]
+    outputs: [IFC-solver__sim, IFC-solver__ledger, IFC-solver__render, IFC-solver__adjoint]
     testable_capability: >-
       Reproduces implicit Euler exactly in free fall, conserves linear momentum
       through collisions, never increases energy without external work, and
@@ -123,6 +123,20 @@ components:
       - {id: FM-analytic-regime, observable: results reported past first yield or for short pads}
     remediation: simphys/analytic.py
 
+  - id: CMP-sim.adjoint
+    purpose: Implicit derivatives of the 3D solver through time (docs/12)
+    inputs: [IFC-design__sim.adjoint, IFC-solver__adjoint]
+    outputs: [IFC-adjoint__sim]
+    testable_capability: >-
+      Gradients of a final-state objective with respect to a material
+      parameter and the initial velocity match finite differences of the
+      forward simulation, the forward run is unchanged by recording, and a run
+      with plastic flow is refused rather than differentiated wrongly
+    failure_modes:
+      - {id: FM-adjoint-mismatch, observable: gradient disagrees with finite differences of the forward run}
+      - {id: FM-adjoint-silent, observable: a gradient is returned for a run with plastic flow}
+    remediation: simphys/adjoint.py and the unprojected Hessian path in simphys/scene.py
+
   - id: CMP-sim.render
     purpose: CPU-only matplotlib rendering, headless (GIF/PNG) or windowed
     inputs: [IFC-design__sim.render, IFC-solver__render]
@@ -181,6 +195,24 @@ interfaces:
     semantics: Force-gap curve and first-yield verdict for the long-pad pinch
     producer_guarantees: [no result past first yield is reported as elastic]
     consumer_assumptions: [no result past first yield is reported as elastic]
+  - id: IFC-design__sim.adjoint
+    producer: CMP-design-process
+    consumer: CMP-sim.adjoint
+    semantics: Implicit differentiation rules of docs/12 (exact Hessian, converged steps, backward-only smoothing)
+    producer_guarantees: [adjoint uses the unprojected Hessian; forward pass never altered by differentiation]
+    consumer_assumptions: [adjoint uses the unprojected Hessian; forward pass never altered by differentiation]
+  - id: IFC-solver__adjoint
+    producer: CMP-sim.solver
+    consumer: CMP-sim.adjoint
+    semantics: Recorded step states, targets and friction lag; exact Hessian on request
+    producer_guarantees: [energy can be assembled without PSD projection at any recorded state]
+    consumer_assumptions: [energy can be assembled without PSD projection at any recorded state]
+  - id: IFC-adjoint__sim
+    producer: CMP-sim.adjoint
+    consumer: CMP-sim
+    semantics: Gradients of objectives of the final state
+    producer_guarantees: [no gradient returned through unmodelled plastic flow]
+    consumer_assumptions: [no gradient returned through unmodelled plastic flow]
   - id: IFC-materials__bodies
     producer: CMP-sim.materials
     consumer: CMP-sim.bodies
@@ -352,6 +384,15 @@ contracts:
     evaluable_by: [TST-sim-analytic]
     sufficiency: {n_min: 4, max_ci_width: 0.5}
 
+  - id: CTR-sim-adjoint
+    subject: CMP-sim.adjoint
+    claim_type: capability
+    metrics: [{id: passed, unit: bool}]
+    acceptance: {rule: "passed == true", target_rate: 0.6}
+    trial_identity: [claim]
+    evaluable_by: [TST-sim-adjoint]
+    sufficiency: {n_min: 4, max_ci_width: 0.5}
+
   - id: CTR-sim-render
     subject: CMP-sim.render
     claim_type: capability
@@ -461,6 +502,13 @@ tests:
     metrics: [passed]
     capture: [claim]
 
+  - id: TST-sim-adjoint
+    layer: component
+    targets: [CMP-sim.adjoint]
+    run: python tools/design_trials.py $OUT -- tests/sim/test_adjoint.py -q
+    metrics: [passed]
+    capture: [claim]
+
   - id: TST-sim-render
     layer: component
     targets: [CMP-sim.render]
@@ -491,5 +539,6 @@ policies:
       - {slice: CTR-sim-ledger, require: supported}
       - {slice: CTR-sim-render, require: supported}
       - {slice: CTR-sim-analytic, require: supported}
+      - {slice: CTR-sim-adjoint, require: supported}
       - {safety_gates: all_passed}
     weights: null

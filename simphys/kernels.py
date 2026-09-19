@@ -137,8 +137,17 @@ def pt_barrier(x4, offset, dhat, kappa):
     return barrier(jnp.sqrt(pt_dist2(x4)) - offset, dhat, kappa)
 
 
-def ee_barrier(x4, offset, dhat, kappa):
-    return barrier(jnp.sqrt(ee_dist2(x4)) - offset, dhat, kappa)
+def ee_mollifier(x4, xr4):
+    """C1 weight that fades the edge-edge barrier to zero as the edges become
+    parallel (IPC; docs/02 §2). xr4 are rest positions of the same vertices."""
+    c = jnp.sum(jnp.cross(x4[1] - x4[0], x4[3] - x4[2]) ** 2)
+    e = 1e-3 * jnp.sum((xr4[1] - xr4[0]) ** 2) * jnp.sum((xr4[3] - xr4[2]) ** 2)
+    r = c / e
+    return jnp.where(r < 1.0, (2.0 - r) * r, 1.0)
+
+
+def ee_barrier(x4, xr4, offset, dhat, kappa):
+    return ee_mollifier(x4, xr4) * barrier(jnp.sqrt(ee_dist2(x4)) - offset, dhat, kappa)
 
 
 def f0(y, eps):
@@ -198,6 +207,14 @@ ee_E, ee_G, ee_H, ee_F = _batched(ee_barrier)
 fr_E, fr_G, fr_H, fr_F = _batched(friction_energy)
 vol_E, vol_G, vol_H, vol_F = _batched(face_volume)
 rot_E, rot_G, rot_H, rot_F = _batched(rigid_rotational)
+def _rot_mixed(Qt, lam, Q, J, h, k_rot):
+    """d/dQ~ of lam . (d/dw rigid_rotational at w = 0): the adjoint's link from a
+    rigid body's inertial target back to its previous rotations (docs/12 §7)."""
+    g = jax.grad(rigid_rotational)(jnp.zeros(3), Q, Qt, J, h, k_rot)
+    return lam @ g
+
+
+rot_mixed = jax.jit(jax.grad(_rot_mixed))
 shell_forms_batched = jax.jit(jax.vmap(shell_forms))
 shell_strains_batched = jax.jit(jax.vmap(shell_strains))
 

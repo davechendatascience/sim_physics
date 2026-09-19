@@ -416,7 +416,7 @@ models:
     doc: 09-simulator.md
     quote: "**Contact** is point–triangle plus edge–edge"
     oracle: design.oracles.sim3d
-    laws: [gradient_consistency, distance_lipschitz, ccd_conservative]
+    laws: [gradient_consistency, distance_lipschitz, ccd_conservative, parallel_edge_mollifier]
   - id: MOD-gas-3d
     doc: 09-simulator.md
     quote: "**Enclosed gas** is isothermal"

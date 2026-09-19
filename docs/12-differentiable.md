@@ -43,3 +43,29 @@ The analytic squeeze tier has exact derivatives: `dP/dg = −2P/g` in flat conta
 - **Convergence matters:** the derivative error falls as the step's residual falls.
 - **The J2 consistent tangent is symmetric** for associative plasticity.
 - **Backward smoothing** leaves the forward result unchanged and reduces to the exact one-sided derivatives as its width goes to zero.
+
+## 7. Implementation (simphys v1)
+
+`simphys/adjoint.py` records the forward run and propagates an adjoint backwards through it.
+
+- **Per step:** solve `H λ = a` with the *unprojected* sparse Hessian at the converged state (§2.1), restricted to free DOFs. λ gives the parameter gradient `−λᵀ ∂g/∂θ` and the adjoint passed to earlier states.
+- **Through time:** implicit Euler makes the inertial target `x̃ₙ = 2xₙ − xₙ₋₁` for n ≥ 1 and `x̃₀ = x₀ + h v₀`. The adjoint therefore flows to the two previous states, and at the first step to the initial velocity. Rigid rotations follow the same rule on `Q̃ = 2Qₙ − Qₙ₋₁`, mapped to rotation increments.
+- **Parameters:** `∂g/∂θ` for a material parameter (for example Young's modulus of a body) is a central difference of the gradient in θ, at relative step 10⁻⁶. That is accurate to about 10⁻⁹, which is far below any physical resolution. State dependence is exact.
+- **Scope of v1:**
+  - Plastic flow is not differentiated yet. If any fiber yielded during the recorded run, the gradient call raises an error instead of returning a derivative that ignores the return map (§2.3).
+  - Friction's lagged normal force and tangent basis are held fixed within each step, as differentiable IPC implementations commonly do. Derivatives through frictional contact are therefore approximate. Frictionless and sticking-free scenes are exact.
+  - Steps must be converged tightly (§2.2). The recorder stores each step's final residual, and the gradient call warns if it is large.
+
+**What validating it found in the forward solver.** Checking gradients against finite differences of the full simulation exposed three forward-solver problems, which are now fixed or recorded:
+
+1. **Parallel edges.** Edge–edge contact was not mollified, so a block landing flat oscillated in Newton without converging. It is now mollified ([02](02-rigid-body-and-contact.md) §2).
+2. **Stopping at the floating-point floor.** Once the predicted decrease fell below the energy's floating-point resolution, Newton kept accepting ever-tinier steps until its iteration cap. It now stops there, as converged.
+3. **Degenerate contact geometry, still open.** When a body's vertices lie exactly on another surface's mesh edges (a block centred on the ground's diagonal), the forward result jumps under perturbations of 10⁻³ m/s. A lateral shift then moved the block 18 times its kinematic amount, and 6–9 µm jumps appeared in the landing height. The derivative there is not meaningful. The tests use general position, and robust handling of coincident features is future work.
+
+Validated (tests/sim/test_adjoint.py), against finite differences of the full forward run:
+
+- a soft block landing on the ground, with respect to Young's modulus and all three components of the initial velocity (agreement 10⁻⁴ to 10⁻³);
+- a spinning rigid box landing, with respect to its initial linear and angular velocity;
+- a shell pressed by a pad, with respect to the wall's modulus.
+
+A run with plastic flow is refused, and recording leaves the forward run bit-identical.

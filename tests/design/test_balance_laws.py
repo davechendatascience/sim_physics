@@ -435,3 +435,19 @@ def test_backward_smoothing_leaves_forward_exact_and_converges():
         exact = np.where(eps < ey, E, E * H / (E + H))
         smooth = AD.fiber_tangent_smoothed(eps, E, sy, H, width)
         assert np.allclose(smooth[away], exact[away], rtol=1e-9)
+
+
+
+@law("MOD-contact-distance", "parallel_edge_mollifier", "02-rigid-body-and-contact.md")
+def test_edge_edge_mollifier_is_smooth_and_vanishes_for_parallel_edges():
+    a0, a1 = np.zeros(3), np.array([1.0, 0, 0])
+    b0 = np.array([0.0, 0.0, 1e-3])
+    rest = (a0, a1, b0, b0 + np.array([1.0, 0, 0]))
+    m = lambda ang: S.ee_mollifier(a0, a1, b0, b0 + np.array([np.cos(ang), np.sin(ang), 0.0]), *rest)
+    assert m(0.0) == 0.0                                  # parallel: weight vanishes
+    assert m(0.2) == 1.0                                  # clearly non-parallel: untouched
+    angs = np.linspace(0, 0.1, 20001)
+    vals = np.array([m(a) for a in angs])
+    slope = np.diff(vals) / np.diff(angs)
+    assert np.all(np.diff(vals) >= -1e-15)               # monotone in the angle
+    assert np.abs(np.diff(slope)).max() < 1e-2 * np.abs(slope).max()     # no slope jump: C1

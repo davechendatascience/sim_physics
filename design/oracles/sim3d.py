@@ -230,3 +230,11 @@ def gas_force(x, faces, nRT):
     np.add.at(f, faces[:, 1], np.cross(c, a) / 6)
     np.add.at(f, faces[:, 2], np.cross(a, b) / 6)
     return p * f
+
+
+def ee_mollifier(a0, a1, b0, b1, a0r, a1r, b0r, b1r):
+    """IPC edge-edge mollifier (docs/02 §2): (2 - c/e) c/e for c < e, else 1,
+    with c = |ea x eb|^2 and e = 1e-3 |ea_rest|^2 |eb_rest|^2."""
+    c = np.sum(np.cross(a1 - a0, b1 - b0) ** 2)
+    e = 1e-3 * np.sum((a1r - a0r) ** 2) * np.sum((b1r - b0r) ** 2)
+    return (2 - c / e) * c / e if c < e else 1.0
